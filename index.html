@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yeonguk Lee — Builder</title>
+<meta name="description" content="CS student & full-stack developer building AI-powered tools. Creator of FlowCraft, a multi-agent AI platform that builds Flutter apps from natural language.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --bg-card: #111113;
+    --bg-card-hover: #18181b;
+    --text: #e4e4e7;
+    --text-muted: #71717a;
+    --text-dim: #52525b;
+    --accent: #f97316;
+    --accent-dim: rgba(249, 115, 22, 0.12);
+    --border: #27272a;
+    --border-hover: #3f3f46;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Outfit', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 80px 0 60px;
+    position: relative;
+  }
+
+  .header-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .header-label::before {
+    content: '';
+    width: 16px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-size: clamp(36px, 6vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  h1 .accent { color: var(--accent); }
+
+  .tagline {
+    font-size: 18px;
+    color: var(--text-muted);
+    font-weight: 300;
+    max-width: 520px;
+    line-height: 1.5;
+  }
+
+  .header-links {
+    margin-top: 28px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .header-links a {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .header-links a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .header-links a svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+  }
+
+  /* ── SECTION ── */
+  section {
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── PROJECT CARDS ── */
+  .project {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 16px;
+    transition: all 0.25s;
+    position: relative;
+  }
+
+  .project:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+    transform: translateY(-1px);
+  }
+
+  .project.featured {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(249,115,22,0.04) 0%, transparent 60%);
+  }
+
+  .project.featured:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(249, 115, 22, 0.06);
+  }
+
+  .project-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  .project h3 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+
+  .project .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    font-weight: 300;
+  }
+
+  .project p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  .tech-stack {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tech-stack span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: border-color 0.2s;
+  }
+
+  .project:hover .tech-stack span {
+    border-color: var(--border-hover);
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    transition: gap 0.2s;
+  }
+
+  .project-link:hover { gap: 8px; }
+
+  .project-link svg {
+    width: 12px;
+    height: 12px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+  }
+
+  /* ── SKILLS GRID ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .skill-group h4 {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .skill-group p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-item {
+    margin-bottom: 24px;
+    padding-left: 20px;
+    border-left: 2px solid var(--border);
+    transition: border-color 0.2s;
+  }
+
+  .exp-item:hover {
+    border-left-color: var(--accent);
+  }
+
+  .exp-item h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .exp-item .meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .exp-item p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  footer a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  footer a:hover { color: var(--accent); }
+
+  /* ── NOW ── */
+  .now-card {
+    background: linear-gradient(135deg, rgba(249,115,22,0.06) 0%, rgba(249,115,22,0.01) 100%);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+
+  .now-card h4 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .now-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    header { padding: 48px 0 40px; }
+    section { padding: 36px 0; }
+    .project { padding: 20px; }
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── FADE-IN ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in:nth-child(1) { animation-delay: 0s; }
+  .fade-in:nth-child(2) { animation-delay: 0.05s; }
+  .fade-in:nth-child(3) { animation-delay: 0.1s; }
+  .fade-in:nth-child(4) { animation-delay: 0.15s; }
+  .fade-in:nth-child(5) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-label fade-in">Builder & CS Student</div>
+    <h1 class="fade-in">Yeonguk <span class="accent">Lee</span></h1>
+    <p class="tagline fade-in">I build AI-powered tools and ship fast. Currently creating FlowCraft — a multi-agent AI platform that builds Flutter apps from natural language.</p>
+    <div class="header-links fade-in">
+      <a href="https://github.com/Poiurity" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/yeonguk-lee-9bbb02390" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="mailto:iamlyg9667@gmail.com">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </a>
+    </div>
+  </header>
+
+  <!-- NOW -->
+  <section>
+    <div class="section-label">Currently</div>
+    <div class="now-card fade-in">
+      <h4>&#9679; Building in Irvine, CA</h4>
+      <p>Participating in the Global PBL Program — a 6-month intensive in full-stack development, applied AI, and startup building. Competitively selected. Shipping projects daily.</p>
+    </div>
+    <div class="now-card fade-in">
+      <h4>&#9679; B.S. Computer Science</h4>
+      <p>Kookmin University, Seoul — expected graduation 2026.</p>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section>
+    <div class="section-label">Projects</div>
+
+    <div class="project featured fade-in">
+      <div class="project-badge">Featured — Active Development</div>
+      <h3>FlowCraft</h3>
+      <div class="subtitle">No-Code Flutter App Builder powered by Agentic AI</div>
+      <p>A platform that lets anyone create and run Flutter apps from a single English sentence. I designed a 6-agent AI pipeline (Orchestrator, Planning, UI, Logic, Diff, Stability) that manipulates structured AppState JSON instead of raw code — solving the reliability problem in AI code generation. Zero to live product in one week.</p>
+      <div class="tech-stack">
+        <span>Flutter</span>
+        <span>Dart</span>
+        <span>OpenAI API</span>
+        <span>Multi-Agent</span>
+        <span>Cloudflare</span>
+        <span>Zapp.run</span>
+      </div>
+      <a href="https://github.com/Poiurity" target="_blank" rel="noopener" class="project-link">
+        View on GitHub <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </a>
+    </div>
+
+    <div class="project fade-in">
+      <h3>PetAge AI</h3>
+      <div class="subtitle">AI Pet Age Estimation App — Project Lead</div>
+      <p>Led a team to build an app that estimates pet age from a single photo. Full pipeline from model training to deployment: EfficientNet-B0 (PyTorch → ONNX) served via FastAPI, with Supabase + Cloudflare R2 for storage and a Flutter frontend.</p>
+      <div class="tech-stack">
+        <span>Flutter</span>
+        <span>FastAPI</span>
+        <span>PyTorch</span>
+        <span>ONNX</span>
+        <span>Supabase</span>
+        <span>Cloudflare R2</span>
+      </div>
+    </div>
+
+    <div class="project fade-in">
+      <h3>Conever</h3>
+      <div class="subtitle">AI-Powered Travel Recommendation Platform</div>
+      <p>Flutter app with Gemini-based AI travel recommendations, Kakao OAuth2 authentication, Naver Map SDK route previews, and async API layers with retry and error handling. Built with GetX MVVM architecture.</p>
+      <div class="tech-stack">
+        <span>Flutter</span>
+        <span>Gemini API</span>
+        <span>Naver Maps</span>
+        <span>Kakao SDK</span>
+        <span>WebSocket</span>
+      </div>
+    </div>
+
+    <div class="project fade-in">
+      <h3>GPSTracker</h3>
+      <div class="subtitle">Vehicle Driving Data Dashboard</div>
+      <p>React + TypeScript dashboard for visualizing vehicle driving data. Zustand state management, TanStack Query caching, MSW mock APIs for independent frontend development, and Recharts for data visualization.</p>
+      <div class="tech-stack">
+        <span>React</span>
+        <span>TypeScript</span>
+        <span>Zustand</span>
+        <span>TanStack Query</span>
+        <span>Docker</span>
+        <span>Jenkins</span>
+      </div>
+    </div>
+
+    <div class="project fade-in">
+      <h3>Danzam</h3>
+      <div class="subtitle">Caffeine Rhythm Analyzer — COKOTHON Hackathon, Excellence Award</div>
+      <p>Flutter app that tracks caffeine intake and predicts optimal sleep timing based on user biometrics. Interactive half-life decay visualization with weekly and monthly stats. 5-person cross-university team.</p>
+      <div class="tech-stack">
+        <span>Flutter</span>
+        <span>Dart</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- SKILLS -->
+  <section>
+    <div class="section-label">Technical Skills</div>
+    <div class="skills-grid fade-in">
+      <div class="skill-group">
+        <h4>Languages</h4>
+        <p>Dart, TypeScript, JavaScript, Python, HTML/CSS</p>
+      </div>
+      <div class="skill-group">
+        <h4>Frameworks</h4>
+        <p>Flutter, React, Next.js, FastAPI, Node.js</p>
+      </div>
+      <div class="skill-group">
+        <h4>AI / ML</h4>
+        <p>OpenAI API, Gemini, EfficientNet-B0, Multi-Agent Architecture</p>
+      </div>
+      <div class="skill-group">
+        <h4>Infrastructure</h4>
+        <p>Docker, Jenkins, Cloudflare, Supabase, Vercel, PostgreSQL</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section>
+    <div class="section-label">Experience</div>
+
+    <div class="exp-item fade-in">
+      <h4>Global PBL Program</h4>
+      <div class="meta">Full-Stack Developer & Startup Builder · Irvine, CA · 2025–Present</div>
+      <p>6-month intensive in full-stack development, applied AI, and startup building. Working daily in English with native-speaking peers and mentors.</p>
+    </div>
+
+    <div class="exp-item fade-in">
+      <h4>Kernal360 University Camp</h4>
+      <div class="meta">Full-Stack Developer Program · Jul–Aug 2025</div>
+    </div>
+
+    <div class="exp-item fade-in">
+      <h4>Kookmin University Alpha Project</h4>
+      <div class="meta">Frontend Developer — Innovation Program · May–Sep 2025</div>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>
+      <a href="mailto:iamlyg9667@gmail.com">iamlyg9667@gmail.com</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://github.com/Poiurity" target="_blank" rel="noopener">GitHub</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://www.linkedin.com/in/yeonguk-lee-9bbb02390" target="_blank" rel="noopener">LinkedIn</a>
+    </p>
+    <p style="margin-top: 12px; color: var(--text-dim);">&copy; 2026 Yeonguk Lee</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
