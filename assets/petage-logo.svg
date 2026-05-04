@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- 코럴 라운드 배경 -->
+  <rect width="512" height="512" rx="112" fill="#E8845A"/>
+
+  <!-- 발바닥 — 흰색 실루엣 -->
+  <!-- 왼쪽 발가락 -->
+  <ellipse cx="152" cy="162" rx="50" ry="60" fill="white"/>
+  <!-- 가운데 발가락 -->
+  <ellipse cx="256" cy="130" rx="50" ry="60" fill="white"/>
+  <!-- 오른쪽 발가락 -->
+  <ellipse cx="360" cy="162" rx="50" ry="60" fill="white"/>
+  <!-- 메인 패드 -->
+  <ellipse cx="256" cy="330" rx="120" ry="104" fill="white"/>
+
+  <!-- 나이/시간 요소 — 하단 우측에 은은한 아크 -->
+  <path d="M 400 370 A 170 170 0 0 1 290 468"
+        stroke="white" stroke-opacity="0.45" stroke-width="14" stroke-linecap="round" fill="none"/>
+  <!-- 아크 끝 점 (시계 바늘 느낌) -->
+  <circle cx="400" cy="370" r="7" fill="white" fill-opacity="0.45"/>
+</svg>
