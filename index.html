@@ -3,30 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yeonguk Lee — Builder</title>
-<meta name="description" content="CS student & full-stack developer building AI-powered tools. Creator of FlowCraft, a multi-agent AI platform that builds Flutter apps from natural language.">
+<title>Yeonguk Lee — Software Engineer</title>
+<meta name="description" content="Software engineer building real products. Full-stack from AI systems to mobile apps.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0b;
-    --bg-card: #111113;
-    --bg-card-hover: #18181b;
-    --text: #e4e4e7;
-    --text-muted: #71717a;
-    --text-dim: #52525b;
+    --bg: #08080a;
+    --bg-section: #0f0f11;
+    --bg-card: #131316;
+    --bg-card-hover: #17171b;
+    --text: #f5f5f7;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --text-faint: #4b5563;
     --accent: #f97316;
-    --accent-dim: rgba(249, 115, 22, 0.12);
+    --accent-hover: #fb923c;
     --border: #27272a;
     --border-hover: #3f3f46;
     --mono: 'JetBrains Mono', monospace;
     --sans: 'Outfit', sans-serif;
+
+    /* project accents */
+    --clir-green: #10b981;
+    --clir-green-dim: rgba(16, 185, 129, 0.1);
+    --clir-cream: #f5f5dc;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
   body {
     font-family: var(--sans);
@@ -34,540 +41,2279 @@
     color: var(--text);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
-  /* Grain overlay */
-  body::after {
+  /* Grain */
+  body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
     pointer-events: none;
-    z-index: 9999;
+    z-index: 100;
+    opacity: 0.6;
   }
 
   .container {
-    max-width: 720px;
+    max-width: 980px;
     margin: 0 auto;
     padding: 0 24px;
   }
 
-  /* ── HEADER ── */
-  header {
-    padding: 80px 0 60px;
+  /* ──────────────────────────── NAV ──────────────────────────── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(8, 8, 10, 0.72);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+  nav.scrolled { border-bottom-color: var(--border); }
+
+  .nav-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .nav-logo .dot { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+  }
+
+  /* ──────────────────────────── HERO ──────────────────────────── */
+  .hero {
+    padding: 72px 0 56px;
     position: relative;
   }
 
-  .header-label {
+  .hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+  }
+  .hero-kicker::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--clir-green);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 var(--clir-green);
+    animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
-  .header-label::before {
-    content: '';
-    width: 16px;
-    height: 1px;
-    background: var(--accent);
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+    50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
   }
 
   h1 {
-    font-size: clamp(36px, 6vw, 52px);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin-bottom: 16px;
+    font-size: clamp(40px, 7vw, 64px);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    margin-bottom: 24px;
+    max-width: 820px;
   }
-
-  h1 .accent { color: var(--accent); }
-
-  .tagline {
-    font-size: 18px;
+  h1 .name {
+    display: block;
+    font-size: 0.7em;
+    font-weight: 400;
     color: var(--text-muted);
-    font-weight: 300;
-    max-width: 520px;
-    line-height: 1.5;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
   }
 
-  .header-links {
-    margin-top: 28px;
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 18px);
+    color: var(--text-muted);
+    max-width: 560px;
+    line-height: 1.65;
+    font-weight: 300;
+    margin-bottom: 36px;
+  }
+  .hero-sub strong {
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .hero-links {
     display: flex;
-    gap: 16px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
-  .header-links a {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--text-muted);
-    text-decoration: none;
-    padding: 8px 16px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .header-links a:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-dim);
-  }
-
-  .header-links a svg {
-    width: 14px;
-    height: 14px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-  }
-
-  /* ── SECTION ── */
-  section {
-    padding: 48px 0;
-    border-top: 1px solid var(--border);
-  }
-
-  .section-label {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 32px;
-    display: flex;
+  .link-btn {
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-  }
-
-  .section-label::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: var(--accent);
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-
-  /* ── PROJECT CARDS ── */
-  .project {
-    background: var(--bg-card);
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text);
+    text-decoration: none;
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px;
-    margin-bottom: 16px;
-    transition: all 0.25s;
-    position: relative;
+    border-radius: 8px;
+    background: var(--bg-card);
+    transition: all 0.2s ease;
+    font-family: var(--sans);
   }
-
-  .project:hover {
+  .link-btn:hover {
     border-color: var(--border-hover);
     background: var(--bg-card-hover);
     transform: translateY(-1px);
   }
-
-  .project.featured {
+  .link-btn.primary {
+    background: var(--accent);
+    color: #0a0a0b;
     border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(249,115,22,0.04) 0%, transparent 60%);
+    font-weight: 500;
+  }
+  .link-btn.primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+  .link-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ──────────────────────────── QUICK STATS ──────────────────────────── */
+  .quick-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin: 0 -24px 64px;
+    padding: 0 24px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--border);
+  }
+  .stat {
+    background: var(--bg);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-num .suffix { color: var(--accent); }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
-  .project.featured:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 30px rgba(249, 115, 22, 0.06);
+  @media (max-width: 640px) {
+    .quick-stats { grid-template-columns: repeat(2, 1fr); }
+    .stat { padding: 16px 14px; }
+    .stat-num { font-size: 22px; }
   }
 
-  .project-badge {
+  /* ──────────────────────────── SECTION ──────────────────────────── */
+  section.work {
+    padding: 24px 0 64px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .section-count {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+
+  /* ──────────────────────────── PROJECT CARD ──────────────────────────── */
+  .project {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: border-color 0.25s;
+  }
+  .project:hover { border-color: var(--border-hover); }
+
+  .project-header {
+    padding: 28px 28px 0;
+  }
+
+  .project-meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .badge {
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--accent);
-    background: var(--accent-dim);
     padding: 4px 10px;
     border-radius: 4px;
-    display: inline-block;
-    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .badge-shipped {
+    background: var(--clir-green-dim);
+    color: var(--clir-green);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+  .badge-team {
+    background: rgba(245, 158, 11, 0.08);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+  .badge-wip {
+    background: rgba(96, 165, 250, 0.08);
+    color: #60a5fa;
+    border: 1px solid rgba(96, 165, 250, 0.2);
   }
 
-  .project h3 {
-    font-size: 20px;
+  .project-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.05em;
+    margin-left: auto;
+  }
+
+  .project-title-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .project-logo-wrap {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+  .project-logo-wrap svg { width: 100%; height: 100%; }
+
+  .project h2 {
+    font-size: clamp(28px, 4vw, 36px);
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .project-tagline {
+    font-size: 17px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.5;
+    max-width: 620px;
+    margin-bottom: 32px;
+  }
+
+  /* ──────── PHONE GALLERY ──────── */
+  .phone-gallery {
+    padding: 0 28px 32px;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0 -28px;
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+  .phone-gallery::-webkit-scrollbar { display: none; }
+
+  .phone {
+    flex-shrink: 0;
+    width: 220px;
+    scroll-snap-align: start;
+    position: relative;
+  }
+
+  .phone-screen {
+    width: 100%;
+    aspect-ratio: 9 / 19;
+    border-radius: 28px;
+    overflow: hidden;
+    background: #000;
+    position: relative;
+    border: 1.5px solid var(--border);
+    transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), border-color 0.3s;
+  }
+  .phone:hover .phone-screen {
+    border-color: var(--clir-green);
+    transform: translateY(-4px);
+  }
+
+  .phone-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+
+  .phone-caption {
+    margin-top: 12px;
+    padding: 0 4px;
+  }
+  .phone-caption-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     margin-bottom: 4px;
   }
-
-  .project .subtitle {
-    font-size: 14px;
+  .phone-caption-text {
+    font-size: 13px;
     color: var(--text-muted);
-    margin-bottom: 14px;
-    font-weight: 300;
+    line-height: 1.4;
   }
 
-  .project p {
+  @media (max-width: 600px) {
+    .phone { width: 180px; }
+  }
+
+  /* ──────── PROBLEM / SOLUTION ──────── */
+  .project-body {
+    padding: 0 28px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+    padding-top: 28px;
+  }
+  @media (max-width: 700px) {
+    .project-body { grid-template-columns: 1fr; gap: 20px; }
+  }
+
+  .story-block { }
+  .story-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .story-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--clir-green);
+  }
+  .story-label.solution::before { background: var(--accent); }
+
+  .story-text {
     font-size: 15px;
     color: var(--text-muted);
     line-height: 1.65;
   }
+  .story-text strong {
+    color: var(--text);
+    font-weight: 500;
+    background: linear-gradient(180deg, transparent 65%, rgba(16,185,129,0.2) 65%);
+    padding: 0 2px;
+  }
+  .story-text.solution strong {
+    background: linear-gradient(180deg, transparent 65%, rgba(249,115,22,0.25) 65%);
+  }
+
+  /* ──────── IMPACT METRICS ──────── */
+  .impact-row {
+    padding: 0 28px 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .impact-row { grid-template-columns: 1fr; gap: 8px; }
+  }
+
+  .impact {
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .impact-num {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--clir-green);
+    line-height: 1;
+  }
+  .impact-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.35;
+  }
+
+  /* ──────── TECH STACK ──────── */
+  .project-footer {
+    padding: 20px 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    background: rgba(0,0,0,0.2);
+  }
 
   .tech-stack {
-    margin-top: 16px;
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
   }
-
-  .tech-stack span {
+  .tech-chip {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--text-dim);
-    padding: 4px 10px;
+    padding: 4px 9px;
     border: 1px solid var(--border);
     border-radius: 4px;
-    transition: border-color 0.2s;
+    letter-spacing: 0.02em;
   }
 
-  .project:hover .tech-stack span {
-    border-color: var(--border-hover);
-  }
-
-  .project-link {
+  .project-cta {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    margin-top: 16px;
+    gap: 6px;
     font-family: var(--mono);
     font-size: 12px;
     color: var(--accent);
     text-decoration: none;
     transition: gap 0.2s;
+    white-space: nowrap;
   }
+  .project-cta:hover { gap: 10px; }
+  .project-cta svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-  .project-link:hover { gap: 8px; }
-
-  .project-link svg {
-    width: 12px;
-    height: 12px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-  }
-
-  /* ── SKILLS GRID ── */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-  }
-
-  .skill-group h4 {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 10px;
-  }
-
-  .skill-group p {
-    font-size: 14px;
-    color: var(--text-muted);
-    line-height: 1.7;
-  }
-
-  /* ── EXPERIENCE ── */
-  .exp-item {
-    margin-bottom: 24px;
-    padding-left: 20px;
-    border-left: 2px solid var(--border);
-    transition: border-color 0.2s;
-  }
-
-  .exp-item:hover {
-    border-left-color: var(--accent);
-  }
-
-  .exp-item h4 {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 2px;
-  }
-
-  .exp-item .meta {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 6px;
-  }
-
-  .exp-item p {
-    font-size: 14px;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    padding: 48px 0;
-    border-top: 1px solid var(--border);
-    text-align: center;
-  }
-
-  footer p {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-
-  footer a {
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  footer a:hover { color: var(--accent); }
-
-  /* ── NOW ── */
-  .now-card {
-    background: linear-gradient(135deg, rgba(249,115,22,0.06) 0%, rgba(249,115,22,0.01) 100%);
-    border: 1px solid rgba(249, 115, 22, 0.2);
+  /* ──────── DESKTOP MOCKUP (GPSTracker) ──────── */
+  .desktop-frame {
+    margin: 0 28px 32px;
     border-radius: 12px;
-    padding: 24px 28px;
-    margin-bottom: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #1a1a1d;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03) inset;
+    position: relative;
   }
-
-  .now-card h4 {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--accent);
-    margin-bottom: 8px;
+  .desktop-chrome {
+    background: #18181b;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .desktop-dots {
+    display: flex;
     gap: 6px;
+    flex-shrink: 0;
+  }
+  .desktop-dots span {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+  }
+  .desktop-dots span:nth-child(1) { background: #ff5f57; }
+  .desktop-dots span:nth-child(2) { background: #febc2e; }
+  .desktop-dots span:nth-child(3) { background: #28c840; }
+  .desktop-url {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .desktop-url .lock { color: var(--clir-green); margin-right: 6px; }
+  .desktop-screen {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #fff;
+    overflow: hidden;
+    position: relative;
+  }
+  .desktop-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
   }
 
-  .now-card p {
+  /* ──────── DESKTOP THUMBNAIL ROW ──────── */
+  .thumb-row {
+    margin: 0 -28px 32px;
+    padding: 0 28px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 700px) {
+    .thumb-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  .thumb {
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: zoom-in;
+    transition: transform 0.25s, border-color 0.25s;
+    position: relative;
+  }
+  .thumb:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+  .thumb-label {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: #fff;
+    background: rgba(0,0,0,0.7);
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ──────── PROJECT 02 ACCENT (GPS - blue) ──────── */
+  .project[data-accent="blue"] .badge-shipped {
+    background: rgba(96, 165, 250, 0.1);
+    color: #60a5fa;
+    border-color: rgba(96, 165, 250, 0.25);
+  }
+  .project[data-accent="blue"] .story-label::before { background: #60a5fa; }
+  .project[data-accent="blue"] .story-text strong {
+    background: linear-gradient(180deg, transparent 65%, rgba(96,165,250,0.22) 65%);
+  }
+  .project[data-accent="blue"] .impact-num { color: #60a5fa; }
+  .project[data-accent="blue"]:hover .phone-screen { border-color: #60a5fa; }
+
+  /* ──────── PROJECT ACCENT (PetAge - coral) ──────── */
+  .project[data-accent="coral"] .badge-shipped {
+    background: rgba(232, 132, 90, 0.12);
+    color: #f87171;
+    border-color: rgba(232, 132, 90, 0.3);
+  }
+  .project[data-accent="coral"] .story-label::before { background: #e8845a; }
+  .project[data-accent="coral"] .story-text strong {
+    background: linear-gradient(180deg, transparent 65%, rgba(232,132,90,0.25) 65%);
+  }
+  .project[data-accent="coral"] .impact-num { color: #e8845a; }
+  .project[data-accent="coral"]:hover .phone-screen { border-color: #e8845a; }
+
+  /* ──────── PROJECT ACCENT (Conever - violet) ──────── */
+  .project[data-accent="violet"] .badge-shipped {
+    background: rgba(167, 139, 250, 0.1);
+    color: #a78bfa;
+    border-color: rgba(167, 139, 250, 0.25);
+  }
+  .project[data-accent="violet"] .story-label::before { background: #a78bfa; }
+  .project[data-accent="violet"] .story-text strong {
+    background: linear-gradient(180deg, transparent 65%, rgba(167,139,250,0.25) 65%);
+  }
+  .project[data-accent="violet"] .impact-num { color: #a78bfa; }
+
+  /* ──────── PROJECT ACCENT (Danzam - amber) ──────── */
+  .project[data-accent="amber"] .badge-shipped {
+    background: rgba(251, 191, 36, 0.1);
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.3);
+  }
+  .project[data-accent="amber"] .story-label::before { background: #fbbf24; }
+  .project[data-accent="amber"] .story-text strong {
+    background: linear-gradient(180deg, transparent 65%, rgba(251,191,36,0.25) 65%);
+  }
+  .project[data-accent="amber"] .impact-num { color: #fbbf24; }
+
+  /* ──────── PROJECT ACCENT (FlowCraft - cyan) ──────── */
+  .project[data-accent="cyan"] .badge-shipped {
+    background: rgba(34, 211, 238, 0.1);
+    color: #22d3ee;
+    border-color: rgba(34, 211, 238, 0.3);
+  }
+  .project[data-accent="cyan"] .story-label::before { background: #22d3ee; }
+  .project[data-accent="cyan"] .story-text strong {
+    background: linear-gradient(180deg, transparent 65%, rgba(34,211,238,0.22) 65%);
+  }
+  .project[data-accent="cyan"] .impact-num { color: #22d3ee; }
+  .project[data-accent="cyan"] .badge.featured-badge {
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(34, 211, 238, 0.06));
+    color: #22d3ee;
+    border: 1px solid rgba(34, 211, 238, 0.4);
+  }
+
+  /* ──────── PROJECT ACCENT (LiveTrack - rose) ──────── */
+  .project[data-accent="rose"] .story-label::before { background: #ec4899; }
+  .project[data-accent="rose"] .story-text strong {
+    background: linear-gradient(180deg, transparent 65%, rgba(236,72,153,0.22) 65%);
+  }
+  .project[data-accent="rose"] .impact-num { color: #ec4899; }
+
+  /* WIP/Building badge with pulsing dot */
+  .badge-wip-active {
+    background: rgba(236, 72, 153, 0.1) !important;
+    color: #f472b6 !important;
+    border: 1px solid rgba(236, 72, 153, 0.35) !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .badge-wip-active::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #ec4899;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.6);
+    animation: pulseRose 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes pulseRose {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.6); }
+    50% { box-shadow: 0 0 0 6px rgba(236, 72, 153, 0); }
+  }
+
+  /* ──────── ARCHITECTURE DIAGRAM (LiveTrack) ──────── */
+  .arch-diagram {
+    margin: 0 28px 16px;
+    padding: 30px 22px 24px;
+    border-radius: 14px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(236,72,153,0.06), transparent 60%),
+      linear-gradient(180deg, #170f15 0%, #0e0a0d 100%);
+    border: 1px solid rgba(236,72,153,0.18);
+    overflow: hidden;
+  }
+  .arch-diagram .diagram-label,
+  .seq-diagram .diagram-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #f472b6;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+  .arch-svg-wrap, .seq-svg-wrap {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .arch-svg-wrap::-webkit-scrollbar,
+  .seq-svg-wrap::-webkit-scrollbar { display: none; }
+  .arch-svg, .seq-svg {
+    display: block;
+    width: 100%;
+    min-width: 560px;
+    max-width: 720px;
+    margin: 0 auto;
+    height: auto;
+  }
+
+  /* ──────── SEQUENCE DIAGRAM (LiveTrack) ──────── */
+  .seq-diagram {
+    margin: 0 28px 28px;
+    padding: 24px 18px 18px;
+    border-radius: 14px;
+    background: rgba(236, 72, 153, 0.025);
+    border: 1px solid rgba(236, 72, 153, 0.12);
+    overflow: hidden;
+  }
+
+  /* ──────── AGENT PIPELINE DIAGRAM (FlowCraft) ──────── */
+  .agent-diagram {
+    margin: 0 28px 24px;
+    padding: 32px 24px;
+    border-radius: 14px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(34,211,238,0.06), transparent 60%),
+      linear-gradient(180deg, #0c1418 0%, #0a1014 100%);
+    border: 1px solid rgba(34,211,238,0.15);
+    overflow: hidden;
+  }
+
+  .diagram-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #22d3ee;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 16px;
+    opacity: 0.7;
+  }
+
+  .diagram-svg-wrap {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .diagram-svg-wrap::-webkit-scrollbar { display: none; }
+
+  .diagram-svg {
+    display: block;
+    width: 100%;
+    min-width: 560px;
+    max-width: 720px;
+    margin: 0 auto;
+    height: auto;
+  }
+
+  /* Diagram node animations */
+  .diagram-node-rect {
+    transition: filter 0.4s, transform 0.4s;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  .diagram-node:hover .diagram-node-rect {
+    filter: brightness(1.5);
+  }
+
+  /* ──────── DUAL SHOWCASE (FlowCraft IDE + chat) ──────── */
+  .dual-showcase {
+    margin: 0 28px 28px;
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 14px;
+    align-items: stretch;
+  }
+  @media (max-width: 700px) {
+    .dual-showcase { grid-template-columns: 1fr; gap: 16px; }
+  }
+
+  .showcase-ide {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #1a1a1d;
+    box-shadow: 0 16px 32px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+  }
+  .showcase-ide-chrome {
+    background: #15151a;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .showcase-ide-chrome .desktop-dots { display: flex; gap: 5px; }
+  .showcase-ide-chrome .desktop-dots span {
+    width: 9px; height: 9px; border-radius: 50%;
+  }
+  .showcase-ide-chrome .desktop-dots span:nth-child(1) { background: #ff5f57; }
+  .showcase-ide-chrome .desktop-dots span:nth-child(2) { background: #febc2e; }
+  .showcase-ide-chrome .desktop-dots span:nth-child(3) { background: #28c840; }
+  .showcase-ide-chrome .ide-tab {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    padding: 3px 10px;
+    background: var(--bg-card);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .showcase-ide-chrome .ide-tab.active { color: #22d3ee; border-color: rgba(34,211,238,0.3); }
+  .showcase-ide-screen {
+    flex: 1;
+    overflow: hidden;
+    background: #15151a;
+    min-height: 280px;
+  }
+  .showcase-ide-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    display: block;
+  }
+
+  .showcase-chat {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+    background: #000;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: zoom-in;
+  }
+  .showcase-chat:hover {
+    border-color: #22d3ee;
+    transform: translateY(-2px);
+  }
+  .showcase-chat img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    aspect-ratio: 9 / 19;
+  }
+
+  /* ──────── AWARD HERO (Danzam) ──────── */
+  .award-hero {
+    margin: 0 28px 24px;
+    padding: 24px 24px 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(251,191,36,0.06) 0%, rgba(251,191,36,0.01) 100%);
+    border: 1px solid rgba(251,191,36,0.18);
+    overflow: hidden;
+  }
+  .award-hero-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .award-trophy {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 22px;
+    box-shadow: 0 4px 12px rgba(251,191,36,0.25);
+  }
+  .award-text { display: flex; flex-direction: column; gap: 2px; }
+  .award-name {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #fbbf24;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .award-detail {
     font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* compact phone row - 4 phones, smaller than CLIR's */
+  .compact-phones {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 0 0 24px;
+  }
+  @media (max-width: 700px) {
+    .compact-phones { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  }
+  .compact-phone {
+    aspect-ratio: 9 / 19;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid rgba(251,191,36,0.2);
+    transition: transform 0.25s, border-color 0.25s;
+    cursor: zoom-in;
+    position: relative;
+  }
+  .compact-phone:hover {
+    border-color: rgba(251,191,36,0.6);
+    transform: translateY(-3px);
+  }
+  .compact-phone img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+  .compact-phone .thumb-label {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: #fff;
+    background: rgba(0,0,0,0.75);
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ──────── JOURNEY FLOW (Conever) ──────── */
+  .journey-flow {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0 -28px 8px;
+    padding: 0 28px 24px;
+  }
+  .journey-flow::-webkit-scrolling { display: none; }
+  .journey-flow::-webkit-scrollbar { display: none; }
+
+  .journey-step {
+    flex-shrink: 0;
+    width: 180px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .journey-step-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+  .journey-step-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #a78bfa;
+    background: rgba(167, 139, 250, 0.1);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .journey-step-name {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .journey-phone {
+    width: 100%;
+    aspect-ratio: 9 / 19;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), border-color 0.3s;
+    position: relative;
+  }
+  .journey-phone:hover {
+    border-color: #a78bfa;
+    transform: translateY(-3px);
+  }
+  .journey-phone img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+
+  /* Connector arrow between steps */
+  .journey-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -14px;
+    width: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+    z-index: 1;
+  }
+
+  .journey-step-caption {
+    margin-top: 10px;
+    padding: 0 4px;
+    font-size: 12px;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.45;
   }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
-    header { padding: 48px 0 40px; }
-    section { padding: 36px 0; }
-    .project { padding: 20px; }
-    .skills-grid { grid-template-columns: 1fr; }
+    .journey-step { width: 158px; }
+    .journey-phone { border-radius: 18px; }
   }
 
-  /* ── FADE-IN ── */
-  .fade-in {
+  /* ──────── SHOWCASE LAYOUT (PetAge AI) ──────── */
+  .showcase {
+    margin: 0 28px 28px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fce4d4 0%, #fad9c2 100%);
+    padding: 32px 28px 0;
+    position: relative;
+  }
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 24px;
+    align-items: end;
+  }
+  @media (max-width: 700px) {
+    .showcase { padding: 24px 20px 0; }
+    .showcase-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+
+  .showcase-text { padding-bottom: 28px; }
+  .showcase-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c4623e;
+    margin-bottom: 14px;
+  }
+  .showcase-headline {
+    font-size: clamp(24px, 3.4vw, 34px);
+    font-weight: 600;
+    color: #1f1410;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .showcase-subline {
+    font-size: 15px;
+    color: #6b4d3c;
+    line-height: 1.6;
+    max-width: 320px;
+  }
+
+  .showcase-screenshot {
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-bottom: none;
+    background: #fff;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.08);
+    transform: translateY(0);
+    aspect-ratio: 4 / 3;
+  }
+  .showcase-screenshot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  /* secondary screen row */
+  .secondary-screens {
+    margin: 0 28px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .secondary-screens { grid-template-columns: 1fr; }
+  }
+  .secondary-screen {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #fff;
+    aspect-ratio: 16 / 11;
+    cursor: zoom-in;
+    transition: transform 0.25s, border-color 0.25s;
+    position: relative;
+  }
+  .secondary-screen:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+  }
+  .secondary-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+  .secondary-screen .thumb-label {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #fff;
+    background: rgba(0,0,0,0.7);
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Modal for thumbnail zoom */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 24px;
+    cursor: zoom-out;
     opacity: 0;
-    transform: translateY(12px);
-    animation: fadeUp 0.5s ease forwards;
+    transition: opacity 0.25s;
+  }
+  .lightbox.open { display: flex; opacity: 1; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 95vh;
+    border-radius: 8px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
   }
 
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
+  /* ──────── PLACEHOLDER ──────── */
+  .project.placeholder {
+    background: transparent;
+    border-style: dashed;
+    padding: 32px 28px;
+    text-align: center;
+  }
+  .project.placeholder .ph-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .project.placeholder .ph-note {
+    font-size: 13px;
+    color: var(--text-faint);
   }
 
-  .fade-in:nth-child(1) { animation-delay: 0s; }
-  .fade-in:nth-child(2) { animation-delay: 0.05s; }
-  .fade-in:nth-child(3) { animation-delay: 0.1s; }
-  .fade-in:nth-child(4) { animation-delay: 0.15s; }
-  .fade-in:nth-child(5) { animation-delay: 0.2s; }
+  /* ──────── FADE IN ──────── */
+  .fade-up { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.in { opacity: 1; transform: translateY(0); }
+
+  /* ──────────────────────────── FOOTER ──────────────────────────── */
+  footer {
+    padding: 40px 0 60px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  .footer-content a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+  .footer-content a:hover { color: var(--accent); }
+
 </style>
 </head>
 <body>
 
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">yeonguk<span class="dot">.</span>dev</a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="mailto:iamlyg9667@gmail.com">Contact</a>
+    </div>
+  </div>
+</nav>
+
 <div class="container">
 
-  <!-- HEADER -->
-  <header>
-    <div class="header-label fade-in">Builder & CS Student</div>
-    <h1 class="fade-in">Yeonguk <span class="accent">Lee</span></h1>
-    <p class="tagline fade-in">I build AI-powered tools and ship fast. Currently creating FlowCraft — a multi-agent AI platform that builds Flutter apps from natural language.</p>
-    <div class="header-links fade-in">
-      <a href="https://github.com/Poiurity" target="_blank" rel="noopener">
+  <!-- ──────────── HERO ──────────── -->
+  <header class="hero">
+    <div class="hero-kicker">Available for internships · Irvine, CA</div>
+    <h1>
+      <span class="name">Yeonguk Lee —</span>
+      Software engineer<br>
+      building real products.
+    </h1>
+    <p class="hero-sub">
+      I build end-to-end — from database to pixel. Currently leading backend on <strong>CLIR</strong>,
+      a food safety app shipping this quarter. Previously built a 6-agent AI platform that makes Flutter
+      apps from natural language, and shipped 4 production mobile apps.
+    </p>
+    <div class="hero-links">
+      <a href="#work" class="link-btn primary">
+        See the work
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      </a>
+      <a href="https://github.com/Poiurity" target="_blank" rel="noopener" class="link-btn">
         <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
         GitHub
       </a>
-      <a href="https://www.linkedin.com/in/yeonguk-lee-9bbb02390" target="_blank" rel="noopener">
+      <a href="https://www.linkedin.com/in/yeonguk-lee-9bbb02390" target="_blank" rel="noopener" class="link-btn">
         <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
         LinkedIn
       </a>
-      <a href="mailto:iamlyg9667@gmail.com">
+      <a href="mailto:iamlyg9667@gmail.com" class="link-btn">
         <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         Email
       </a>
     </div>
   </header>
 
-  <!-- NOW -->
-  <section>
-    <div class="section-label">Currently</div>
-    <div class="now-card fade-in">
-      <h4>&#9679; Building in Irvine, CA</h4>
-      <p>Participating in the Global PBL Program — a 6-month intensive in full-stack development, applied AI, and startup building. Competitively selected. Shipping projects daily.</p>
+  <!-- ──────────── QUICK STATS ──────────── -->
+  <div class="quick-stats fade-up">
+    <div class="stat">
+      <span class="stat-num">5<span class="suffix">+</span></span>
+      <span class="stat-label">shipped products</span>
     </div>
-    <div class="now-card fade-in">
-      <h4>&#9679; B.S. Computer Science</h4>
-      <p>Kookmin University, Seoul — expected graduation 2026.</p>
+    <div class="stat">
+      <span class="stat-num">2</span>
+      <span class="stat-label">team projects led</span>
     </div>
+    <div class="stat">
+      <span class="stat-num">60<span class="suffix">%</span></span>
+      <span class="stat-label">API cost cut via caching</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">1<span class="suffix"> wk</span></span>
+      <span class="stat-label">idea → FlowCraft live</span>
+    </div>
+  </div>
+
+  <!-- ──────────── WORK ──────────── -->
+  <section class="work" id="work">
+    <div class="section-header">
+      <span class="section-title">// Featured work</span>
+      <span class="section-count">01 / 07</span>
+    </div>
+
+    <!-- ━━━━━━━━ CLIR ━━━━━━━━ -->
+    <article class="project fade-up">
+
+      <div class="project-header">
+        <div class="project-meta">
+          <span class="badge badge-shipped">● Shipped</span>
+          <span class="badge badge-team">Team · G-PBL</span>
+          <span class="project-id">WORK_01</span>
+        </div>
+
+        <div class="project-title-row">
+          <div class="project-logo-wrap">
+            <svg viewBox="0 0 105 62" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 31.0075C0 47.8494 13.7079 61.5417 30.5689 61.5417V42.7332C24.3367 42.7332 19.2739 37.6762 19.2739 31.4511C19.2739 25.226 24.3367 20.169 30.5689 20.169V0.458496C13.7079 0.458496 0 14.1656 0 31.0075Z" fill="black"/>
+              <path d="M33.1447 23.9987V24.9598V37.9276V38.8887C37.26 38.8887 40.6055 35.547 40.6055 31.4363C40.6055 27.3256 37.26 23.9839 33.1447 23.9839V23.9987Z" fill="black"/>
+              <path d="M55.1486 0V62H48.6055V0H55.1486Z" fill="black"/>
+              <path d="M65.9846 10.1141C66.858 9.22691 67.9239 8.7981 69.1822 8.7981C70.4404 8.7981 71.5063 9.24169 72.3797 10.1141C73.2531 11.0013 73.6824 12.0511 73.6824 13.2932C73.6824 14.5353 73.2531 15.5112 72.3797 16.3688C71.5063 17.2264 70.4404 17.6552 69.1822 17.6552C67.9239 17.6552 66.858 17.2264 65.9846 16.3688C65.1112 15.5112 64.6819 14.4909 64.6819 13.2932C64.6819 12.0955 65.1112 11.0013 65.9846 10.1141ZM72.4685 28.5677V62.0001H65.9254V28.5677H72.4685Z" fill="black"/>
+              <path d="M89.9364 28.5675V33.9942H90.1585C90.9874 31.998 92.2013 30.4158 93.8297 29.2773C95.4581 28.1387 97.3381 27.562 99.4698 27.562C101.32 27.562 103.111 28.1091 104.858 29.2033L101.868 35.0588C100.802 34.1568 99.4698 33.6984 97.871 33.6984C96.1686 33.6984 94.7623 34.0385 93.652 34.7335C92.5418 35.4285 91.7276 36.4044 91.2095 37.6612C90.7062 38.9181 90.3657 40.1602 90.1881 41.3726C90.0104 42.5851 89.9364 43.9751 89.9364 45.5572V61.9851H83.3933V28.5527H89.9364V28.5675Z" fill="black"/>
+            </svg>
+          </div>
+          <h2>CLIR</h2>
+        </div>
+
+        <p class="project-tagline">
+          Personalized food safety. Scan any product — know instantly if it matches your allergies, dietary restrictions, or health profile.
+        </p>
+      </div>
+
+      <!-- Phone gallery: scroll horizontally -->
+      <div class="phone-gallery">
+        <div class="phone">
+          <div class="phone-screen"><img src="./assets/clir-ocr.png" alt="CLIR OCR ingredient scanning" loading="lazy"></div>
+          <div class="phone-caption">
+            <div class="phone-caption-label">01 · Scan</div>
+            <div class="phone-caption-text">Dual OCR + barcode scan on any product label</div>
+          </div>
+        </div>
+        <div class="phone">
+          <div class="phone-screen"><img src="./assets/clir-barcode-good.png" alt="CLIR barcode match found" loading="lazy"></div>
+          <div class="phone-caption">
+            <div class="phone-caption-label">02 · Match</div>
+            <div class="phone-caption-text">Instant feedback — safe to consume or flagged</div>
+          </div>
+        </div>
+        <div class="phone">
+          <div class="phone-screen"><img src="./assets/clir-result.png" alt="CLIR ingredient analysis result" loading="lazy"></div>
+          <div class="phone-caption">
+            <div class="phone-caption-label">03 · Analyze</div>
+            <div class="phone-caption-text">Full ingredient breakdown, personalized to your profile</div>
+          </div>
+        </div>
+        <div class="phone">
+          <div class="phone-screen"><img src="./assets/clir-list.png" alt="CLIR favorites list" loading="lazy"></div>
+          <div class="phone-caption">
+            <div class="phone-caption-label">04 · Save</div>
+            <div class="phone-caption-text">Personal safe-product library grows with every scan</div>
+          </div>
+        </div>
+        <div class="phone">
+          <div class="phone-screen"><img src="./assets/clir-ingredients.png" alt="CLIR ingredient review" loading="lazy"></div>
+          <div class="phone-caption">
+            <div class="phone-caption-label">05 · Profile</div>
+            <div class="phone-caption-text">Customize allergies, dietary rules, and sensitivity levels</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Problem / Solution -->
+      <div class="project-body">
+        <div class="story-block">
+          <div class="story-label">Challenge</div>
+          <p class="story-text">
+            Every scan triggered an <strong>AI call for ingredient analysis</strong>. At realistic scale, this breaks the cost model — and makes users wait on every single repeat scan of the same product.
+          </p>
+        </div>
+        <div class="story-block">
+          <div class="story-label solution">Solution</div>
+          <p class="story-text solution">
+            Designed a <strong>3-layer caching strategy</strong>: TanStack Query client-side, product-level cache in PostgreSQL, and Claude prompt caching server-side. Repeat scans are free. New products cost 60% less.
+          </p>
+        </div>
+      </div>
+
+      <!-- Impact -->
+      <div class="impact-row">
+        <div class="impact"><span class="impact-num">~60%</span><span class="impact-label">AI API cost reduction</span></div>
+        <div class="impact"><span class="impact-num">0ms</span><span class="impact-label">Latency on cached scans</span></div>
+        <div class="impact"><span class="impact-num">Backend lead</span><span class="impact-label">API, DB, caching, auth</span></div>
+      </div>
+
+      <!-- Tech + CTA -->
+      <div class="project-footer">
+        <div class="tech-stack">
+          <span class="tech-chip">React Native</span>
+          <span class="tech-chip">Expo 54</span>
+          <span class="tech-chip">TypeScript</span>
+          <span class="tech-chip">Node.js</span>
+          <span class="tech-chip">PostgreSQL</span>
+          <span class="tech-chip">Claude API</span>
+          <span class="tech-chip">Railway</span>
+        </div>
+        <a href="#" class="project-cta">
+          Case study
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- ━━━━━━━━ FLOWCRAFT ━━━━━━━━ -->
+    <article class="project fade-up" data-accent="cyan">
+
+      <div class="project-header">
+        <div class="project-meta">
+          <span class="badge featured-badge">★ Featured · Agentic AI</span>
+          <span class="badge badge-team" style="background:rgba(34,211,238,0.06); color:#67e8f9; border-color:rgba(34,211,238,0.2);">Solo build</span>
+          <span class="project-id">WORK_02</span>
+        </div>
+
+        <div class="project-title-row">
+          <div class="project-logo-wrap" style="background: transparent; padding: 0;">
+            <img src="./assets/flowcraft-logo.png" alt="FlowCraft logo" style="width:100%; height:100%; object-fit: contain; border-radius: 10px;">
+          </div>
+          <h2>FlowCraft</h2>
+        </div>
+
+        <p class="project-tagline">
+          Describe an app in plain English. A multi-agent AI pipeline builds it as a working Flutter app — with live preview.
+        </p>
+      </div>
+
+      <!-- Architecture diagram (custom SVG) -->
+      <div class="agent-diagram">
+        <div class="diagram-label">// Multi-agent pipeline</div>
+        <div class="diagram-svg-wrap">
+          <svg class="diagram-svg" viewBox="0 0 720 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FlowCraft multi-agent pipeline diagram">
+
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#22d3ee" opacity="0.6"/>
+              </marker>
+              <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#0e1a20"/>
+                <stop offset="100%" stop-color="#0a1418"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Connectors first (so nodes overlap them cleanly) -->
+            <!-- Clarifier → Design (left diagonal) -->
+            <path d="M 295 75 Q 220 110, 175 165" stroke="#22d3ee" stroke-width="1.2" stroke-opacity="0.55" fill="none" marker-end="url(#arrowhead)"/>
+            <!-- Clarifier → Structure (right diagonal) -->
+            <path d="M 425 75 Q 500 110, 545 165" stroke="#22d3ee" stroke-width="1.2" stroke-opacity="0.55" fill="none" marker-end="url(#arrowhead)"/>
+            <!-- Design → Merger -->
+            <path d="M 175 235 Q 220 275, 295 305" stroke="#22d3ee" stroke-width="1.2" stroke-opacity="0.55" fill="none" marker-end="url(#arrowhead)"/>
+            <!-- Structure → Merger -->
+            <path d="M 545 235 Q 500 275, 425 305" stroke="#22d3ee" stroke-width="1.2" stroke-opacity="0.55" fill="none" marker-end="url(#arrowhead)"/>
+            <!-- Merger → Code Generator -->
+            <line x1="360" y1="365" x2="360" y2="395" stroke="#22d3ee" stroke-width="1.2" stroke-opacity="0.55" marker-end="url(#arrowhead)"/>
+
+            <!-- Connector mini labels -->
+            <text x="190" y="140" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b7280" text-anchor="middle">how it looks</text>
+            <text x="530" y="140" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b7280" text-anchor="middle">what to build</text>
+            <text x="360" y="295" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b7280" text-anchor="middle">structure + design</text>
+            <text x="445" y="383" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b7280" text-anchor="start">blueprint → flutter</text>
+
+            <!-- Node 1: Clarifier (top center) -->
+            <g class="diagram-node" transform="translate(280, 30)">
+              <rect class="diagram-node-rect" width="160" height="50" rx="10" fill="url(#nodeGrad)" stroke="#22d3ee" stroke-width="1.3" stroke-opacity="0.7"/>
+              <text x="80" y="22" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#f5f5f7" text-anchor="middle">Clarifier</text>
+              <text x="80" y="38" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">what does the user want?</text>
+            </g>
+
+            <!-- Node 2: Design (mid-left) -->
+            <g class="diagram-node" transform="translate(95, 165)">
+              <rect class="diagram-node-rect" width="160" height="70" rx="10" fill="url(#nodeGrad)" stroke="#22d3ee" stroke-width="1.3" stroke-opacity="0.5"/>
+              <text x="80" y="28" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#f5f5f7" text-anchor="middle">Design Agent</text>
+              <text x="80" y="46" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">colors · spacing</text>
+              <text x="80" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">typography · theme</text>
+            </g>
+
+            <!-- Node 3: Structure (mid-right) -->
+            <g class="diagram-node" transform="translate(465, 165)">
+              <rect class="diagram-node-rect" width="160" height="70" rx="10" fill="url(#nodeGrad)" stroke="#22d3ee" stroke-width="1.3" stroke-opacity="0.5"/>
+              <text x="80" y="28" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#f5f5f7" text-anchor="middle">Structure Agent</text>
+              <text x="80" y="46" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">screens · widgets</text>
+              <text x="80" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">state · logic</text>
+            </g>
+
+            <!-- Node 4: Merger (mid-center) -->
+            <g class="diagram-node" transform="translate(280, 305)">
+              <rect class="diagram-node-rect" width="160" height="60" rx="10" fill="url(#nodeGrad)" stroke="#22d3ee" stroke-width="1.3" stroke-opacity="0.6"/>
+              <text x="80" y="26" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#f5f5f7" text-anchor="middle">Merger</text>
+              <text x="80" y="46" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">unified AppState JSON</text>
+            </g>
+
+            <!-- Node 5: Code Generator (bottom) -->
+            <g class="diagram-node" transform="translate(265, 395)">
+              <rect class="diagram-node-rect" width="190" height="50" rx="10" fill="url(#nodeGrad)" stroke="#22d3ee" stroke-width="1.5"/>
+              <text x="95" y="22" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#22d3ee" text-anchor="middle">Code Generator</text>
+              <text x="95" y="38" font-family="JetBrains Mono, monospace" font-size="9" fill="#67e8f9" text-anchor="middle">→ runnable flutter app</text>
+            </g>
+
+          </svg>
+        </div>
+      </div>
+
+      <!-- Dual showcase: IDE + chat -->
+      <div class="dual-showcase">
+        <div class="showcase-ide thumb" data-full="./assets/flowcraft-1-main.png">
+          <div class="showcase-ide-chrome">
+            <div class="desktop-dots"><span></span><span></span><span></span></div>
+            <div class="ide-tab active">FlowCraft</div>
+            <div class="ide-tab">Preview</div>
+          </div>
+          <div class="showcase-ide-screen">
+            <img src="./assets/flowcraft-1-main.png" alt="FlowCraft IDE — chat, generated Flutter code, live preview" loading="lazy">
+          </div>
+        </div>
+        <div class="showcase-chat thumb" data-full="./assets/flowcraft-2-chat.png">
+          <img src="./assets/flowcraft-2-chat.png" alt="FlowCraft chat interface — natural language to app" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Problem / Solution -->
+      <div class="project-body">
+        <div class="story-block">
+          <div class="story-label">Challenge</div>
+          <p class="story-text">
+            LLMs that generate code directly are <strong>fragile and break on every revision</strong>. A "make this button blue" request shouldn't require regenerating the whole app — but most AI codegen tools do exactly that.
+          </p>
+        </div>
+        <div class="story-block">
+          <div class="story-label solution">Solution</div>
+          <p class="story-text solution">
+            Designed agents to manipulate a <strong>structured AppState JSON instead of raw code</strong>, with specialized roles (Clarify · Design · Structure · Merge · Generate). Code is the output, not the medium — making revisions stable, diff-able, and inspectable.
+          </p>
+        </div>
+      </div>
+
+      <!-- Impact -->
+      <div class="impact-row">
+        <div class="impact"><span class="impact-num">1 week</span><span class="impact-label">Idea → architecture → live deploy</span></div>
+        <div class="impact"><span class="impact-num">5 agents</span><span class="impact-label">Specialized, single-responsibility</span></div>
+        <div class="impact"><span class="impact-num">JSON-first</span><span class="impact-label">Stable revisions, no full regen</span></div>
+      </div>
+
+      <!-- Tech + CTA -->
+      <div class="project-footer">
+        <div class="tech-stack">
+          <span class="tech-chip">Flutter</span>
+          <span class="tech-chip">Dart</span>
+          <span class="tech-chip">OpenAI API</span>
+          <span class="tech-chip">Multi-agent orchestration</span>
+          <span class="tech-chip">JSON Schema</span>
+          <span class="tech-chip">Cloudflare</span>
+          <span class="tech-chip">Zapp.run</span>
+        </div>
+        <a href="https://github.com/Poiurity/FlowCraft/tree/develop" target="_blank" rel="noopener" class="project-cta">
+          Source on GitHub
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- ━━━━━━━━ GPSTRACKER ━━━━━━━━ -->
+    <article class="project fade-up" data-accent="blue">
+
+      <div class="project-header">
+        <div class="project-meta">
+          <span class="badge badge-shipped">● Shipped</span>
+          <span class="badge badge-team">Team · Kernel360</span>
+          <span class="project-id">WORK_03</span>
+        </div>
+
+        <div class="project-title-row">
+          <div class="project-logo-wrap" style="background: #fff; padding: 4px;">
+            <img src="./assets/gps-logo.png" alt="GPSTracker logo" style="width:100%; height:100%; object-fit: contain;">
+          </div>
+          <h2>GPSTracker</h2>
+        </div>
+
+        <p class="project-tagline">
+          Fleet management dashboard. Track vehicles in real time, replay routes on a map, and manage the full vehicle lifecycle.
+        </p>
+      </div>
+
+      <!-- Hero: animated GIF in browser frame -->
+      <div class="desktop-frame">
+        <div class="desktop-chrome">
+          <div class="desktop-dots"><span></span><span></span><span></span></div>
+          <div class="desktop-url"><span class="lock">●</span> gpstracker.poiurity.com / fleet</div>
+        </div>
+        <div class="desktop-screen">
+          <img src="./assets/gps-6-demo.gif" alt="GPSTracker live demo - real-time vehicle tracking" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Thumbnail row of additional screens -->
+      <div class="thumb-row">
+        <div class="thumb" data-full="./assets/gps-2-route.png">
+          <img src="./assets/gps-2-route.png" alt="Route replay on map" loading="lazy">
+          <span class="thumb-label">Route replay</span>
+        </div>
+        <div class="thumb" data-full="./assets/gps-1-list.png">
+          <img src="./assets/gps-1-list.png" alt="Trip log table" loading="lazy">
+          <span class="thumb-label">Trip log</span>
+        </div>
+        <div class="thumb" data-full="./assets/gps-5-fleet.png">
+          <img src="./assets/gps-5-fleet.png" alt="Fleet management" loading="lazy">
+          <span class="thumb-label">Fleet CRUD</span>
+        </div>
+        <div class="thumb" data-full="./assets/gps-8-login.png">
+          <img src="./assets/gps-8-login.png" alt="Login page" loading="lazy">
+          <span class="thumb-label">Auth</span>
+        </div>
+      </div>
+
+      <!-- Problem / Solution -->
+      <div class="project-body">
+        <div class="story-block">
+          <div class="story-label">Challenge</div>
+          <p class="story-text">
+            A fleet operator dashboard needs <strong>live position updates, historical playback, and full CRUD</strong> on vehicles — and the frontend had to be developed in parallel with a backend that didn't exist yet.
+          </p>
+        </div>
+        <div class="story-block">
+          <div class="story-label solution">Solution</div>
+          <p class="story-text solution">
+            Built a <strong>mock-API-first frontend with MSW</strong> so development was fully decoupled from backend readiness. Zustand for global state, TanStack Query for server cache, Recharts + Kakao Map SDK for visualization. CI/CD with Docker + Jenkins.
+          </p>
+        </div>
+      </div>
+
+      <!-- Impact -->
+      <div class="impact-row">
+        <div class="impact"><span class="impact-num">5+</span><span class="impact-label">Major screens shipped</span></div>
+        <div class="impact"><span class="impact-num">0 blockers</span><span class="impact-label">Decoupled from backend via MSW</span></div>
+        <div class="impact"><span class="impact-num">CI/CD</span><span class="impact-label">Docker + Jenkins pipeline</span></div>
+      </div>
+
+      <!-- Tech + CTA -->
+      <div class="project-footer">
+        <div class="tech-stack">
+          <span class="tech-chip">React</span>
+          <span class="tech-chip">TypeScript</span>
+          <span class="tech-chip">Zustand</span>
+          <span class="tech-chip">TanStack Query</span>
+          <span class="tech-chip">MSW</span>
+          <span class="tech-chip">Recharts</span>
+          <span class="tech-chip">Kakao Map SDK</span>
+          <span class="tech-chip">Docker</span>
+          <span class="tech-chip">Jenkins</span>
+        </div>
+        <a href="https://github.com/Kernel360/KUNI_GPSTracker_FE" target="_blank" rel="noopener" class="project-cta">
+          Source on GitHub
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- ━━━━━━━━ LIVETRACK ━━━━━━━━ -->
+    <article class="project fade-up" data-accent="rose">
+
+      <div class="project-header">
+        <div class="project-meta">
+          <span class="badge badge-wip-active">Building · live this quarter</span>
+          <span class="badge badge-team" style="background:rgba(236,72,153,0.06); color:#f472b6; border-color:rgba(236,72,153,0.2);">Solo build</span>
+          <span class="project-id">WORK_04</span>
+        </div>
+
+        <div class="project-title-row">
+          <div class="project-logo-wrap" style="background: linear-gradient(135deg, #ec4899, #be185d); padding: 0; display:flex; align-items:center; justify-content:center;">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#fff"/>
+              <circle cx="12" cy="9" r="2.5" fill="#ec4899"/>
+            </svg>
+          </div>
+          <h2>LiveTrack</h2>
+        </div>
+
+        <p class="project-tagline">
+          Real-time group location sharing — with post-session analytics. Built for hikers, road-trippers, and field teams.
+        </p>
+      </div>
+
+      <!-- HERO: Architecture diagram -->
+      <div class="arch-diagram">
+        <div class="diagram-label">// System architecture</div>
+        <div class="arch-svg-wrap">
+          <svg class="arch-svg" viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LiveTrack system architecture">
+
+            <defs>
+              <marker id="arrow-rose" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#ec4899" opacity="0.7"/>
+              </marker>
+              <linearGradient id="archNode" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1a121a"/>
+                <stop offset="100%" stop-color="#100b10"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Connectors first -->
+            <!-- Clients to Server (bidirectional, dashed = WebSocket) -->
+            <path d="M 175 175 L 295 175" stroke="#ec4899" stroke-width="1.4" stroke-opacity="0.6" stroke-dasharray="5 4" fill="none"/>
+            <path d="M 295 175 L 175 175" stroke="#ec4899" stroke-width="1.4" stroke-opacity="0.6" stroke-dasharray="5 4" fill="none"/>
+            <text x="235" y="166" font-family="JetBrains Mono, monospace" font-size="9" fill="#f472b6" text-anchor="middle">ws://</text>
+            <text x="235" y="195" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b7280" text-anchor="middle">bidirectional</text>
+
+            <!-- Server to PostgreSQL (bidirectional) -->
+            <line x1="455" y1="175" x2="555" y2="175" stroke="#ec4899" stroke-width="1.4" stroke-opacity="0.6" marker-end="url(#arrow-rose)"/>
+            <text x="505" y="166" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">geo queries</text>
+
+            <!-- Firebase Auth into Server (top) -->
+            <line x1="375" y1="65" x2="375" y2="120" stroke="#ec4899" stroke-width="1.2" stroke-opacity="0.5" marker-end="url(#arrow-rose)"/>
+            <text x="385" y="95" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="start">verify token</text>
+
+            <!-- Hetzner deploy box surrounds server (dashed container) -->
+            <rect x="270" y="105" width="220" height="155" rx="8" fill="none" stroke="#6b7280" stroke-width="0.8" stroke-dasharray="4 4" opacity="0.45"/>
+            <text x="280" y="120" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="start">Hetzner VPS · Docker Compose</text>
+
+            <!-- Node 1: Mobile clients (left) -->
+            <g class="diagram-node" transform="translate(40, 130)">
+              <rect width="135" height="90" rx="10" fill="url(#archNode)" stroke="#ec4899" stroke-width="1.2" stroke-opacity="0.55"/>
+              <text x="67.5" y="26" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#f5f5f7" text-anchor="middle">Mobile clients</text>
+              <text x="67.5" y="46" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">React Native (Expo)</text>
+              <text x="67.5" y="60" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">react-native-maps</text>
+              <text x="67.5" y="74" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">Zustand · Victory Native</text>
+            </g>
+
+            <!-- Node 2: Firebase Auth (top center) -->
+            <g class="diagram-node" transform="translate(290, 25)">
+              <rect width="170" height="44" rx="8" fill="url(#archNode)" stroke="#ec4899" stroke-width="1" stroke-opacity="0.45"/>
+              <text x="85" y="20" font-family="Outfit, sans-serif" font-size="12" font-weight="500" fill="#f5f5f7" text-anchor="middle">Firebase Auth</text>
+              <text x="85" y="34" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">JWT identity provider</text>
+            </g>
+
+            <!-- Node 3: WebSocket server (center) -->
+            <g class="diagram-node" transform="translate(295, 130)">
+              <rect width="160" height="90" rx="10" fill="url(#archNode)" stroke="#ec4899" stroke-width="1.5"/>
+              <text x="80" y="26" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#f472b6" text-anchor="middle">WebSocket hub</text>
+              <text x="80" y="46" font-family="JetBrains Mono, monospace" font-size="9" fill="#f472b6" text-anchor="middle">Node.js + Fastify</text>
+              <text x="80" y="60" font-family="JetBrains Mono, monospace" font-size="9" fill="#f472b6" text-anchor="middle">ws library</text>
+              <text x="80" y="74" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">room broadcast</text>
+            </g>
+
+            <!-- Node 4: PostgreSQL/PostGIS (right) -->
+            <g class="diagram-node" transform="translate(555, 130)">
+              <rect width="135" height="90" rx="10" fill="url(#archNode)" stroke="#ec4899" stroke-width="1.2" stroke-opacity="0.55"/>
+              <text x="67.5" y="26" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#f5f5f7" text-anchor="middle">Database</text>
+              <text x="67.5" y="46" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">PostgreSQL + PostGIS</text>
+              <text x="67.5" y="60" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">on Neon (serverless)</text>
+              <text x="67.5" y="74" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">geospatial indices</text>
+            </g>
+
+            <!-- Bottom data flow indicators -->
+            <g transform="translate(50, 290)">
+              <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b7280">live phase</text>
+              <text x="0" y="32" font-family="Outfit, sans-serif" font-size="12" fill="#9ca3af">in-memory broadcast · sub-second latency</text>
+            </g>
+            <g transform="translate(380, 290)">
+              <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b7280">post-session</text>
+              <text x="0" y="32" font-family="Outfit, sans-serif" font-size="12" fill="#9ca3af">heatmap · route replay · stats</text>
+            </g>
+
+            <!-- Divider line above bottom labels -->
+            <line x1="40" y1="270" x2="680" y2="270" stroke="#ec4899" stroke-width="0.5" stroke-opacity="0.15"/>
+
+          </svg>
+        </div>
+      </div>
+
+      <!-- SECONDARY: WebSocket message protocol sequence -->
+      <div class="seq-diagram">
+        <div class="diagram-label">// WebSocket message protocol</div>
+        <div class="seq-svg-wrap">
+          <svg class="seq-svg" viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LiveTrack WebSocket message protocol sequence">
+
+            <defs>
+              <marker id="arrow-seq" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#ec4899" opacity="0.75"/>
+              </marker>
+              <marker id="arrow-seq-broadcast" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#f472b6" opacity="0.7"/>
+              </marker>
+            </defs>
+
+            <!-- Lifelines (vertical dashed) -->
+            <line x1="120" y1="50" x2="120" y2="345" stroke="#374151" stroke-width="0.8" stroke-dasharray="3 4"/>
+            <line x1="360" y1="50" x2="360" y2="345" stroke="#374151" stroke-width="0.8" stroke-dasharray="3 4"/>
+            <line x1="600" y1="50" x2="600" y2="345" stroke="#374151" stroke-width="0.8" stroke-dasharray="3 4"/>
+
+            <!-- Lifeline headers (rounded rects) -->
+            <g transform="translate(70, 20)">
+              <rect width="100" height="34" rx="8" fill="#1a121a" stroke="#ec4899" stroke-width="1" stroke-opacity="0.5"/>
+              <text x="50" y="22" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#f5f5f7" text-anchor="middle">User A</text>
+            </g>
+            <g transform="translate(310, 20)">
+              <rect width="100" height="34" rx="8" fill="#1a121a" stroke="#ec4899" stroke-width="1.4"/>
+              <text x="50" y="22" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#f472b6" text-anchor="middle">Server</text>
+            </g>
+            <g transform="translate(550, 20)">
+              <rect width="100" height="34" rx="8" fill="#1a121a" stroke="#ec4899" stroke-width="1" stroke-opacity="0.5"/>
+              <text x="50" y="22" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#f5f5f7" text-anchor="middle">User B</text>
+            </g>
+
+            <!-- Step 1: User A connects + handshake -->
+            <line x1="120" y1="80" x2="358" y2="80" stroke="#ec4899" stroke-width="1.2" stroke-opacity="0.7" marker-end="url(#arrow-seq)"/>
+            <text x="240" y="73" font-family="JetBrains Mono, monospace" font-size="10" fill="#f472b6" text-anchor="middle">connect + auth(jwt)</text>
+
+            <!-- Step 2: Server acks -->
+            <line x1="360" y1="110" x2="122" y2="110" stroke="#ec4899" stroke-width="1.2" stroke-opacity="0.5" marker-end="url(#arrow-seq)"/>
+            <text x="240" y="103" font-family="JetBrains Mono, monospace" font-size="10" fill="#9ca3af" text-anchor="middle">connection_ack</text>
+
+            <!-- Step 3: User A joins room -->
+            <line x1="120" y1="145" x2="358" y2="145" stroke="#ec4899" stroke-width="1.2" stroke-opacity="0.7" marker-end="url(#arrow-seq)"/>
+            <text x="240" y="138" font-family="JetBrains Mono, monospace" font-size="10" fill="#f472b6" text-anchor="middle">join_room { roomId }</text>
+
+            <!-- Step 4: Server broadcasts room_state to both -->
+            <line x1="360" y1="180" x2="122" y2="180" stroke="#f472b6" stroke-width="1.2" stroke-opacity="0.5" marker-end="url(#arrow-seq-broadcast)"/>
+            <line x1="360" y1="180" x2="598" y2="180" stroke="#f472b6" stroke-width="1.2" stroke-opacity="0.5" marker-end="url(#arrow-seq-broadcast)"/>
+            <text x="478" y="173" font-family="JetBrains Mono, monospace" font-size="10" fill="#9ca3af" text-anchor="middle">room_state (members)</text>
+
+            <!-- Step 5: User A sends location -->
+            <line x1="120" y1="225" x2="358" y2="225" stroke="#ec4899" stroke-width="1.4" marker-end="url(#arrow-seq)"/>
+            <text x="240" y="218" font-family="JetBrains Mono, monospace" font-size="10" fill="#f472b6" text-anchor="middle">location_update {lat, lng, t}</text>
+
+            <!-- Step 6: Server fan-outs to room (User B only) -->
+            <line x1="360" y1="255" x2="598" y2="255" stroke="#f472b6" stroke-width="1.4" marker-end="url(#arrow-seq-broadcast)"/>
+            <text x="478" y="248" font-family="JetBrains Mono, monospace" font-size="10" fill="#9ca3af" text-anchor="middle">location_broadcast →</text>
+
+            <!-- Step 7: Server async-persists -->
+            <rect x="335" y="280" width="50" height="22" rx="4" fill="rgba(236,72,153,0.08)" stroke="#ec4899" stroke-width="0.6" stroke-opacity="0.5"/>
+            <text x="360" y="295" font-family="JetBrains Mono, monospace" font-size="9" fill="#9ca3af" text-anchor="middle">persist</text>
+            <text x="395" y="295" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b7280" text-anchor="start">→ PostGIS (async, batched)</text>
+
+            <!-- Bottom note -->
+            <text x="360" y="335" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b7280" text-anchor="middle">all messages JSON-enveloped: { type, payload, t }</text>
+
+          </svg>
+        </div>
+      </div>
+
+      <!-- Problem / Solution -->
+      <div class="project-body">
+        <div class="story-block">
+          <div class="story-label">Challenge</div>
+          <p class="story-text">
+            Most "share location" apps either show <strong>stale dots updated every minute</strong>, or rely on managed real-time services that hide what's actually happening on the wire.
+          </p>
+        </div>
+        <div class="story-block">
+          <div class="story-label solution">Solution</div>
+          <p class="story-text solution">
+            Building a <strong>custom WebSocket server with explicit message protocol</strong>, in-memory room state for sub-second broadcast, and async batch persistence to PostGIS. Designed to learn the systems, not abstract them away.
+          </p>
+        </div>
+      </div>
+
+      <!-- Impact -->
+      <div class="impact-row">
+        <div class="impact"><span class="impact-num">Sub-sec</span><span class="impact-label">Live broadcast latency target</span></div>
+        <div class="impact"><span class="impact-num">Full stack</span><span class="impact-label">Owned: protocol → DB → mobile</span></div>
+        <div class="impact"><span class="impact-num">PostGIS</span><span class="impact-label">Geospatial replay + heatmap</span></div>
+      </div>
+
+      <!-- Tech + CTA -->
+      <div class="project-footer">
+        <div class="tech-stack">
+          <span class="tech-chip">React Native</span>
+          <span class="tech-chip">Expo</span>
+          <span class="tech-chip">Node.js</span>
+          <span class="tech-chip">Fastify</span>
+          <span class="tech-chip">ws</span>
+          <span class="tech-chip">PostgreSQL</span>
+          <span class="tech-chip">PostGIS</span>
+          <span class="tech-chip">Neon</span>
+          <span class="tech-chip">Firebase Auth</span>
+          <span class="tech-chip">Hetzner</span>
+          <span class="tech-chip">Docker</span>
+        </div>
+        <a href="#" class="project-cta">
+          Build log (soon)
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </article>
+    <!-- ━━━━━━━━ PETAGE AI ━━━━━━━━ -->
+    <article class="project fade-up" data-accent="coral">
+
+      <div class="project-header">
+        <div class="project-meta">
+          <span class="badge badge-shipped">● Live · petageai.com</span>
+          <span class="badge badge-team" style="background:rgba(167,139,250,0.1); color:#a78bfa; border-color:rgba(167,139,250,0.25);">Project lead</span>
+          <span class="project-id">WORK_05</span>
+        </div>
+
+        <div class="project-title-row">
+          <div class="project-logo-wrap" style="background: transparent; padding: 0;">
+            <img src="./assets/petage-logo.svg" alt="PetAge AI logo" style="width:100%; height:100%; border-radius:10px;">
+          </div>
+          <h2>PetAge AI</h2>
+        </div>
+
+        <p class="project-tagline">
+          Upload a pet photo. Get its estimated age in human years — powered by a custom-trained vision model.
+        </p>
+      </div>
+
+      <!-- Showcase: brand-true hero -->
+      <div class="showcase">
+        <div class="showcase-grid">
+          <div class="showcase-text">
+            <div class="showcase-eyebrow">Live at petageai.com</div>
+            <h3 class="showcase-headline">Your pet has a secret age.</h3>
+            <p class="showcase-subline">Trained EfficientNet-B0, served via FastAPI, deployed in days — not weeks.</p>
+          </div>
+          <div class="showcase-screenshot">
+            <img src="./assets/petage-1-result.png" alt="PetAge AI result screen — 34 years old in human years" loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondary screens -->
+      <div class="secondary-screens">
+        <div class="secondary-screen thumb" data-full="./assets/petage-2-landing.png">
+          <img src="./assets/petage-2-landing.png" alt="PetAge AI landing page with photo upload" loading="lazy">
+          <span class="thumb-label">Landing</span>
+        </div>
+        <div class="secondary-screen thumb" data-full="./assets/petage-3-modal.png">
+          <img src="./assets/petage-3-modal.png" alt="PetAge AI onboarding modal explaining the service" loading="lazy">
+          <span class="thumb-label">Onboarding</span>
+        </div>
+      </div>
+
+      <!-- Problem / Solution -->
+      <div class="project-body">
+        <div class="story-block">
+          <div class="story-label">Challenge</div>
+          <p class="story-text">
+            Build a <strong>full ML pipeline</strong> — train a model, serve inference, wire up a frontend, and deploy publicly — as a student team without ML infrastructure budget.
+          </p>
+        </div>
+        <div class="story-block">
+          <div class="story-label solution">Solution</div>
+          <p class="story-text solution">
+            Trained <strong>EfficientNet-B0 in PyTorch</strong>, exported to ONNX for fast CPU inference. Wrapped with FastAPI, paired with a Flutter client and Supabase + Cloudflare R2 for storage. Led the team end-to-end.
+          </p>
+        </div>
+      </div>
+
+      <!-- Impact -->
+      <div class="impact-row">
+        <div class="impact"><span class="impact-num">Live</span><span class="impact-label">Public site at petageai.com</span></div>
+        <div class="impact"><span class="impact-num">Custom model</span><span class="impact-label">Trained, exported, deployed</span></div>
+        <div class="impact"><span class="impact-num">Team lead</span><span class="impact-label">Planning + technical direction</span></div>
+      </div>
+
+      <!-- Tech + CTA -->
+      <div class="project-footer">
+        <div class="tech-stack">
+          <span class="tech-chip">Flutter</span>
+          <span class="tech-chip">FastAPI</span>
+          <span class="tech-chip">PyTorch</span>
+          <span class="tech-chip">ONNX</span>
+          <span class="tech-chip">EfficientNet-B0</span>
+          <span class="tech-chip">Supabase</span>
+          <span class="tech-chip">Cloudflare R2</span>
+        </div>
+        <a href="https://petageai.com" target="_blank" rel="noopener" class="project-cta">
+          Visit live site
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </article>
+    <!-- ━━━━━━━━ CONEVER ━━━━━━━━ -->
+    <article class="project fade-up" data-accent="violet">
+
+      <div class="project-header">
+        <div class="project-meta">
+          <span class="badge badge-shipped">● Shipped</span>
+          <span class="badge badge-team">Team · Alpha Project</span>
+          <span class="project-id">WORK_06</span>
+        </div>
+
+        <div class="project-title-row">
+          <div class="project-logo-wrap" style="background: #fff; padding: 6px;">
+            <img src="./assets/conever-logo.svg" alt="Conever logo" style="width:100%; height:100%; object-fit: contain;">
+          </div>
+          <h2>Conever</h2>
+        </div>
+
+        <p class="project-tagline">
+          Plan trips with AI — together with your travel companions, in real time.
+        </p>
+      </div>
+
+      <!-- USER JOURNEY FLOW -->
+      <div class="journey-flow">
+
+        <div class="journey-step">
+          <div class="journey-step-header">
+            <span class="journey-step-num">01</span>
+            <span class="journey-step-name">Plan</span>
+          </div>
+          <div class="journey-phone">
+            <img src="./assets/conever-1-home.png" alt="Conever home — upcoming trips with countdown" loading="lazy">
+          </div>
+          <div class="journey-step-caption">D-day countdown for upcoming trips</div>
+        </div>
+
+        <div class="journey-step">
+          <div class="journey-step-header">
+            <span class="journey-step-num">02</span>
+            <span class="journey-step-name">Discover</span>
+          </div>
+          <div class="journey-phone">
+            <img src="./assets/conever-3-recommend.png" alt="Conever AI route recommendation by location" loading="lazy">
+          </div>
+          <div class="journey-step-caption">Gemini-powered route suggestions</div>
+        </div>
+
+        <div class="journey-step">
+          <div class="journey-step-header">
+            <span class="journey-step-num">03</span>
+            <span class="journey-step-name">Locate</span>
+          </div>
+          <div class="journey-phone">
+            <img src="./assets/conever-4-map.png" alt="Conever Naver Maps integration to add places" loading="lazy">
+          </div>
+          <div class="journey-step-caption">Native maps integration via Naver SDK</div>
+        </div>
+
+        <div class="journey-step">
+          <div class="journey-step-header">
+            <span class="journey-step-num">04</span>
+            <span class="journey-step-name">Collaborate</span>
+          </div>
+          <div class="journey-phone">
+            <img src="./assets/conever-5-detail.png" alt="Conever shared trip plan with travel companions" loading="lazy">
+          </div>
+          <div class="journey-step-caption">Real-time sync via WebSocket</div>
+        </div>
+
+      </div>
+
+      <!-- Problem / Solution -->
+      <div class="project-body">
+        <div class="story-block">
+          <div class="story-label">Challenge</div>
+          <p class="story-text">
+            Group trip planning today means jumping between <strong>maps, messengers, and recommendation sites</strong> — context gets lost and friends fall out of sync.
+          </p>
+        </div>
+        <div class="story-block">
+          <div class="story-label solution">Solution</div>
+          <p class="story-text solution">
+            Built one app that integrates <strong>Gemini for AI route generation, Naver Maps for native location search, and WebSocket for real-time multi-user sync</strong> — wrapped in GetX MVVM with a resilient async API layer.
+          </p>
+        </div>
+      </div>
+
+      <!-- Impact -->
+      <div class="impact-row">
+        <div class="impact"><span class="impact-num">4 systems</span><span class="impact-label">AI, Maps, Auth, real-time sync</span></div>
+        <div class="impact"><span class="impact-num">Multi-user</span><span class="impact-label">Live trip collaboration via WebSocket</span></div>
+        <div class="impact"><span class="impact-num">Resilient</span><span class="impact-label">Retry + error layer on every API</span></div>
+      </div>
+
+      <!-- Tech + CTA -->
+      <div class="project-footer">
+        <div class="tech-stack">
+          <span class="tech-chip">Flutter</span>
+          <span class="tech-chip">Dart</span>
+          <span class="tech-chip">Gemini API</span>
+          <span class="tech-chip">Naver Map SDK</span>
+          <span class="tech-chip">Kakao OAuth</span>
+          <span class="tech-chip">WebSocket</span>
+          <span class="tech-chip">GetX MVVM</span>
+        </div>
+        <a href="https://github.com/orgs/2025AlphaProject/repositories" target="_blank" rel="noopener" class="project-cta">
+          Source on GitHub
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- ━━━━━━━━ DANZAM ━━━━━━━━ -->
+    <article class="project fade-up" data-accent="amber">
+
+      <div class="project-header">
+        <div class="project-meta">
+          <span class="badge badge-shipped">● Shipped</span>
+          <span class="badge badge-team" style="background:rgba(251,191,36,0.1); color:#fbbf24; border-color:rgba(251,191,36,0.3);">Hackathon · 5-person team</span>
+          <span class="project-id">WORK_07</span>
+        </div>
+
+        <div class="project-title-row">
+          <div class="project-logo-wrap" style="background: #1a1410; padding: 4px;">
+            <img src="./assets/danzam-logo.png" alt="Danzam logo" style="width:100%; height:100%; object-fit: contain;">
+          </div>
+          <h2>Danzam</h2>
+        </div>
+
+        <p class="project-tagline">
+          Caffeine in, sleep out. Track your intake and predict the perfect time to fall asleep — based on your body chemistry.
+        </p>
+      </div>
+
+      <!-- Award + compact phone row -->
+      <div class="award-hero">
+        <div class="award-hero-top">
+          <div class="award-trophy">🏆</div>
+          <div class="award-text">
+            <span class="award-name">Excellence Award</span>
+            <span class="award-detail">COKOTHON 4th — cross-university hackathon</span>
+          </div>
+        </div>
+
+        <div class="compact-phones">
+          <div class="compact-phone thumb" data-full="./assets/danzam-3-dashboard.png">
+            <img src="./assets/danzam-3-dashboard.png" alt="Danzam main dashboard - caffeine remaining 78.6%" loading="lazy">
+            <span class="thumb-label">Dashboard</span>
+          </div>
+          <div class="compact-phone thumb" data-full="./assets/danzam-2-profile.png">
+            <img src="./assets/danzam-2-profile.png" alt="Danzam personalization - body profile input" loading="lazy">
+            <span class="thumb-label">Profile</span>
+          </div>
+          <div class="compact-phone thumb" data-full="./assets/danzam-5-stats.png">
+            <img src="./assets/danzam-5-stats.png" alt="Danzam weekly caffeine statistics" loading="lazy">
+            <span class="thumb-label">Stats</span>
+          </div>
+          <div class="compact-phone thumb" data-full="./assets/danzam-7-sleep-summary.png">
+            <img src="./assets/danzam-7-sleep-summary.png" alt="Danzam sleep summary with quality rating" loading="lazy">
+            <span class="thumb-label">Sleep</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Problem / Solution (compact) -->
+      <div class="project-body">
+        <div class="story-block">
+          <div class="story-label">Challenge</div>
+          <p class="story-text">
+            Generic caffeine trackers ignore that <strong>everyone metabolizes caffeine differently</strong> — by weight, age, sex, smoking status, medication.
+          </p>
+        </div>
+        <div class="story-block">
+          <div class="story-label solution">Solution</div>
+          <p class="story-text solution">
+            Modeled <strong>caffeine half-life decay personalized to body profile</strong>, then projected the curve forward to estimate the optimal sleep window. Built end-to-end in 36-hour hackathon sprint.
+          </p>
+        </div>
+      </div>
+
+      <!-- Impact -->
+      <div class="impact-row">
+        <div class="impact"><span class="impact-num">🏆 1st cohort</span><span class="impact-label">Excellence Award winner</span></div>
+        <div class="impact"><span class="impact-num">36 hrs</span><span class="impact-label">Concept to working app</span></div>
+        <div class="impact"><span class="impact-num">5-person</span><span class="impact-label">Cross-university team</span></div>
+      </div>
+
+      <!-- Tech + CTA -->
+      <div class="project-footer">
+        <div class="tech-stack">
+          <span class="tech-chip">Flutter</span>
+          <span class="tech-chip">Dart</span>
+          <span class="tech-chip">Pharmacokinetic model</span>
+        </div>
+        <a href="https://github.com/4TH-cocothon-team2/danzam-flutter" target="_blank" rel="noopener" class="project-cta">
+          Source on GitHub
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </article>
+
   </section>
 
-  <!-- PROJECTS -->
-  <section>
-    <div class="section-label">Projects</div>
-
-    <div class="project featured fade-in">
-      <div class="project-badge">Featured — Active Development</div>
-      <h3>FlowCraft</h3>
-      <div class="subtitle">No-Code Flutter App Builder powered by Agentic AI</div>
-      <p>A platform that lets anyone create and run Flutter apps from a single English sentence. I designed a 6-agent AI pipeline (Orchestrator, Planning, UI, Logic, Diff, Stability) that manipulates structured AppState JSON instead of raw code — solving the reliability problem in AI code generation. Zero to live product in one week.</p>
-      <div class="tech-stack">
-        <span>Flutter</span>
-        <span>Dart</span>
-        <span>OpenAI API</span>
-        <span>Multi-Agent</span>
-        <span>Cloudflare</span>
-        <span>Zapp.run</span>
-      </div>
-      <a href="https://github.com/Poiurity/FlowCraft/tree/develop" target="_blank" rel="noopener" class="project-link">
-        View on GitHub <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-      </a>
-    </div>
-
-    <div class="project fade-in">
-      <h3>PetAge AI</h3>
-      <div class="subtitle">AI Pet Age Estimation App — Project Lead</div>
-      <p>Led a team to build an app that estimates pet age from a single photo. Full pipeline from model training to deployment: EfficientNet-B0 (PyTorch → ONNX) served via FastAPI, with Supabase + Cloudflare R2 for storage and a Flutter frontend.</p>
-      <div class="tech-stack">
-        <span>Flutter</span>
-        <span>FastAPI</span>
-        <span>PyTorch</span>
-        <span>ONNX</span>
-        <span>Supabase</span>
-        <span>Cloudflare R2</span>
-      </div>
-      <a href="https://petageai.com/" target="_blank" rel="noopener" class="project-link">
-        View on WebSite <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-      </a>
-    </div>
-
-    <div class="project fade-in">
-      <h3>Conever</h3>
-      <div class="subtitle">AI-Powered Travel Recommendation Platform</div>
-      <p>Flutter app with Gemini-based AI travel recommendations, Kakao OAuth2 authentication, Naver Map SDK route previews, and async API layers with retry and error handling. Built with GetX MVVM architecture.</p>
-      <div class="tech-stack">
-        <span>Flutter</span>
-        <span>Gemini API</span>
-        <span>Naver Maps</span>
-        <span>Kakao SDK</span>
-        <span>WebSocket</span>
-      </div>
-      <a href="https://github.com/orgs/2025AlphaProject/repositories" target="_blank" rel="noopener" class="project-link">
-        View on GitHub <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-      </a>
-    </div>
-
-    <div class="project fade-in">
-      <h3>GPSTracker</h3>
-      <div class="subtitle">Vehicle Driving Data Dashboard</div>
-      <p>React + TypeScript dashboard for visualizing vehicle driving data. Zustand state management, TanStack Query caching, MSW mock APIs for independent frontend development, and Recharts for data visualization.</p>
-      <div class="tech-stack">
-        <span>React</span>
-        <span>TypeScript</span>
-        <span>Zustand</span>
-        <span>TanStack Query</span>
-        <span>Docker</span>
-        <span>Jenkins</span>
-      </div>
-      <a href="https://github.com/Kernel360/KUNI_GPSTracker_FE" target="_blank" rel="noopener" class="project-link">
-        View on GitHub <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-      </a>
-    </div>
-
-    <div class="project fade-in">
-      <h3>Danzam</h3>
-      <div class="subtitle">Caffeine Rhythm Analyzer — COKOTHON Hackathon, Excellence Award</div>
-      <p>Flutter app that tracks caffeine intake and predicts optimal sleep timing based on user biometrics. Interactive half-life decay visualization with weekly and monthly stats. 5-person cross-university team.</p>
-      <div class="tech-stack">
-        <span>Flutter</span>
-        <span>Dart</span>
-      </div>
-      <a href="https://github.com/4TH-cocothon-team2/danzam-flutter" target="_blank" rel="noopener" class="project-link">
-        View on GitHub <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-      </a>
-    </div>
-
-  </section>
-
-  <!-- SKILLS -->
-  <section>
-    <div class="section-label">Technical Skills</div>
-    <div class="skills-grid fade-in">
-      <div class="skill-group">
-        <h4>Languages</h4>
-        <p>Dart, TypeScript, JavaScript, Python, HTML/CSS</p>
-      </div>
-      <div class="skill-group">
-        <h4>Frameworks</h4>
-        <p>Flutter, React, Next.js, FastAPI, Node.js</p>
-      </div>
-      <div class="skill-group">
-        <h4>AI / ML</h4>
-        <p>OpenAI API, Gemini, EfficientNet-B0, Multi-Agent Architecture</p>
-      </div>
-      <div class="skill-group">
-        <h4>Infrastructure</h4>
-        <p>Docker, Jenkins, Cloudflare, Supabase, Vercel, PostgreSQL</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- EXPERIENCE -->
-  <section>
-    <div class="section-label">Experience</div>
-
-    <div class="exp-item fade-in">
-      <h4>Global PBL Program</h4>
-      <div class="meta">Full-Stack Developer & Startup Builder · Irvine, CA · 2025–Present</div>
-      <p>6-month intensive in full-stack development, applied AI, and startup building. Working daily in English with native-speaking peers and mentors.</p>
-    </div>
-
-    <div class="exp-item fade-in">
-      <h4>Kernal360 University Camp</h4>
-      <div class="meta">Full-Stack Developer Program · Jul–Aug 2025</div>
-    </div>
-
-    <div class="exp-item fade-in">
-      <h4>Kookmin University Alpha Project</h4>
-      <div class="meta">Frontend Developer — Innovation Program · May–Sep 2025</div>
-    </div>
-
-  </section>
-
-  <!-- FOOTER -->
   <footer>
-    <p>
-      <a href="mailto:iamlyg9667@gmail.com">iamlyg9667@gmail.com</a>
-      &nbsp;&middot;&nbsp;
-      <a href="https://github.com/Poiurity" target="_blank" rel="noopener">GitHub</a>
-      &nbsp;&middot;&nbsp;
-      <a href="https://www.linkedin.com/in/yeonguk-lee-9bbb02390" target="_blank" rel="noopener">LinkedIn</a>
-    </p>
-    <p style="margin-top: 12px; color: var(--text-dim);">&copy; 2026 Yeonguk Lee</p>
+    <div class="footer-content">
+      <div>© 2026 Yeonguk Lee · Built in Irvine</div>
+      <div style="display:flex; gap:18px;">
+        <a href="https://github.com/Poiurity" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/yeonguk-lee-9bbb02390" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:iamlyg9667@gmail.com">Email</a>
+      </div>
+    </div>
   </footer>
 
 </div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  // Nav shadow on scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }, { passive: true });
+
+  // Fade-up on intersection
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  // Lightbox for thumbnails
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  document.querySelectorAll('.thumb').forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      lightboxImg.src = thumb.dataset.full;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  lightbox.addEventListener('click', () => {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+</script>
 
 </body>
 </html>
