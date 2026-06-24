@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# Private career data (sensitive: contact, positioning strategy)
+docs/
