@@ -7,36 +7,29 @@
 <meta name="description" content="Software engineer with backend and systems fundamentals (caching, concurrency, WebSocket, self-hosted infrastructure) who builds fast with AI and multi-agent engineering. Backend owner of CLIR, live on the App Store.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap" rel="stylesheet">
 <script>
-  // Set theme before first paint to avoid a flash
-  (function () {
-    try {
-      var t = localStorage.getItem('theme');
-      if (t !== 'light' && t !== 'dark') {
-        t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
-      document.documentElement.setAttribute('data-theme', t);
-    } catch (e) {}
-  })();
+  // Editorial paper aesthetic is light-only
+  document.documentElement.setAttribute('data-theme', 'light');
 </script>
 <style>
   :root {
-    /* ── LIGHT THEME (default) ── */
-    --bg: #ffffff;
-    --bg-section: #f6f6f7;
-    --bg-card: #ffffff;
-    --bg-card-hover: #fafafa;
-    --text: #15161a;
-    --text-muted: #4b5563;
-    --text-dim: #6b7280;
-    --text-faint: #9ca3af;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --border: #e6e7eb;
-    --border-hover: #d0d2d8;
+    /* ── EDITORIAL / SWISS: warm paper + ink + Swiss red ── */
+    --bg: #f4f1ea;            /* warm paper */
+    --bg-section: #ede9df;    /* slightly deeper paper */
+    --bg-card: #f8f6f0;       /* lifted paper */
+    --bg-card-hover: #fbf9f4;
+    --text: #1a1714;          /* warm ink */
+    --text-muted: #57514a;
+    --text-dim: #76705f;
+    --text-faint: #a59c8b;
+    --accent: #e5341e;        /* Swiss red (used sparingly) */
+    --accent-hover: #c42a16;
+    --border: #ddd6c7;        /* warm hairline */
+    --border-hover: #c8bfab;
     --mono: 'JetBrains Mono', monospace;
-    --sans: 'Outfit', sans-serif;
+    --sans: 'Switzer', 'Helvetica Neue', Arial, sans-serif;
     --serif: 'Fraunces', Georgia, serif;
 
     /* project accents (shared) */
@@ -45,24 +38,24 @@
     --clir-cream: #f5f5dc;
 
     /* theme-conditional surfaces */
-    --grain-opacity: 0.35;
-    --nav-bg: rgba(255, 255, 255, 0.78);
-    --logo-bg: #f2f2f4;
+    --grain-opacity: 0.5;
+    --nav-bg: rgba(244, 241, 234, 0.85);
+    --logo-bg: #ede9df;
     --logo-border: var(--border);
-    --primary-btn-text: #ffffff;
+    --primary-btn-text: #f4f1ea;
     --footer-bg: var(--bg-section);
-    --frame-bg: #f0f0f2;
-    --chrome-bg: #f0f0f2;
-    --frame-shadow: 0 18px 40px rgba(0,0,0,0.10);
+    --frame-bg: #e7e2d6;
+    --chrome-bg: #e7e2d6;
+    --frame-shadow: 0 18px 44px rgba(40, 30, 20, 0.13);
 
-    /* per-accent ink: legible on light surfaces */
-    --ink-green: #047857;
-    --ink-blue: #1d4ed8;
-    --ink-violet: #6d28d9;
-    --ink-amber: #b45309;
-    --ink-cyan: #0e7490;
-    --ink-coral: #c2410c;
-    --ink-rose: #be185d;
+    /* Swiss discipline: per-accent inks collapse to ink */
+    --ink-green: var(--text);
+    --ink-blue: var(--text);
+    --ink-violet: var(--text);
+    --ink-amber: var(--text);
+    --ink-cyan: var(--text);
+    --ink-coral: var(--text);
+    --ink-rose: var(--text);
   }
 
   :root[data-theme="dark"] {
@@ -1550,6 +1543,104 @@
   :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
   :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
+  /* ════════════════════════════════════════════════════════════
+     EDITORIAL / SWISS OVERRIDES
+     warm paper · Fraunces display · Switzer grotesque · Swiss red
+     ════════════════════════════════════════════════════════════ */
+
+  /* Masthead */
+  nav.scrolled { box-shadow: none; border-bottom-color: var(--border); }
+  .nav-logo {
+    font-family: var(--sans);
+    font-weight: 600; font-size: 15px;
+    letter-spacing: -0.01em; text-transform: none;
+  }
+  .nav-logo .dot { color: var(--accent); }
+  .nav-links { gap: 22px; }
+  .nav-meta {
+    font-family: var(--sans); font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim);
+  }
+  .nav-contact {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--text-muted); text-decoration: none;
+  }
+  .nav-contact:hover { color: var(--accent); }
+  @media (max-width: 640px) { .nav-meta { display: none; } }
+
+  /* Square off the rounded "app UI" look */
+  .project, .about-facts, .quick-stats { border-radius: 2px; }
+  .link-btn, .tech-chip, .badge, .badge-shipped, .badge-team, .badge-wip,
+  .badge-wip-active, .featured-badge, .hero-kicker, .stat { border-radius: 0 !important; }
+  .project-logo-wrap { border-radius: 2px !important; }
+
+  /* Display typography: Fraunces leads */
+  h1 { font-weight: 600; letter-spacing: -0.025em; line-height: 1.0; }
+  .hero h1 .name {
+    font-family: var(--sans); font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  @media (min-width: 1024px) {
+    .hero h1 { font-size: clamp(30px, 3vw, 40px); }
+    .hero h1 .name { font-size: 0.42em; }
+  }
+  .project-title-row h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.02em; }
+  .hero-sub { font-family: var(--sans); font-weight: 400; }
+
+  /* Editorial section headers: red index + grotesque caps + rule */
+  .section-header { align-items: flex-end; border-bottom: 1.5px solid var(--text); padding-bottom: 12px; }
+  .section-title {
+    font-family: var(--sans); font-weight: 600; font-size: 13px;
+    letter-spacing: 0.16em; color: var(--text);
+  }
+  .section-title .idx { color: var(--accent); margin-right: 12px; }
+  .section-count {
+    font-family: var(--sans); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
+  }
+
+  /* Labels as editorial type, not pills */
+  .hero-kicker {
+    border: none; padding: 0; font-family: var(--sans);
+    font-weight: 500; letter-spacing: 0.16em; color: var(--text-dim); margin-bottom: 26px;
+  }
+  .hero-kicker::before { width: 7px; height: 7px; background: var(--accent); box-shadow: none; animation: none; }
+  .rail-nav a { font-family: var(--sans); }
+  .rail-nav a:hover, .rail-nav a.active { color: var(--accent); }
+  .rail-nav a:hover::before, .rail-nav a.active::before { background: var(--accent); }
+
+  /* Badges & chips: hairline, ink, caps */
+  .badge, .badge-shipped, .badge-team, .badge-wip, .featured-badge {
+    background: transparent !important; border: 1px solid var(--border) !important;
+    color: var(--text-muted) !important; font-family: var(--sans); font-weight: 500;
+    letter-spacing: 0.07em; text-transform: uppercase; font-size: 10px;
+  }
+  .project-id { font-family: var(--mono); color: var(--text-faint); }
+  .tech-chip {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-muted); font-family: var(--mono);
+  }
+
+  /* Swiss red on links; flatter buttons */
+  .project-cta { color: var(--accent); font-family: var(--sans); font-weight: 500; }
+  .link-btn { background: transparent; border: 1px solid var(--border); }
+  .link-btn:hover { border-color: var(--text); transform: none; background: transparent; }
+
+  /* Unify per-card accents to ink + red */
+  .impact-num { color: var(--text) !important; font-family: var(--sans); font-weight: 600; }
+  .story-label { color: var(--accent); font-family: var(--sans); }
+  .story-label.solution { color: var(--text-dim); }
+  .story-label::before { background: var(--accent) !important; }
+  .story-text strong {
+    background: linear-gradient(180deg, transparent 64%, rgba(229,52,30,0.16) 64%) !important;
+  }
+  .award-name { color: var(--text) !important; }
+
+  /* Cards: flat with hairline */
+  .project { box-shadow: none; }
+  .project:hover { transform: none; box-shadow: 0 8px 30px rgba(40,30,20,0.07); }
+
 </style>
 </head>
 <body>
@@ -1557,12 +1648,10 @@
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo">yeonguk<span class="dot">.</span>dev</a>
+    <a href="#" class="nav-logo">Yeonguk Lee<span class="dot">.</span></a>
     <div class="nav-links">
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark/light theme">
-        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      </button>
+      <span class="nav-meta">Software Engineer</span>
+      <a href="mailto:iamlyg9667@gmail.com" class="nav-contact">iamlyg9667@gmail.com</a>
     </div>
   </div>
 </nav>
@@ -1628,8 +1717,8 @@
   <!-- ──────────── ABOUT ──────────── -->
   <section class="about fade-up" id="about">
     <div class="section-header">
-      <span class="section-title">// About</span>
-      <span class="section-count">who · why</span>
+      <span class="section-title"><span class="idx">01</span>About</span>
+      <span class="section-count">Who · Why</span>
     </div>
 
     <div class="about-grid">
@@ -1674,8 +1763,8 @@
   <!-- ──────────── EXPERIENCE ──────────── -->
   <section class="work" id="experience">
     <div class="section-header">
-      <span class="section-title">// Experience</span>
-      <span class="section-count">role · ownership</span>
+      <span class="section-title"><span class="idx">02</span>Experience</span>
+      <span class="section-count">Role · Ownership</span>
     </div>
 
     <article class="project fade-up">
@@ -1906,8 +1995,8 @@
   <!-- ──────────── WORK ──────────── -->
   <section class="work" id="work">
     <div class="section-header">
-      <span class="section-title">// Featured work</span>
-      <span class="section-count">01 / 08</span>
+      <span class="section-title"><span class="idx">03</span>Selected Work</span>
+      <span class="section-count">Eight projects</span>
     </div>
 
     <!-- ━━━━━━━━ CLIR ━━━━━━━━ -->
@@ -2797,14 +2886,6 @@
 </div>
 
 <script>
-  // Theme toggle
-  const themeToggle = document.getElementById('theme-toggle');
-  themeToggle.addEventListener('click', () => {
-    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    try { localStorage.setItem('theme', next); } catch (e) {}
-  });
-
   // Nav shadow on scroll
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
