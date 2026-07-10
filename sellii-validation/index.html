@@ -1,474 +1,311 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sellii · Verification Harness Results — Yeonguk Lee</title>
 <meta name="description" content="Methodology and result tables for three reproducible offline harnesses measuring Sellii's server-side verification, exactly-once event handling, and LLM cost/recall trade-off.">
+<link rel="canonical" href="https://poiurity.com/sellii-validation/">
+<script>
+try {
+  var l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('lang');
+  if (l === 'ko' || l === 'en') { document.documentElement.dataset.lang = l; document.documentElement.lang = l; }
+} catch (e) {}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #f4f1ea;
-    --bg-section: #ede9df;
-    --bg-card: #f8f6f0;
-    --text: #1a1714;
-    --text-muted: #57514a;
-    --text-dim: #76705f;
-    --text-faint: #a59c8b;
-    --accent: #e5341e;
-    --border: #ddd6c7;
-    --mono: 'JetBrains Mono', monospace;
-    --sans: 'Switzer', 'Helvetica Neue', Arial, sans-serif;
-    --serif: 'Fraunces', Georgia, serif;
-    --green: #0e7a4f;
-    --red: #b3261e;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 100;
-    opacity: 0.5;
-  }
-
-  .page {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
-
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 48px;
-  }
-  .topbar a {
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    color: var(--text-dim);
-    text-decoration: none;
-  }
-  .topbar a:hover { color: var(--accent); }
-  .topbar .brand {
-    font-family: var(--serif);
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--text);
-    letter-spacing: 0;
-  }
-
-  h1 {
-    font-family: var(--serif);
-    font-size: clamp(28px, 5vw, 40px);
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    margin-bottom: 14px;
-  }
-  .lede {
-    font-size: 16px;
-    color: var(--text-muted);
-    max-width: 640px;
-  }
-  .lede strong { color: var(--text); font-weight: 500; }
-
-  .meta-line {
-    font-family: var(--mono);
-    font-size: 11.5px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-    margin-bottom: 18px;
-  }
-
-  .scope-banner {
-    margin-top: 28px;
-    background: var(--bg-section);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 8px;
-    padding: 16px 20px;
-    font-size: 14px;
-    color: var(--text-muted);
-  }
-  .scope-banner strong { color: var(--text); font-weight: 600; }
-
-  section { margin-top: 64px; }
-
-  .sec-header {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 12px;
-    margin-bottom: 20px;
-  }
-  .sec-idx {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--accent);
-  }
-  h2 {
-    font-family: var(--serif);
-    font-size: clamp(21px, 3.5vw, 26px);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-  .sec-q {
-    font-size: 15px;
-    color: var(--text-dim);
-    font-style: italic;
-    margin-bottom: 18px;
-  }
-
-  h3 {
-    font-family: var(--mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-    margin: 28px 0 10px;
-  }
-
-  p { font-size: 15px; color: var(--text-muted); margin-bottom: 12px; }
-  p strong { color: var(--text); font-weight: 600; }
-
-  ul.plain {
-    font-size: 15px;
-    color: var(--text-muted);
-    padding-left: 20px;
-    display: grid;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  ul.plain strong { color: var(--text); font-weight: 600; }
-  ul.plain code, p code, td code {
-    font-family: var(--mono);
-    font-size: 0.86em;
-    background: var(--bg-section);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1px 5px;
-    white-space: nowrap;
-  }
-
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
-  .chip {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 4px 12px;
-    white-space: nowrap;
-  }
-
-  .table-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--bg-card);
-    margin: 14px 0 6px;
-  }
-  table { border-collapse: collapse; width: 100%; min-width: 480px; }
-  caption {
-    text-align: left;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--text-faint);
-    padding: 12px 16px 0;
-    text-transform: uppercase;
-  }
-  th, td {
-    text-align: left;
-    font-size: 13.5px;
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-  tr:last-child td { border-bottom: none; }
-  th {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    background: var(--bg-section);
-  }
-  td.num { font-family: var(--mono); font-size: 13px; white-space: nowrap; }
-  .good { color: var(--green); font-weight: 600; }
-  .bad { color: var(--red); font-weight: 600; }
-  .hero-num { font-weight: 600; color: var(--text); }
-
-  .callout {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--text);
-    border-radius: 8px;
-    padding: 14px 18px;
-    font-size: 14px;
-    color: var(--text-muted);
-    margin: 14px 0;
-  }
-  .callout strong { color: var(--text); }
-
-  .limits {
-    font-size: 13.5px;
-    color: var(--text-dim);
-    border-top: 1px dashed var(--border);
-    padding-top: 14px;
-    margin-top: 22px;
-  }
-  .limits ul { padding-left: 18px; display: grid; gap: 6px; }
-
-  .foot {
-    margin-top: 72px;
-    border-top: 1px solid var(--border);
-    padding-top: 24px;
-    font-size: 14px;
-    color: var(--text-dim);
-  }
-  .foot a { color: var(--text); text-decoration: underline; text-decoration-color: var(--text-faint); text-underline-offset: 3px; }
-  .foot a:hover { color: var(--accent); }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
 </head>
 <body>
 
-<div class="page">
-
-  <div class="topbar">
-    <a href="/" class="brand">Yeonguk Lee<span style="color:var(--accent)">.</span></a>
-    <a href="/#work">&larr; back to portfolio</a>
+<div class="topbar">
+  <a href="/" class="brand">Yeonguk Lee<em>.</em></a>
+  <div class="topbar-right">
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" data-setlang="en" aria-pressed="true">EN</button>
+      <button type="button" data-setlang="ko" aria-pressed="false">KO</button>
+    </div>
+    <a href="/#work"><span lang="en">&larr; back to portfolio</span><span lang="ko">&larr; 포트폴리오로</span></a>
   </div>
+</div>
 
-  <header>
-    <div class="meta-line">Sellii · Verification Harness Results · measured 2026-07-09</div>
-    <h1>Three claims about an agent,<br>each turned into a number.</h1>
-    <p class="lede">
-      Sellii is a resale-arbitrage agent (solo build, not launched, private repo). Instead of asking anyone to
-      take its reliability on faith, I wrote three <strong>reproducible offline harnesses</strong> that measure
-      the claims directly. This page is the methodology summary and result tables — the numbers cited in my
-      resume and outreach, with their exact scope.
+<div class="report">
+
+  <header class="report-head">
+    <div class="kicker"><span lang="en">Sellii · verification harness results · measured 2026-07-09</span><span lang="ko">Sellii · 검증 하네스 결과 · 2026-07-09 측정</span></div>
+    <h1>
+      <span lang="en">Three claims about an agent,<br>each turned into a number.</span>
+      <span lang="ko">에이전트에 대한 주장 3가지를,<br>전부 숫자로 바꿨어요.</span>
+    </h1>
+    <p class="lede" lang="en">
+      Sellii is a resale-arbitrage agent (solo build, not launched, private repo). Instead of asking
+      anyone to take its reliability on faith, I wrote three <strong>reproducible offline harnesses</strong>
+      that measure the claims directly. This page is the methodology summary and result tables — the
+      numbers cited in my resume and outreach, with their exact scope.
+    </p>
+    <p class="lede" lang="ko">
+      Sellii는 혼자 만든 리셀 아비트리지 에이전트예요(미출시, 비공개 저장소). 믿어달라고 말하는
+      대신, 주장을 직접 재는 <strong>재현 가능한 오프라인 하네스 3개</strong>를 만들었어요. 이
+      페이지는 그 방법 요약과 결과 표예요 — 이력서와 메일에 인용한 숫자들의 정확한 범위를 밝혀둔
+      곳이에요.
     </p>
     <div class="scope-banner">
-      <strong>Read this first:</strong> every number below comes from a deterministic harness on fixed fixtures,
-      run fully offline — <strong>not production traffic</strong>. Sellii has no real users. Where a harness measures
-      a fix rather than the shipped code, that is stated explicitly. Gaps and misses are documented, not hidden.
+      <span lang="en"><strong>Read this first:</strong> every number below comes from a deterministic harness on fixed
+      fixtures, run fully offline — <strong>not production traffic</strong>. Sellii has no real users. Where a harness
+      measures a fix rather than the shipped code, that is stated explicitly. Gaps and misses are documented, not hidden.</span>
+      <span lang="ko"><strong>먼저 읽어주세요:</strong> 아래 숫자는 전부 고정된 픽스처로 오프라인에서 돌린 결정적
+      하네스 결과예요 — <strong>프로덕션 트래픽이 아니에요</strong>. Sellii는 실사용자가 없어요. 출시된 코드가 아니라
+      '고친 것'을 잰 경우엔 그렇게 명시했어요. 못 잡은 케이스도 숨기지 않고 적었어요.</span>
     </div>
   </header>
 
-  <!-- ───────────────── 01 TRUST ───────────────── -->
+  <!-- ───────── 01 TRUST ───────── -->
   <section id="trust">
-    <div class="sec-header"><span class="sec-idx">01</span><h2>Trust — does server-side verification actually block fabricated economics?</h2></div>
-    <p class="sec-q">If the model lies about prices, profit, or comps, does anything catch it before a human sees the deal?</p>
+    <div class="sec-head"><span class="idx">01</span><h2><span lang="en">Trust — does server-side verification actually block fabricated economics?</span><span lang="ko">신뢰 — 서버 검증이 지어낸 숫자를 정말 막을까?</span></h2></div>
+    <p class="sec-q"><span lang="en">If the model lies about prices, profit, or comps, does anything catch it before a human sees the deal?</span><span lang="ko">모델이 가격·수익·시세를 지어내면, 사람이 보기 전에 걸러질까요?</span></p>
 
-    <h3>Method</h3>
-    <p>
-      44 recommendations (8 valid, 36 deliberately corrupted across 12 corruption types) are run through two validators:
-    </p>
+    <h3><span lang="en">Method</span><span lang="ko">방법</span></h3>
+    <p lang="en">44 recommendations (8 valid, 36 deliberately corrupted across 12 corruption types) are run through two validators:</p>
+    <p lang="ko">추천 44개(정상 8, 12가지 방식으로 일부러 손상시킨 36)를 두 검증기에 통과시켰어요:</p>
     <ul class="plain">
-      <li><strong>Prompt-only baseline</strong> — trusts the model's self-reported price, profit, and recommendation; schema validation only. This represents "we told the model not to make things up."</li>
-      <li><strong>Server-side verifier</strong> — a faithful replica of the production gate sequence. It <strong>discards the model's economic fields entirely</strong> and recomputes price, profit, and the buy/skip call from canonical eBay sold-comps, then pins the evidence snapshot to the decision.</li>
+      <li lang="en"><strong>Prompt-only baseline</strong> — trusts the model's self-reported price, profit, and recommendation; schema validation only. This represents "we told the model not to make things up."</li>
+      <li lang="ko"><strong>프롬프트만 쓰는 기준선</strong> — 모델이 스스로 보고한 가격·수익·추천을 그대로 믿어요. 스키마 검사만 해요. "지어내지 마"라고 지시하는 방식의 한계를 대표해요.</li>
+      <li lang="en"><strong>Server-side verifier</strong> — a faithful replica of the production gate sequence. It <strong>discards the model's economic fields entirely</strong> and recomputes price, profit, and the buy/skip call from canonical eBay sold-comps, then pins the evidence snapshot to the decision.</li>
+      <li lang="ko"><strong>서버 검증기</strong> — 실제 게이트 순서를 그대로 옮겼어요. <strong>모델이 말한 금액을 전부 버리고</strong>, eBay 실거래 데이터에서 가격·수익·판단을 다시 계산한 뒤, 근거 스냅샷을 결정에 박아둬요.</li>
     </ul>
-    <div class="chips">
-      <span class="chip">44 fixtures</span><span class="chip">12 corruption types</span><span class="chip">fully offline</span><span class="chip">deterministic</span><span class="chip">no DB · no LLM calls</span>
+    <div class="tags">
+      <span class="tag"><span lang="en">44 fixtures</span><span lang="ko">픽스처 44개</span></span>
+      <span class="tag"><span lang="en">12 corruption types</span><span lang="ko">손상 유형 12가지</span></span>
+      <span class="tag"><span lang="en">fully offline</span><span lang="ko">완전 오프라인</span></span>
+      <span class="tag"><span lang="en">deterministic</span><span lang="ko">결정적</span></span>
+      <span class="tag"><span lang="en">no DB · no LLM calls</span><span lang="ko">DB·LLM 호출 없음</span></span>
     </div>
 
-    <h3>Results</h3>
+    <h3><span lang="en">Results</span><span lang="ko">결과</span></h3>
     <div class="table-wrap">
       <table>
-        <caption>44-fixture run, 2026-07-09</caption>
-        <thead><tr><th>Metric</th><th>Prompt-only</th><th>Server-side</th></tr></thead>
+        <caption><span lang="en">44-fixture run, 2026-07-09</span><span lang="ko">픽스처 44개, 2026-07-09 실행</span></caption>
+        <thead><tr><th><span lang="en">Metric</span><span lang="ko">지표</span></th><th><span lang="en">Prompt-only</span><span lang="ko">프롬프트만</span></th><th><span lang="en">Server-side</span><span lang="ko">서버 검증</span></th></tr></thead>
         <tbody>
           <tr>
-            <td>Economic lies blocked <span style="color:var(--text-faint)">(fabricated price / profit / recommendation / sample count / query)</span></td>
+            <td><span lang="en">Economic lies blocked <span class="scope">(fabricated price / profit / recommendation / sample count / query)</span></span><span lang="ko">지어낸 가격·수익·추천 차단 <span class="scope">(가격 / 수익 / 추천 / 샘플 수 / 쿼리 위조)</span></span></td>
             <td class="num bad">0/17</td>
             <td class="num good">17/17</td>
           </tr>
           <tr>
-            <td>Valid recommendations preserved (false positives)</td>
+            <td><span lang="en">Valid recommendations preserved (false positives)</span><span lang="ko">정상 추천 보존 (오차단)</span></td>
             <td class="num">—</td>
             <td class="num good">8/8 (0 FP)</td>
           </tr>
           <tr>
-            <td>Comp-contamination resistance <span style="color:var(--text-faint)">(low-value parts or wrong-category items mixed into comps; median must hold at the true value)</span></td>
+            <td><span lang="en">Comp-contamination resistance <span class="scope">(cheap parts or wrong-category items mixed into comps; median must hold at the true value)</span></span><span lang="ko">시세 데이터 오염 저항 <span class="scope">(저가 부품·다른 카테고리가 섞여도 중앙값이 참값 유지)</span></span></td>
             <td class="num">—</td>
             <td class="num good">7/7</td>
           </tr>
           <tr>
-            <td>Evidence snapshot attached to every accepted deal</td>
+            <td><span lang="en">Evidence snapshot attached to every accepted deal</span><span lang="ko">승인된 거래마다 근거 스냅샷 저장</span></td>
             <td class="num">—</td>
             <td class="num good">24/24</td>
           </tr>
           <tr>
-            <td>All should-block cases, including out-of-scope gaps</td>
+            <td><span lang="en">All should-block cases, including out-of-scope gaps</span><span lang="ko">차단해야 할 전체 케이스 (범위 밖 구멍 포함)</span></td>
             <td class="num">—</td>
-            <td class="num hero-num">17/29 (58.6%)</td>
+            <td class="num"><strong>17/29 (58.6%)</strong></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <h3>What it does not catch (documented gaps — 12/29)</h3>
-    <p>
+    <h3><span lang="en">What it does not catch (documented gaps — 12/29)</span><span lang="ko">못 잡는 것 (기록해 둔 구멍 — 12/29)</span></h3>
+    <p lang="en">
       Four corruption types get through, each with a known cause and a concrete hardening step:
       comps fabricated for a never-searched query (canonical recomputation only protects on cache hit),
       comps that are <em>entirely</em> the wrong product (the token filter falls back when almost nothing matches),
       stale comps older than three years (no freshness window yet), and a missing listing URL (detail check is skipped).
       These are why the page says <strong>17/17 economic lies</strong>, not "100% of everything."
     </p>
+    <p lang="ko">
+      4가지 손상 유형은 통과돼요. 각각 원인과 다음 보강 방법을 알아요: 검색한 적 없는 쿼리로
+      지어낸 시세(재계산은 캐시에 있을 때만 보호해요), 시세가 <em>전부</em> 다른 상품인 경우(거의
+      안 맞으면 토큰 필터가 물러서요), 3년 넘은 오래된 판매 기록(신선도 검사가 아직 없어요),
+      매물 URL 누락(상세 검사를 건너뛰어요). 그래서 이 페이지는 "전부 100% 차단"이 아니라
+      <strong>경제적 거짓말 17/17</strong>이라고 말해요.
+    </p>
 
     <div class="limits">
       <ul>
-        <li>The prompt-only baseline is a reasonable stand-in for schema-only validation, not logs from a previously deployed version.</li>
-        <li>Fixtures are synthetic; the filter and recomputation logic is the real production logic, but inputs are hand-built.</li>
-        <li>Gates coupled to external systems (vision detail checks, DOM resolution, DB dedup) are injected as world-state and not measured here.</li>
-        <li>Dollar values inside fixtures are design values — the claims are block rates, preservation rates, and contamination resistance, not amounts.</li>
+        <li lang="en">The prompt-only baseline is a reasonable stand-in for schema-only validation, not logs from a previously deployed version.</li>
+        <li lang="ko">프롬프트만 쓰는 기준선은 스키마 검사만 하는 방식을 대표하는 합리적 비교 대상이에요. 실제로 배포했던 이전 버전의 로그가 아니에요.</li>
+        <li lang="en">Fixtures are synthetic; the filter and recomputation logic is the real production logic, but inputs are hand-built.</li>
+        <li lang="ko">픽스처는 손으로 만든 합성 데이터예요. 필터와 재계산 로직은 실제 프로덕션 코드지만, 입력은 만든 거예요.</li>
+        <li lang="en">Gates coupled to external systems (vision detail checks, DOM resolution, DB dedup) are injected as world-state and not measured here.</li>
+        <li lang="ko">외부 시스템에 붙은 게이트(비전 상세 검사, DOM 해석, DB 중복 제거)는 값을 주입했고, 여기서 재지 않았어요.</li>
+        <li lang="en">Dollar values inside fixtures are design values — the claims are block rates, preservation rates, and contamination resistance, not amounts.</li>
+        <li lang="ko">픽스처 안의 금액은 설계값이에요 — 주장하는 건 차단율·보존율·오염 저항이지, 금액이 아니에요.</li>
       </ul>
     </div>
   </section>
 
-  <!-- ───────────────── 02 IDEMPOTENCY ───────────────── -->
+  <!-- ───────── 02 IDEMPOTENCY ───────── -->
   <section id="idempotency">
-    <div class="sec-header"><span class="sec-idx">02</span><h2>Duplicate execution — does one event ever commit twice?</h2></div>
-    <p class="sec-q">When a payment webhook or deal-save event is redelivered, retried, or raced, how many times does the business action actually commit?</p>
+    <div class="sec-head"><span class="idx">02</span><h2><span lang="en">Duplicate execution — does one event ever commit twice?</span><span lang="ko">중복 실행 — 같은 이벤트가 두 번 커밋될까?</span></h2></div>
+    <p class="sec-q"><span lang="en">When a payment webhook or deal-save event is redelivered, retried, or raced, how many times does the business action actually commit?</span><span lang="ko">결제 웹훅이나 저장 이벤트가 다시 오거나, 재시도되거나, 경쟁하면 실제로 몇 번 커밋될까요?</span></p>
 
     <div class="callout">
-      <strong>This harness measures the fix, not the shipped v1 code.</strong> Sellii v1 uses the failing patterns below
+      <span lang="en"><strong>This harness measures the fix, not the shipped v1 code.</strong> Sellii v1 uses the failing patterns below
       (no event-id dedup on the payment webhook, a non-atomic check-then-insert on deal save). The harness reproduces
-      those failures under real concurrency, then measures what an atomic guard changes.
+      those failures under real concurrency, then measures what an atomic guard changes.</span>
+      <span lang="ko"><strong>이 하네스는 출시된 v1 코드가 아니라 '고친 것'을 재요.</strong> v1은 아래 실패하는 패턴을
+      그대로 써요(결제 웹훅에 이벤트 ID 중복 제거 없음, 저장은 비원자적 확인-후-삽입). 하네스는 그 실패를 실제
+      동시성에서 재현한 다음, 원자적 가드가 무엇을 바꾸는지 재요.</span>
     </div>
 
-    <h3>Method</h3>
-    <p>
+    <h3><span lang="en">Method</span><span lang="ko">방법</span></h3>
+    <p lang="en">
       One logical event is delivered <strong>20× sequentially, 20× concurrently, across a process restart, and from two
       processes at once</strong>, against three dedup strategies. External side effects are mocked as counters; the ideal
       outcome is exactly one committed action per unique event. The concurrency race is real — the non-atomic strategy
       has an async gap between check and insert, and interleaving actually occurs.
     </p>
-    <div class="chips">
-      <span class="chip">4 scenarios</span><span class="chip">3 strategies</span><span class="chip">side effects mocked</span><span class="chip">reproducible</span>
+    <p lang="ko">
+      논리적으로 같은 이벤트 1개를 <strong>순차 20번, 동시 20번, 프로세스 재시작을 사이에 두고, 그리고 두
+      프로세스에서 동시에</strong> 전달했어요. 중복 제거 전략 3가지를 비교했고, 외부 부수효과는 카운터로 모킹했어요.
+      이상적인 결과는 이벤트당 정확히 1번 커밋이에요. 동시성 레이스는 진짜예요 — 비원자 전략은 확인과 삽입 사이에
+      비동기 틈이 있어서 실제로 겹쳐요.
+    </p>
+    <div class="tags">
+      <span class="tag"><span lang="en">4 scenarios</span><span lang="ko">시나리오 4개</span></span>
+      <span class="tag"><span lang="en">3 strategies</span><span lang="ko">전략 3가지</span></span>
+      <span class="tag"><span lang="en">side effects mocked</span><span lang="ko">부수효과 모킹</span></span>
+      <span class="tag"><span lang="en">reproducible</span><span lang="ko">재현 가능</span></span>
     </div>
 
-    <h3>Results — committed actions per unique event (ideal = 1)</h3>
+    <h3><span lang="en">Results — committed actions per unique event (ideal = 1)</span><span lang="ko">결과 — 이벤트당 커밋 수 (이상값 = 1)</span></h3>
     <div class="table-wrap">
       <table>
-        <caption>Replay harness run, 2026-07-09</caption>
-        <thead><tr><th>Strategy</th><th>Sequential ×20</th><th>Concurrent ×20</th><th>Restart replay</th><th>2 processes ×20</th></tr></thead>
+        <caption><span lang="en">Replay harness run, 2026-07-09</span><span lang="ko">리플레이 하네스, 2026-07-09 실행</span></caption>
+        <thead><tr><th><span lang="en">Strategy</span><span lang="ko">전략</span></th><th><span lang="en">Sequential ×20</span><span lang="ko">순차 ×20</span></th><th><span lang="en">Concurrent ×20</span><span lang="ko">동시 ×20</span></th><th><span lang="en">Restart replay</span><span lang="ko">재시작 후 재전송</span></th><th><span lang="en">2 processes ×20</span><span lang="ko">2프로세스 ×20</span></th></tr></thead>
         <tbody>
-          <tr><td>In-memory set <span style="color:var(--text-faint)">(marker lost on restart)</span></td><td class="num good">1</td><td class="num good">1</td><td class="num bad">2</td><td class="num bad">2</td></tr>
-          <tr><td>Non-atomic durable check-then-insert <span style="color:var(--text-faint)">(v1's pattern)</span></td><td class="num good">1</td><td class="num bad">20</td><td class="num good">1</td><td class="num bad">40</td></tr>
-          <tr><td><strong>Atomic durable event ledger</strong> <span style="color:var(--text-faint)">(claim-if-absent / unique constraint)</span></td><td class="num good">1</td><td class="num good">1</td><td class="num good">1</td><td class="num good">1</td></tr>
+          <tr><td><span lang="en">In-memory set <span class="scope">(marker lost on restart)</span></span><span lang="ko">인메모리 셋 <span class="scope">(재시작하면 마커가 사라져요)</span></span></td><td class="num good">1</td><td class="num good">1</td><td class="num bad">2</td><td class="num bad">2</td></tr>
+          <tr><td><span lang="en">Non-atomic durable check-then-insert <span class="scope">(v1's pattern)</span></span><span lang="ko">비원자적 확인-후-삽입 <span class="scope">(v1의 패턴)</span></span></td><td class="num good">1</td><td class="num bad">20</td><td class="num good">1</td><td class="num bad">40</td></tr>
+          <tr><td><span lang="en"><strong>Atomic durable event ledger</strong> <span class="scope">(claim-if-absent / unique constraint)</span></span><span lang="ko"><strong>원자적 이벤트 원장</strong> <span class="scope">(없을 때만 선점 / 유니크 제약)</span></span></td><td class="num good">1</td><td class="num good">1</td><td class="num good">1</td><td class="num good">1</td></tr>
         </tbody>
       </table>
     </div>
-    <p>
+    <p lang="en">
       Under partial failure (crash after the side effect but before the marker is written), act-then-mark ordering
       committed twice — a double charge — while <strong>claim-then-act committed once</strong>, with the retry becoming a no-op.
+    </p>
+    <p lang="ko">
+      부분 실패(부수효과는 성공했는데 마커를 쓰기 전에 죽는 경우)에서는, 행동-후-기록 순서가 두 번
+      커밋됐어요 — 이중 결제예요. <strong>선점-후-행동은 한 번만 커밋됐고</strong>, 재시도는 아무 일도 하지 않았어요.
     </p>
 
     <div class="limits">
       <ul>
-        <li>Side effects are mocked counters, not a real payment provider or database; porting the guard to real unique constraints is the follow-up.</li>
-        <li>The two-process scenario is simulated within the harness — a proof of principle, not a substitute for distributed-lock testing on a real DB.</li>
+        <li lang="en">Side effects are mocked counters, not a real payment provider or database; porting the guard to real unique constraints is the follow-up.</li>
+        <li lang="ko">부수효과는 모킹한 카운터예요. 실제 결제사나 DB가 아니에요. 실제 유니크 제약으로 옮기는 게 다음 단계예요.</li>
+        <li lang="en">The two-process scenario is simulated within the harness — a proof of principle, not a substitute for distributed-lock testing on a real DB.</li>
+        <li lang="ko">2프로세스 시나리오는 하네스 안에서 시뮬레이션한 거예요 — 원리 증명이지, 실제 DB의 분산 락 테스트를 대신하진 않아요.</li>
       </ul>
     </div>
   </section>
 
-  <!-- ───────────────── 03 COST ───────────────── -->
+  <!-- ───────── 03 COST ───────── -->
   <section id="cost">
-    <div class="sec-header"><span class="sec-idx">03</span><h2>Unit economics — what does HTTP-first buy, and what does it cost?</h2></div>
-    <p class="sec-q">Replacing "one vision call per listing" with free deterministic filters plus a small text model: how much cheaper, and how many good deals get lost?</p>
+    <div class="sec-head"><span class="idx">03</span><h2><span lang="en">Unit economics — what does HTTP-first buy, and what does it cost?</span><span lang="ko">단위 경제 — HTTP 우선 설계는 얼마나 아끼고, 무엇을 잃을까?</span></h2></div>
+    <p class="sec-q"><span lang="en">Replacing "one vision call per listing" with free deterministic filters plus a small text model: how much cheaper, and how many good deals get lost?</span><span lang="ko">"매물마다 비전 호출 1번"을 공짜 결정적 필터와 작은 텍스트 모델로 바꾸면, 얼마나 싸지고 좋은 매물을 몇 개나 놓칠까요?</span></p>
 
-    <h3>Method</h3>
-    <p>
+    <h3><span lang="en">Method</span><span lang="ko">방법</span></h3>
+    <p lang="en">
       The same fixed 31-listing fixture runs through two pipelines: a <strong>baseline</strong> that sends every listing to
       gpt-4o Vision, and the <strong>HTTP-first</strong> design where deterministic filters (price sanity, initial profit gate,
       48-hour dedup, removed-listing checks) eliminate candidates for free and only survivors reach gpt-4o-mini as text.
       Profit and market-price judgments use the real production functions; LLM outputs are fixture-injected, so this
       measures pipeline shape, cost, and recall — not model accuracy.
     </p>
-    <div class="chips">
-      <span class="chip">fixed 31-listing fixture</span><span class="chip">deterministic</span><span class="chip">rates from the code's pricing table</span><span class="chip">token counts estimated</span>
+    <p lang="ko">
+      같은 고정 매물 31개 픽스처를 두 파이프라인에 통과시켰어요. <strong>기준선</strong>은 모든 매물을 gpt-4o
+      Vision으로 보내요. <strong>HTTP 우선</strong> 설계는 결정적 필터(가격 검증, 초기 수익 게이트, 48시간 중복
+      제거, 삭제 매물 확인)가 후보를 공짜로 줄이고, 살아남은 것만 gpt-4o-mini에 텍스트로 보내요. 수익·시세 판단은
+      실제 프로덕션 함수를 썼고 LLM 출력은 픽스처로 주입했어요 — 그래서 재는 건 파이프라인 구조·비용·유지율이지,
+      모델 정확도가 아니에요.
+    </p>
+    <div class="tags">
+      <span class="tag"><span lang="en">fixed 31-listing fixture</span><span lang="ko">고정 매물 31개 픽스처</span></span>
+      <span class="tag"><span lang="en">deterministic</span><span lang="ko">결정적</span></span>
+      <span class="tag"><span lang="en">rates from the code's pricing table</span><span lang="ko">단가는 코드의 가격표 그대로</span></span>
+      <span class="tag"><span lang="en">token counts estimated</span><span lang="ko">토큰 수는 추정치</span></span>
     </div>
 
-    <h3>Results — cost</h3>
+    <h3><span lang="en">Results — cost</span><span lang="ko">결과 — 비용</span></h3>
     <div class="table-wrap">
       <table>
-        <caption>Cost A/B run, 2026-07-09</caption>
-        <thead><tr><th>Metric</th><th>Baseline (all-vision)</th><th>HTTP-first</th></tr></thead>
+        <caption><span lang="en">Cost A/B run, 2026-07-09</span><span lang="ko">비용 A/B, 2026-07-09 실행</span></caption>
+        <thead><tr><th><span lang="en">Metric</span><span lang="ko">지표</span></th><th><span lang="en">Baseline (all-vision)</span><span lang="ko">기준선 (전량 비전)</span></th><th>HTTP-first</th></tr></thead>
         <tbody>
-          <tr><td>gpt-4o Vision calls</td><td class="num">31</td><td class="num good">0</td></tr>
-          <tr><td>gpt-4o-mini text calls</td><td class="num">0</td><td class="num">38</td></tr>
-          <tr><td>Share of listings hitting the expensive model</td><td class="num">100%</td><td class="num good">0%</td></tr>
-          <tr><td>Projected LLM cost (fixture total)</td><td class="num">$0.2480</td><td class="num">$0.0031</td></tr>
-          <tr><td><strong>Projected savings</strong></td><td class="num">—</td><td class="num hero-num">98.8% (81× cheaper)</td></tr>
+          <tr><td><span lang="en">gpt-4o Vision calls</span><span lang="ko">gpt-4o Vision 호출</span></td><td class="num">31</td><td class="num good">0</td></tr>
+          <tr><td><span lang="en">gpt-4o-mini text calls</span><span lang="ko">gpt-4o-mini 텍스트 호출</span></td><td class="num">0</td><td class="num">38</td></tr>
+          <tr><td><span lang="en">Share of listings hitting the expensive model</span><span lang="ko">비싼 모델로 간 매물 비율</span></td><td class="num">100%</td><td class="num good">0%</td></tr>
+          <tr><td><span lang="en">Projected LLM cost (fixture total)</span><span lang="ko">예상 LLM 비용 (픽스처 합계)</span></td><td class="num">$0.2480</td><td class="num">$0.0031</td></tr>
+          <tr><td><span lang="en"><strong>Projected savings</strong></span><span lang="ko"><strong>예상 절감</strong></span></td><td class="num">—</td><td class="num good">98.8% (81×)</td></tr>
         </tbody>
       </table>
     </div>
 
-    <h3>Results — recall (did the cheap path throw away good deals?)</h3>
+    <h3><span lang="en">Results — recall (did the cheap path throw away good deals?)</span><span lang="ko">결과 — 유지율 (싼 경로가 좋은 매물을 버렸을까?)</span></h3>
     <div class="table-wrap">
       <table>
-        <caption>Same fixture, profitable-deal retention</caption>
-        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <caption><span lang="en">Same fixture, profitable-deal retention</span><span lang="ko">같은 픽스처, 수익 매물 유지</span></caption>
+        <thead><tr><th><span lang="en">Metric</span><span lang="ko">지표</span></th><th><span lang="en">Value</span><span lang="ko">값</span></th></tr></thead>
         <tbody>
-          <tr><td>Profitable deals surfaced by the baseline</td><td class="num">15</td></tr>
-          <tr><td>Also surfaced by HTTP-first</td><td class="num">12</td></tr>
-          <tr><td><strong>Recall</strong></td><td class="num hero-num">80.0% (12/15)</td></tr>
-          <tr><td>Misses</td><td class="num">3 — all image-only listings</td></tr>
+          <tr><td><span lang="en">Profitable deals surfaced by the baseline</span><span lang="ko">기준선이 찾은 수익 매물</span></td><td class="num">15</td></tr>
+          <tr><td><span lang="en">Also surfaced by HTTP-first</span><span lang="ko">HTTP 우선도 찾은 것</span></td><td class="num">12</td></tr>
+          <tr><td><span lang="en"><strong>Recall</strong></span><span lang="ko"><strong>유지율</strong></span></td><td class="num"><strong>80.0% (12/15)</strong></td></tr>
+          <tr><td><span lang="en">Misses</span><span lang="ko">놓친 것</span></td><td class="num"><span lang="en">3 — all image-only listings</span><span lang="ko">3 — 전부 사진만 있는 매물</span></td></tr>
         </tbody>
       </table>
     </div>
-    <p>
+    <p lang="en">
       All three misses are listings with a photo and a vague title ("🔥 must go asap DM me") — a text-only model cannot
       extract brand or model, while the vision baseline reads the photo. That is the real recall/cost trade-off of
       HTTP-first, measured rather than assumed. Selective vision escalation for that segment is an
       <strong>unbenchmarked hypothesis</strong>, not a claim.
     </p>
+    <p lang="ko">
+      놓친 3건은 전부 사진에 모호한 제목만 있는 매물이에요("🔥 급처, DM 주세요" 같은). 텍스트만 보는 모델은
+      브랜드·모델명을 못 뽑는데, 비전 기준선은 사진을 읽어서 잡아요. 이게 HTTP 우선 설계의 진짜 비용/유지율
+      트레이드오프예요 — 가정이 아니라 측정한 거예요. 그 구간만 비전으로 올려보내는 방식은 아직 <strong>벤치마크
+      안 한 가설</strong>이라서, 주장하지 않아요.
+    </p>
 
     <div class="limits">
       <ul>
-        <li>The baseline is a representative "send everything to vision" model, not production logs of an earlier version.</li>
-        <li>Per-call token counts are documented estimates; USD rates are copied from the code's pricing table — so absolute dollars are projections. The defensible claims are call counts, ratios, and recall.</li>
-        <li>Recall depends on this fixture's share of image-only listings (3 of 15); a different feed mix shifts it.</li>
+        <li lang="en">The baseline is a representative "send everything to vision" model, not production logs of an earlier version.</li>
+        <li lang="ko">기준선은 "전부 비전으로 보내는" 방식을 대표하는 모델이에요. 이전 버전의 프로덕션 로그가 아니에요.</li>
+        <li lang="en">Per-call token counts are documented estimates; USD rates are copied from the code's pricing table — so absolute dollars are projections. The defensible claims are call counts, ratios, and recall.</li>
+        <li lang="ko">호출당 토큰 수는 문서화된 추정치고, 달러 단가는 코드의 가격표를 그대로 썼어요 — 그래서 절대 금액은 추정이에요. 방어할 수 있는 주장은 호출 수, 비율, 유지율이에요.</li>
+        <li lang="en">Recall depends on this fixture's share of image-only listings (3 of 15); a different feed mix shifts it.</li>
+        <li lang="ko">유지율은 이 픽스처의 사진 전용 매물 비율(15개 중 3개)에 달려 있어요. 실제 피드 구성이 다르면 달라져요.</li>
       </ul>
     </div>
   </section>
 
-  <!-- ───────────────── FOOT ───────────────── -->
+  <!-- ───────── FOOT ───────── -->
   <div class="foot">
-    <p>
+    <p lang="en">
       Each harness is a deterministic script that runs fully offline (<code>npm run test:trust</code> ·
       <code>npm run test:idempotency</code> · <code>npm run test:cost</code>) and reproduces these tables on every run.
       The repo is private; I'm happy to do a <strong>live code walkthrough</strong> of the harnesses and the production
       gate logic they replicate.
+    </p>
+    <p lang="ko">
+      각 하네스는 완전히 오프라인에서 도는 결정적 스크립트예요(<code>npm run test:trust</code> ·
+      <code>npm run test:idempotency</code> · <code>npm run test:cost</code>). 돌릴 때마다 같은 표가 나와요.
+      저장소는 비공개지만, 하네스와 그것이 복제한 프로덕션 게이트 로직을 <strong>라이브 코드 워크스루</strong>로
+      보여드릴 수 있어요.
     </p>
     <p style="margin-top:12px">
       <a href="/">poiurity.com</a> · <a href="mailto:iamlyg9667@gmail.com">iamlyg9667@gmail.com</a> ·
@@ -477,6 +314,28 @@
   </div>
 
 </div>
+
+<script>
+(function () {
+  var TITLES = {
+    en: 'Sellii · Verification Harness Results — Yeonguk Lee',
+    ko: 'Sellii · 검증 하네스 결과 — 이영욱'
+  };
+  function apply(l) {
+    document.documentElement.dataset.lang = l;
+    document.documentElement.lang = l;
+    document.title = TITLES[l] || TITLES.en;
+    document.querySelectorAll('[data-setlang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.setlang === l));
+    });
+    try { localStorage.setItem('lang', l); } catch (e) {}
+  }
+  document.querySelectorAll('[data-setlang]').forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.setlang); });
+  });
+  apply(document.documentElement.dataset.lang || 'en');
+})();
+</script>
 
 </body>
 </html>
