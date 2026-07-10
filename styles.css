@@ -410,47 +410,111 @@ figcaption {
 .diagram .flow { animation: dashflow 1.4s linear infinite; }
 @keyframes dashflow { to { stroke-dashoffset: -14; } }
 
-/* ---------- MORE WORK: ruled list with Linear-style row hover ---------- */
-.row {
-  padding: 18px 14px;
-  margin: 0 -14px;
-  border-bottom: 1px solid var(--border);
-  border-radius: 10px;
-  transition: background 0.16s var(--ease);
-}
-.row:hover { background: var(--surface-1); }
-.rows { border-top: 1px solid var(--border); }
-.row-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+/* ---------- WORK: project card grid (thumbnail + name + summary) ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  flex-wrap: wrap;
 }
-.row-head h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; transition: color 0.1s var(--ease); }
-.row:hover .row-head h3 { color: var(--accent); }
-.row-head .row-meta {
-  font-family: var(--mono);
-  font-size: 11.5px;
-  color: var(--text-3);
-  white-space: nowrap;
-}
-.row-head .row-meta a { color: var(--text-3); text-decoration: none; border-bottom: 1px solid var(--border); transition: color 0.1s var(--ease), border-color 0.1s var(--ease); }
-.row-head .row-meta a:hover { color: var(--accent); border-color: var(--accent); }
-.row p { color: var(--text-2); font-size: 14px; margin-top: 6px; max-width: 680px; }
-.row p strong { color: var(--text); font-weight: 600; }
+@media (max-width: 900px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 580px) { .cards { grid-template-columns: 1fr; } }
 
-.row details { margin-top: 12px; }
-.row summary {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--text-2);
+.card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-1);
+  overflow: hidden;
   cursor: pointer;
-  user-select: none;
-  transition: color 0.1s var(--ease);
+  transition: border-color 0.16s var(--ease), transform 0.16s var(--ease), box-shadow 0.16s var(--ease);
 }
-.row summary:hover { color: var(--accent); }
-.row details > figure { margin-top: 12px; }
+.card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--text) 8%, transparent);
+}
+.card-thumb {
+  aspect-ratio: 16 / 10;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.3s var(--ease);
+}
+.card:hover .card-thumb img { transform: scale(1.03); }
+.card-thumb svg { width: 100%; height: 100%; display: block; }
+.card-body { padding: 14px 16px 15px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.card-body h3 { font-size: 15.5px; font-weight: 650; letter-spacing: -0.01em; transition: color 0.1s var(--ease); }
+.card:hover .card-body h3 { color: var(--accent); }
+.card-sum { font-size: 13.5px; color: var(--text-2); line-height: 1.55; }
+.card-meta {
+  margin-top: auto;
+  padding-top: 8px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  color: var(--text-3);
+}
+.card-meta .flag { color: var(--accent); }
+.card-meta .live { color: var(--positive); }
+
+/* ---------- PROJECT DETAIL MODAL ---------- */
+.js .project-details { display: none; }
+.project-details > .flagship { margin-top: 64px; }
+
+.pmodal {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: none;
+  background: color-mix(in srgb, var(--text) 42%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+  padding: 5vh 16px;
+}
+.pmodal.open { display: block; }
+.pmodal-panel {
+  position: relative;
+  max-width: 880px;
+  margin: 0 auto;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 30px clamp(18px, 4vw, 38px) 38px;
+  animation: modalIn 0.22s var(--ease);
+}
+@keyframes modalIn { from { opacity: 0; transform: translateY(8px) scale(0.985); } to { opacity: 1; transform: none; } }
+.pmodal .flagship { margin-bottom: 0; }
+.pmodal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-1);
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.1s var(--ease), border-color 0.1s var(--ease), background 0.1s var(--ease);
+}
+.pmodal-close:hover { color: var(--text); border-color: var(--text-3); background: var(--surface-2); }
+@media (max-width: 600px) {
+  .pmodal { padding: 0; }
+  .pmodal-panel { border-radius: 0; border: 0; min-height: 100vh; padding-top: 56px; }
+  .pmodal-close { position: fixed; top: 12px; right: 12px; }
+}
 
 /* ---------- FOOTER ---------- */
 .footer { border-top: 1px solid var(--border); }
@@ -585,7 +649,8 @@ code {
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
   .diagram .flow { animation: none; }
-  .lightbox img { animation: none; }
-  .btn, figure, .row { transition: none; }
-  .btn-primary:hover, .btn-sec:hover, figure:hover { transform: none; }
+  .lightbox img, .pmodal-panel { animation: none; }
+  .btn, figure, .card, .card-thumb img { transition: none; }
+  .btn-primary:hover, .btn-sec:hover, figure:hover, .card:hover { transform: none; }
+  .card:hover .card-thumb img { transform: none; }
 }

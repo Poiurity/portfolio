@@ -31,7 +31,6 @@ try {
     <nav class="nav-links" aria-label="Sections">
       <a href="#profile"><span lang="en">Profile</span><span lang="ko">소개</span></a>
       <a href="#work"><span lang="en">Work</span><span lang="ko">대표 작업</span></a>
-      <a href="#more"><span lang="en">More</span><span lang="ko">그 외</span></a>
     </nav>
     <div class="topnav-right">
       <div class="lang-toggle" role="group" aria-label="Language">
@@ -136,12 +135,89 @@ try {
       </div>
     </section>
 
-    <!-- 02 SELECTED WORK -->
+    <!-- 02 WORK: card grid -->
     <section id="work">
-      <div class="sec-head reveal"><span class="idx">02</span><h2><span lang="en">Selected work</span><span lang="ko">대표 작업</span></h2></div>
+      <div class="sec-head reveal"><span class="idx">02</span><h2><span lang="en">Work</span><span lang="ko">작업</span></h2></div>
+      <div class="cards">
+        <a class="card reveal" href="#p-sellii" data-project="p-sellii" style="--d: 0s;">
+          <div class="card-thumb" aria-hidden="true"><svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect width="320" height="200" style="fill:var(--surface-2)"/><text x="24" y="38" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1" style="fill:var(--text-3)">TRUST HARNESS</text><text x="22" y="110" font-family="JetBrains Mono, monospace" font-size="44" font-weight="600" style="fill:var(--accent)">17/17</text><text x="24" y="140" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-2)">fabricated claims blocked</text><text x="24" y="158" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-3)">8/8 valid preserved · 0 FP</text><circle cx="270" cy="54" r="22" fill="none" style="stroke:var(--accent)" stroke-width="1.4"/><path d="M260 54 l7 7 l14 -14" fill="none" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="card-body">
+            <h3>Sellii</h3>
+            <p class="card-sum"><span lang="en">A resale-arbitrage agent that verifies before it acts.</span><span lang="ko">행동하기 전에 서버가 먼저 검증하는 resale arbitrage 에이전트예요.</span></p>
+            <p class="card-meta"><span class="flag"><span lang="en">featured</span><span lang="ko">대표</span></span> · <span lang="en">solo · 2026 · not launched</span><span lang="ko">1인 개발 · 2026 · 미출시</span></p>
+          </div>
+        </a>
+        <a class="card reveal" href="#p-clir" data-project="p-clir" style="--d: 0.06s;">
+          <div class="card-thumb" aria-hidden="true"><img src="./assets/clir-result.png" alt="CLIR verdict screen" loading="lazy"></div>
+          <div class="card-body">
+            <h3>CLIR</h3>
+            <p class="card-sum"><span lang="en">Scan a food label once, get a safe-or-not answer for your profile.</span><span lang="ko">라벨을 한 번 스캔하면, 내 프로필 기준으로 먹어도 되는지 알려줘요.</span></p>
+            <p class="card-meta"><span class="flag"><span lang="en">featured</span><span lang="ko">대표</span></span> · <span class="live">● </span><span lang="en"><span class="live">live · App Store</span> · backend owner</span><span lang="ko"><span class="live">App Store 서비스 중</span> · 백엔드 담당</span></p>
+          </div>
+        </a>
+        <a class="card reveal" href="#p-flowcraft" data-project="p-flowcraft" style="--d: 0.12s;">
+          <div class="card-thumb" aria-hidden="true"><img src="./assets/flowcraft-1-main.png" alt="FlowCraft IDE with generated code and preview" loading="lazy"></div>
+          <div class="card-body">
+            <h3>FlowCraft</h3>
+            <p class="card-sum"><span lang="en">A no-code Flutter app builder where agents never write the code.</span><span lang="ko">에이전트가 코드를 직접 쓰지 않는 노코드 Flutter 앱 빌더예요.</span></p>
+            <p class="card-meta"><span class="flag"><span lang="en">featured</span><span lang="ko">대표</span></span> · <span lang="en">solo · 2026 · open source</span><span lang="ko">1인 개발 · 2026 · 오픈소스</span></p>
+          </div>
+        </a>
+        <a class="card reveal" href="#p-livetrack" data-project="p-livetrack" style="--d: 0s;">
+          <div class="card-thumb" aria-hidden="true"><svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect width="320" height="200" style="fill:var(--surface-2)"/><text x="24" y="38" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1" style="fill:var(--text-3)">SELF-HOSTED REALTIME</text><circle cx="92" cy="112" r="7" style="fill:var(--accent)"/><circle cx="92" cy="112" r="17" fill="none" style="stroke:var(--accent)" stroke-opacity="0.35" stroke-width="1.2"/><circle cx="236" cy="96" r="7" style="fill:var(--text-3)"/><circle cx="236" cy="96" r="17" fill="none" style="stroke:var(--text-3)" stroke-opacity="0.35" stroke-width="1.2"/><path d="M 108 108 C 150 80, 186 120, 220 98" fill="none" style="stroke:var(--diagram-line)" stroke-width="1.4" stroke-dasharray="5 4"/><text x="162" y="80" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--accent)" text-anchor="middle">ws://</text><text x="24" y="168" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-2)">room broadcast · PostGIS replay</text></svg></div>
+          <div class="card-body">
+            <h3>LiveTrack</h3>
+            <p class="card-sum"><span lang="en">Real-time group location on a hand-written WebSocket layer.</span><span lang="ko">직접 짠 WebSocket 레이어로 만든 실시간 그룹 위치 공유예요.</span></p>
+            <p class="card-meta"><span lang="en">solo · 2026 · self-hosted</span><span lang="ko">1인 개발 · 2026 · 직접 운영</span></p>
+          </div>
+        </a>
+        <a class="card reveal" href="#p-livingstage" data-project="p-livingstage" style="--d: 0.06s;">
+          <div class="card-thumb" aria-hidden="true"><svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect width="320" height="200" style="fill:var(--surface-2)"/><text x="24" y="38" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1" style="fill:var(--text-3)">SPEECH-PACED UI</text><rect x="44" y="118" width="36" height="42" rx="5" style="fill:var(--surface-3)"/><rect x="92" y="98" width="36" height="62" rx="5" style="fill:var(--surface-3)"/><rect x="140" y="80" width="36" height="80" rx="5" style="fill:var(--border-strong)"/><rect x="188" y="58" width="36" height="102" rx="5" style="fill:var(--accent)"/><text x="24" y="184" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-2)">widgets grow as the speaker talks</text></svg></div>
+          <div class="card-body">
+            <h3>Living Stage</h3>
+            <p class="card-sum"><span lang="en">A generative UI that grows on stage as the speaker talks.</span><span lang="ko">발표 속도에 맞춰 무대 위에서 자라나는 UI예요.</span></p>
+            <p class="card-meta"><span lang="en">Google I/O hackathon · solo · 2026</span><span lang="ko">Google I/O 해커톤 · 1인 · 2026</span></p>
+          </div>
+        </a>
+        <a class="card reveal" href="#p-conever" data-project="p-conever" style="--d: 0.12s;">
+          <div class="card-thumb" aria-hidden="true"><img src="./assets/conever-4-map.png" alt="Conever native map screen" loading="lazy"></div>
+          <div class="card-body">
+            <h3>Conever</h3>
+            <p class="card-sum"><span lang="en">Plan trips together, with AI suggestions and real-time sync.</span><span lang="ko">AI 추천과 실시간 동기화로 함께 여행을 계획하는 앱이에요.</span></p>
+            <p class="card-meta"><span lang="en">team · frontend lead · 2025 · ONE Store</span><span lang="ko">팀 · 프론트 리드 · 2025 · ONE Store</span></p>
+          </div>
+        </a>
+        <a class="card reveal" href="#p-gpstracker" data-project="p-gpstracker" style="--d: 0s;">
+          <div class="card-thumb" aria-hidden="true"><img src="./assets/gps-2-route.png" alt="GPSTracker route replay dashboard" loading="lazy"></div>
+          <div class="card-body">
+            <h3>GPSTracker</h3>
+            <p class="card-sum"><span lang="en">Fleet driving-analytics dashboard, built mock-API-first.</span><span lang="ko">mock API로 먼저 굴러가게 만든 차량 주행 분석 대시보드예요.</span></p>
+            <p class="card-meta"><span lang="en">team · Kernel360 · 2025</span><span lang="ko">팀 · Kernel360 · 2025</span></p>
+          </div>
+        </a>
+        <a class="card reveal" href="#p-driftless" data-project="p-driftless" style="--d: 0.06s;">
+          <div class="card-thumb" aria-hidden="true"><svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><defs><marker id="arrSync" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L7,3 z" style="fill:var(--diagram-line)"/></marker></defs><rect width="320" height="200" style="fill:var(--surface-2)"/><text x="24" y="38" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1" style="fill:var(--text-3)">CONTEXT SYNC</text><rect x="40" y="78" width="94" height="46" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/><text x="87" y="105" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text)" text-anchor="middle">code</text><rect x="186" y="78" width="94" height="46" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/><text x="233" y="105" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text)" text-anchor="middle">AGENTS.md</text><path d="M 138 88 C 156 76, 166 76, 182 88" fill="none" style="stroke:var(--diagram-line)" stroke-width="1.2" marker-end="url(#arrSync)"/><path d="M 182 114 C 164 126, 154 126, 138 114" fill="none" style="stroke:var(--diagram-line)" stroke-width="1.2" marker-end="url(#arrSync)"/><text x="24" y="168" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-2)">synced on every pull request</text></svg></div>
+          <div class="card-body">
+            <h3>Driftless</h3>
+            <p class="card-sum"><span lang="en">Keeps an AI agent's context files in sync on every PR.</span><span lang="ko">PR마다 AI 에이전트의 컨텍스트 파일을 코드와 맞춰줘요.</span></p>
+            <p class="card-meta"><span lang="en">48h hackathon · solo · 2026</span><span lang="ko">48시간 해커톤 · 1인 · 2026</span></p>
+          </div>
+        </a>
+        <a class="card reveal" href="#p-petage" data-project="p-petage" style="--d: 0.12s;">
+          <div class="card-thumb" aria-hidden="true"><img src="./assets/petage-1-result.png" alt="PetAge AI age estimate result" loading="lazy"></div>
+          <div class="card-body">
+            <h3>PetAge AI · Danzam</h3>
+            <p class="card-sum"><span lang="en">A pet-age estimator and an award-winning sleep predictor.</span><span lang="ko">반려동물 나이 추정기, 그리고 우수상을 받은 수면 예측 앱이에요.</span></p>
+            <p class="card-meta"><span lang="en">team · 2025 · Excellence Award</span><span lang="ko">팀 · 2025 · 우수상</span></p>
+          </div>
+        </a>
+      </div>
+    </section>
 
+    <!-- project details: shown in the modal (stacked inline when JS is off) -->
+    <div class="project-details" id="project-details">
       <!-- Sellii: table-led, no images -->
-      <article class="flagship reveal">
+      <article class="flagship" id="p-sellii">
         <div class="flagship-head">
           <h3>Sellii</h3>
           <p class="claim">
@@ -229,7 +305,7 @@ try {
       </article>
 
       <!-- CLIR: product-led -->
-      <article class="flagship reveal">
+      <article class="flagship" id="p-clir">
         <div class="flagship-head">
           <h3>CLIR</h3>
           <p class="claim">
@@ -313,7 +389,7 @@ try {
       </article>
 
       <!-- FlowCraft: diagram-led -->
-      <article class="flagship reveal">
+      <article class="flagship" id="p-flowcraft">
         <div class="flagship-head">
           <h3>FlowCraft</h3>
           <p class="claim">
@@ -451,35 +527,19 @@ try {
 
         <p class="stack-line">Stack: Flutter · Dart · OpenAI API · JSON Schema · DartPad</p>
       </article>
-    </section>
 
-    <!-- 03 MORE WORK -->
-    <section id="more">
-      <div class="sec-head reveal"><span class="idx">03</span><h2><span lang="en">More work</span><span lang="ko">그 외 작업</span></h2></div>
-
-      <div class="rows">
-        <div class="row reveal">
-          <div class="row-head">
-            <h3>LiveTrack</h3>
-            <span class="row-meta"><span lang="en">solo</span><span lang="ko">1인 개발</span> · Apr 2026– · <a href="https://github.com/Poiurity/LiveTrack" target="_blank" rel="noopener">GitHub ↗</a></span>
-          </div>
-          <p lang="en">
-            Real-time location sharing for groups that split up on a trip. I wrote the
-            <strong>WebSocket layer myself</strong> instead of reaching for a managed realtime
-            service, because I wanted to own the failure handling: failures are classified by
-            retryability, with separate paths for partially completed operations. The whole stack
-            runs on one Hetzner VPS with Docker Compose, and movement analytics run on PostGIS.
-          </p>
-          <p lang="ko">
-            여행 중에 흩어진 일행이 서로 위치를 실시간으로 보는 앱이에요. 관리형 실시간 서비스
-            대신 <strong>WebSocket 서버를 직접 짰어요.</strong> 실패 처리를 남에게 맡기지 않고
-            직접 감당해 보고 싶었거든요. 실패는 재시도해도 되는지를 기준으로 나누고, 반쯤 끝난
-            작업은 따로 처리해요. 전체 스택은 Hetzner VPS 한 대에서 Docker Compose로 돌아가고,
-            이동 분석은 PostGIS로 해요.
-          </p>
-          <details>
-            <summary><span lang="en">architecture diagram</span><span lang="ko">구조 다이어그램</span></summary>
-            <figure class="diagram">
+      <article class="flagship" id="p-livetrack">
+        <div class="flagship-head">
+          <h3>LiveTrack</h3>
+          <p class="claim"><span lang="en">Real-time group location on a hand-written WebSocket layer, fully self-hosted.</span><span lang="ko">직접 짠 WebSocket 레이어로 만든 실시간 그룹 위치 공유예요. 서버도 직접 운영해요.</span></p>
+        </div>
+        <div class="meta-line"><span lang="en">solo</span><span lang="ko">1인 개발</span> <span>Apr 2026 –<span lang="en"> present</span><span lang="ko"> 현재</span></span> <a href="https://github.com/Poiurity/LiveTrack" target="_blank" rel="noopener">GitHub ↗</a></div>
+        <div class="prose">
+          <p lang="en">Real-time location sharing for groups that split up on a trip. I wrote the <strong>WebSocket layer myself</strong> instead of reaching for a managed realtime service, because I wanted to own the failure handling: failures are classified by retryability, with separate paths for partially completed operations. The whole stack runs on one Hetzner VPS with Docker Compose, and movement analytics run on PostGIS.</p>
+          <p lang="ko">여행 중에 흩어진 일행이 서로 위치를 실시간으로 보는 앱이에요. 관리형 실시간 서비스 대신 <strong>WebSocket 서버를 직접 짰어요.</strong> 실패 처리를 남에게 맡기지 않고 직접 감당해 보고 싶었거든요. 실패는 재시도해도 되는지를 기준으로 나누고, 반쯤 끝난 작업은 따로 처리해요. 전체 스택은 Hetzner VPS 한 대에서 Docker Compose로 돌아가고, 이동 분석은 PostGIS로 해요.</p>
+        </div>
+        <div style="margin-top: 20px;">
+          <figure class="diagram">
               <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LiveTrack architecture: mobile clients connect over WebSocket to a self-hosted hub which persists to PostGIS, all on one VPS">
                 <defs>
                   <marker id="arr2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -520,67 +580,85 @@ try {
                 </g>
               </svg>
             </figure>
-          </details>
         </div>
+        <p class="stack-line">Stack: React Native (Expo) · Node.js · Fastify · ws · PostgreSQL + PostGIS · Hetzner VPS · Docker Compose</p>
+      </article>
 
-        <div class="row reveal">
-          <div class="row-head">
-            <h3>Living Stage</h3>
-            <span class="row-meta"><span lang="en">hackathon · solo</span><span lang="ko">해커톤 · 1인</span> · May 2026 · <a href="https://github.com/Poiurity/Predator" target="_blank" rel="noopener">GitHub ↗</a></span>
-          </div>
-          <p lang="en">
-            A speech-paced generative UI built in about five hours at a Google I/O hackathon
-            hosted by Cerebral Valley and Google DeepMind. As the speaker talks,
-            structured-output streaming grows widgets on stage. The hero Sim widget stays fully
-            interactive: pulling a slider re-evaluates a sandboxed mathjs model and redraws a 60fps
-            canvas chart, with <strong>no model call in the interaction loop</strong>.
-          </p>
-          <p lang="ko">
-            Cerebral Valley와 Google DeepMind가 주최한 Google I/O 해커톤에서 5시간쯤 걸려 만든,
-            발표 속도에 맞춰 자라나는 UI예요. 발표자가 말하면 structured output 스트리밍으로
-            위젯이 무대에 하나씩 생겨요. 핵심 위젯은 슬라이더를 당기면 샌드박스 mathjs 모델을
-            다시 계산해서 60fps 캔버스 차트를 그리는데, <strong>이 상호작용 루프에는 모델 호출이
-            없어요</strong>.
-          </p>
+      <article class="flagship" id="p-livingstage">
+        <div class="flagship-head">
+          <h3>Living Stage</h3>
+          <p class="claim"><span lang="en">A generative UI that grows on stage as the speaker talks.</span><span lang="ko">발표 속도에 맞춰 무대 위에서 자라나는 UI예요.</span></p>
         </div>
-
-        <div class="row reveal">
-          <div class="row-head">
-            <h3>Conever</h3>
-            <span class="row-meta"><span lang="en">team · frontend lead</span><span lang="ko">팀 · 프론트 리드</span> · 2025 · <a href="https://github.com/orgs/2025AlphaProject/repositories" target="_blank" rel="noopener">GitHub ↗</a></span>
-          </div>
-          <p lang="en">Team-built travel app with AI route suggestions, native maps, and real-time trip sync. I led the frontend track; published on ONE Store (Korea).</p>
-          <p lang="ko">팀으로 만든 여행 앱이에요. AI 경로 추천, 네이티브 지도, 실시간 일정 동기화가 들어가요. 프론트엔드 트랙을 이끌었고, ONE Store(한국)에 출시했어요.</p>
+        <div class="meta-line"><span lang="en">Google I/O hackathon · solo</span><span lang="ko">Google I/O 해커톤 · 1인</span> <span>May 2026</span> <a href="https://github.com/Poiurity/Predator" target="_blank" rel="noopener">GitHub ↗</a></div>
+        <div class="prose">
+          <p lang="en">Built in about five hours at a Google I/O hackathon hosted by Cerebral Valley and Google DeepMind. As the speaker talks, structured-output streaming grows widgets on stage. The hero Sim widget stays fully interactive: pulling a slider re-evaluates a sandboxed mathjs model and redraws a 60fps canvas chart, with <strong>no model call in the interaction loop</strong>.</p>
+          <p lang="ko">Cerebral Valley와 Google DeepMind가 주최한 Google I/O 해커톤에서 5시간쯤 걸려 만들었어요. 발표자가 말하면 structured output 스트리밍으로 위젯이 무대에 하나씩 생겨요. 핵심 위젯은 슬라이더를 당기면 샌드박스 mathjs 모델을 다시 계산해서 60fps 캔버스 차트를 그리는데, <strong>이 상호작용 루프에는 모델 호출이 없어요</strong>.</p>
         </div>
+        <p class="stack-line">Stack: React · TypeScript · Gemini · Web Speech API · mathjs · Cloudflare Workers</p>
+      </article>
 
-        <div class="row reveal">
-          <div class="row-head">
-            <h3>GPSTracker</h3>
-            <span class="row-meta"><span lang="en">team · Kernel360</span><span lang="ko">팀 · Kernel360</span> · 2025</span>
-          </div>
+      <article class="flagship" id="p-conever">
+        <div class="flagship-head">
+          <h3>Conever</h3>
+          <p class="claim"><span lang="en">Plan trips together, with AI suggestions and real-time sync.</span><span lang="ko">AI 추천과 실시간 동기화로 함께 여행을 계획하는 앱이에요.</span></p>
+        </div>
+        <div class="meta-line"><span lang="en">team · frontend lead</span><span lang="ko">팀 · 프론트 리드</span> <span>2025</span> <span lang="en">published on ONE Store (Korea)</span><span lang="ko">ONE Store(한국) 출시</span> <a href="https://github.com/orgs/2025AlphaProject/repositories" target="_blank" rel="noopener">GitHub ↗</a></div>
+        <div class="prose">
+          <p lang="en">Team-built travel app with AI route suggestions, native maps, and real-time trip sync over WebSocket. I led the frontend track.</p>
+          <p lang="ko">팀으로 만든 여행 앱이에요. AI 경로 추천, 네이티브 지도, WebSocket 실시간 일정 동기화가 들어가요. 프론트엔드 트랙을 이끌었어요.</p>
+        </div>
+        <div class="gallery" style="margin-top: 20px;">
+          <figure><img src="./assets/conever-3-recommend.png" data-zoom="./assets/conever-3-recommend.png" alt="Conever AI route suggestions" loading="lazy"><figcaption>Fig. 1 · <span lang="en">AI route suggestions</span><span lang="ko">AI 경로 추천</span></figcaption></figure>
+          <figure><img src="./assets/conever-4-map.png" data-zoom="./assets/conever-4-map.png" alt="Conever native map" loading="lazy"><figcaption>Fig. 2 · <span lang="en">native maps</span><span lang="ko">네이티브 지도</span></figcaption></figure>
+          <figure><img src="./assets/conever-6-plans.png" data-zoom="./assets/conever-6-plans.png" alt="Conever shared plans" loading="lazy"><figcaption>Fig. 3 · <span lang="en">shared plans</span><span lang="ko">공유 일정</span></figcaption></figure>
+        </div>
+        <p class="stack-line">Stack: Flutter · Dart · Gemini API · Naver Map SDK · Kakao OAuth · WebSocket</p>
+      </article>
+
+      <article class="flagship" id="p-gpstracker">
+        <div class="flagship-head">
+          <h3>GPSTracker</h3>
+          <p class="claim"><span lang="en">Fleet driving-analytics dashboard, built mock-API-first.</span><span lang="ko">mock API로 먼저 굴러가게 만든 차량 주행 분석 대시보드예요.</span></p>
+        </div>
+        <div class="meta-line"><span lang="en">team · Kernel360</span><span lang="ko">팀 · Kernel360</span> <span>2025</span></div>
+        <div class="prose">
           <p lang="en">Fleet driving-analytics dashboard. The frontend ran mock-API-first so the team could move before the backend was ready; I collaborated on the Docker and Jenkins CI/CD pipeline.</p>
           <p lang="ko">차량 주행 분석 대시보드예요. 백엔드가 준비되기 전에 mock API로 프론트를 먼저 움직이게 했고, 팀의 Docker·Jenkins CI/CD는 같이 구축했어요.</p>
         </div>
+        <div style="margin-top: 20px;"><figure><img src="./assets/gps-2-route.png" data-zoom="./assets/gps-2-route.png" alt="GPSTracker route replay" loading="lazy"><figcaption>Fig. 1 · <span lang="en">route replay</span><span lang="ko">경로 리플레이</span></figcaption></figure></div>
+        <p class="stack-line">Stack: React · TypeScript · Zustand · TanStack Query · MSW · Docker · Jenkins</p>
+      </article>
 
-        <div class="row reveal">
-          <div class="row-head">
-            <h3>Driftless</h3>
-            <span class="row-meta"><span lang="en">48h hackathon · solo</span><span lang="ko">48시간 해커톤 · 1인</span> · May 2026 · <a href="https://github.com/Poiurity/driftless-demo" target="_blank" rel="noopener">GitHub ↗</a></span>
-          </div>
-          <p lang="en">Keeps an AI coding agent's persisted context (rules, skills, AGENTS.md) in sync with the codebase on every pull request, using only the agent's own extension mechanisms.</p>
-          <p lang="ko">PR이 생길 때마다 AI 코딩 에이전트의 컨텍스트 파일(규칙, 스킬, AGENTS.md)을 코드베이스와 맞춰주는 도구예요. 에이전트가 원래 가진 확장 수단만 썼어요.</p>
+      <article class="flagship" id="p-driftless">
+        <div class="flagship-head">
+          <h3>Driftless</h3>
+          <p class="claim"><span lang="en">Keeps an AI coding agent's context files in sync with the code on every PR.</span><span lang="ko">PR이 생길 때마다 AI 코딩 에이전트의 컨텍스트 파일을 코드와 맞춰줘요.</span></p>
         </div>
+        <div class="meta-line"><span lang="en">48h hackathon · solo</span><span lang="ko">48시간 해커톤 · 1인</span> <span>May 2026</span> <a href="https://github.com/Poiurity/driftless-demo" target="_blank" rel="noopener">GitHub ↗</a></div>
+        <div class="prose">
+          <p lang="en">Keeps an AI coding agent's persisted context (rules, skills, AGENTS.md) in sync with the codebase on every pull request, using only the agent's own extension mechanisms. Built solo in a 48-hour IBM hackathon; 7 of 7 mock test scenarios pass.</p>
+          <p lang="ko">PR이 생길 때마다 AI 코딩 에이전트의 컨텍스트 파일(규칙, 스킬, AGENTS.md)을 코드베이스와 맞춰주는 도구예요. 에이전트가 원래 가진 확장 수단만 썼어요. IBM 해커톤에서 48시간 동안 혼자 만들었고, mock 테스트 시나리오 7개가 전부 통과해요.</p>
+        </div>
+        <p class="stack-line">Stack: IBM Bob (Skills, Slash Commands) · watsonx · GitHub</p>
+      </article>
 
-        <div class="row reveal">
-          <div class="row-head">
-            <h3>PetAge AI · Danzam</h3>
-            <span class="row-meta"><span lang="en">team</span><span lang="ko">팀</span> · 2025 · <a href="https://petageai.com" target="_blank" rel="noopener">petageai.com ↗</a> · <a href="https://github.com/4TH-cocothon-team2/danzam-flutter" target="_blank" rel="noopener">Danzam ↗</a></span>
-          </div>
+      <article class="flagship" id="p-petage">
+        <div class="flagship-head">
+          <h3>PetAge AI · Danzam</h3>
+          <p class="claim"><span lang="en">A pet-age estimator and an award-winning sleep predictor.</span><span lang="ko">반려동물 나이 추정기, 그리고 우수상을 받은 수면 예측 앱이에요.</span></p>
+        </div>
+        <div class="meta-line"><span lang="en">team</span><span lang="ko">팀</span> <span>2025</span> <a href="https://petageai.com" target="_blank" rel="noopener">petageai.com ↗</a> <a href="https://github.com/4TH-cocothon-team2/danzam-flutter" target="_blank" rel="noopener">Danzam ↗</a></div>
+        <div class="prose">
           <p lang="en">PetAge estimates a pet's age from photos (EfficientNet-B0 served through FastAPI); I led the team. Danzam, a caffeine-rhythm sleep predictor, won the Excellence Award at the 4th COKOTHON.</p>
           <p lang="ko">PetAge는 사진으로 반려동물 나이를 추정해요(EfficientNet-B0 + FastAPI). 팀을 이끌었어요. 카페인 리듬으로 수면을 예측하는 Danzam은 제4회 COKOTHON에서 우수상을 받았어요.</p>
         </div>
-      </div>
-    </section>
+        <div class="flagship-cols" style="margin-top: 20px;">
+          <figure><img src="./assets/petage-1-result.png" data-zoom="./assets/petage-1-result.png" alt="PetAge AI age estimate" loading="lazy"><figcaption>Fig. 1 · <span lang="en">PetAge: age estimate from a photo</span><span lang="ko">PetAge: 사진으로 나이 추정</span></figcaption></figure>
+          <figure><img src="./assets/danzam-3-dashboard.png" data-zoom="./assets/danzam-3-dashboard.png" alt="Danzam caffeine dashboard" loading="lazy"><figcaption>Fig. 2 · <span lang="en">Danzam: caffeine dashboard</span><span lang="ko">Danzam: 카페인 대시보드</span></figcaption></figure>
+        </div>
+        <p class="stack-line">Stack: Flutter · FastAPI · Supabase · EfficientNet-B0 (PyTorch/ONNX)</p>
+      </article>
+    </div>
 
   </div>
 </main>
@@ -608,6 +686,13 @@ try {
     <p class="fine">© 2026 Yeonguk Lee · Irvine, CA</p>
   </div>
 </footer>
+
+<div class="pmodal" id="pmodal" aria-hidden="true">
+  <div class="pmodal-panel" role="dialog" aria-modal="true">
+    <button type="button" class="pmodal-close" aria-label="Close">✕</button>
+    <div class="pmodal-body"></div>
+  </div>
+</div>
 
 <div class="lightbox" id="lightbox" aria-hidden="true"><img src="" alt=""></div>
 
@@ -672,7 +757,43 @@ try {
     });
   });
   lb.addEventListener('click', function () { lb.classList.remove('open'); lbImg.removeAttribute('src'); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') lb.classList.remove('open'); });
+  // project modal
+  var pmodal = document.getElementById('pmodal');
+  var pbody = pmodal.querySelector('.pmodal-body');
+  var pdetails = document.getElementById('project-details');
+  var openId = null;
+  function openProject(id) {
+    var art = document.getElementById(id);
+    if (!art) return;
+    pbody.appendChild(art);
+    pmodal.classList.add('open');
+    pmodal.setAttribute('aria-hidden', 'false');
+    pmodal.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+    openId = id;
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  }
+  function closeProject() {
+    if (!openId) return;
+    var art = document.getElementById(openId);
+    if (art) pdetails.appendChild(art);
+    pmodal.classList.remove('open');
+    pmodal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    openId = null;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  }
+  document.querySelectorAll('.card[data-project]').forEach(function (c) {
+    c.addEventListener('click', function (e) { e.preventDefault(); openProject(c.dataset.project); });
+  });
+  pmodal.addEventListener('click', function (e) { if (e.target === pmodal) closeProject(); });
+  pmodal.querySelector('.pmodal-close').addEventListener('click', closeProject);
+  if (location.hash && /^#p-/.test(location.hash)) openProject(location.hash.slice(1));
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (lb.classList.contains('open')) { lb.classList.remove('open'); } else { closeProject(); }
+  });
 })();
 </script>
 
