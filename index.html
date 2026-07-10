@@ -7,10 +7,11 @@
 <meta name="description" content="Backend & systems engineer who builds fast with AI. Backend owner of CLIR (live on the App Store); builds agents that verify before they act, with reliability measured in reproducible harnesses.">
 <link rel="canonical" href="https://poiurity.com/">
 <meta property="og:title" content="Yeonguk Lee · Software Engineer">
-<meta property="og:description" content="Backend & systems engineer who builds fast with AI. Shipped App Store backend; agents verified before they act.">
+<meta property="og:description" content="Backend & systems engineer who builds fast with AI. Shipped App Store backend; agents that verify before they act.">
 <meta property="og:url" content="https://poiurity.com/">
 <meta property="og:type" content="website">
 <script>
+document.documentElement.classList.add('js');
 try {
   var l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('lang');
   if (l === 'ko' || l === 'en') { document.documentElement.dataset.lang = l; document.documentElement.lang = l; }
@@ -24,91 +25,103 @@ try {
 </head>
 <body>
 
-<div class="topbar">
-  <a href="/" class="brand">Yeonguk Lee<em>.</em></a>
-  <div class="topbar-right">
-    <div class="lang-toggle" role="group" aria-label="Language">
-      <button type="button" data-setlang="en" aria-pressed="true">EN</button>
-      <button type="button" data-setlang="ko" aria-pressed="false">KO</button>
-    </div>
-    <a href="mailto:iamlyg9667@gmail.com" class="hide-sm">iamlyg9667@gmail.com</a>
-  </div>
-</div>
-
-<div class="shell">
-
-  <!-- ──────── RAIL ──────── -->
-  <aside class="rail">
-    <div class="rail-sticky">
-      <h1>Yeonguk Lee</h1>
-      <div class="role"><span lang="en">software engineer · Irvine, CA</span><span lang="ko">소프트웨어 엔지니어 · 캘리포니아 어바인</span></div>
-
-      <p class="positioning" lang="en">
-        Backend &amp; systems engineer who builds fast with AI.
-        I own the backend of <strong>CLIR</strong>, a food-allergy scanner live on the App Store,
-        and I build agents that <strong>verify before they act</strong>.
-      </p>
-      <p class="positioning" lang="ko">
-        백엔드와 시스템 기본기 위에서 AI로 빠르게 만드는 엔지니어예요.
-        앱스토어에 올라와 있는 식품 알레르기 스캐너 <strong>CLIR</strong>의 백엔드를 맡고 있고,
-        <strong>행동하기 전에 먼저 검증하는</strong> 에이전트를 만들어요.
-      </p>
-
-      <nav class="rail-nav" aria-label="Sections">
-        <a href="#profile"><span class="idx">01</span><span lang="en">Profile</span><span lang="ko">소개</span></a>
-        <a href="#work"><span class="idx">02</span><span lang="en">Selected work</span><span lang="ko">대표 작업</span></a>
-        <a href="#more"><span class="idx">03</span><span lang="en">More work</span><span lang="ko">그 외 작업</span></a>
-      </nav>
-
-      <div class="rail-links">
-        <a href="https://github.com/Poiurity" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://linkedin.com/in/yeonguk-lee" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="mailto:iamlyg9667@gmail.com">Email</a>
+<header class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a href="/" class="brand">Yeonguk Lee<em>.</em></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#profile"><span lang="en">Profile</span><span lang="ko">소개</span></a>
+      <a href="#work"><span lang="en">Work</span><span lang="ko">대표 작업</span></a>
+      <a href="#more"><span lang="en">More</span><span lang="ko">그 외</span></a>
+    </nav>
+    <div class="topnav-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-setlang="en" aria-pressed="true">EN</button>
+        <button type="button" data-setlang="ko" aria-pressed="false">KO</button>
       </div>
+      <a href="mailto:iamlyg9667@gmail.com" class="btn btn-primary btn-sm">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span lang="en">Email</span><span lang="ko">메일</span>
+      </a>
     </div>
-  </aside>
+  </div>
+</header>
 
-  <!-- ──────── MAIN ──────── -->
-  <main>
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="container">
+      <h1 class="reveal" style="--d: 0s;">
+        <span lang="en">Backend &amp; systems engineer<br>who builds fast with AI.</span>
+        <span lang="ko">백엔드와 시스템 기본기 위에서<br>AI로 빠르게 만드는 엔지니어.</span>
+      </h1>
+      <p class="hero-sub reveal" style="--d: 0.09s;">
+        <span lang="en">I own the backend of <strong>CLIR</strong>, a food-allergy scanner live on the App Store,
+        and I build agents that <strong>verify before they act</strong>.</span>
+        <span lang="ko">App Store에 올라와 있는 식품 알레르기 스캐너 <strong>CLIR</strong>의 백엔드를 맡고 있어요.
+        그리고 <strong>행동하기 전에 먼저 검증하는</strong> 에이전트를 만들어요.</span>
+      </p>
+      <div class="btn-row reveal" style="--d: 0.18s;">
+        <a href="mailto:iamlyg9667@gmail.com" class="btn btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span lang="en">Email me</span><span lang="ko">메일 보내기</span>
+        </a>
+        <a href="https://github.com/Poiurity" target="_blank" rel="noopener" class="btn btn-sec">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub
+        </a>
+        <a href="https://linkedin.com/in/yeonguk-lee" target="_blank" rel="noopener" class="btn btn-sec">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+      </div>
+      <p class="hero-status reveal" style="--d: 0.27s;">
+        <span lang="en">software engineer · Irvine, CA</span>
+        <span lang="ko">소프트웨어 엔지니어 · Irvine, CA</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="container">
 
     <!-- 01 PROFILE -->
     <section id="profile">
-      <div class="sec-head"><span class="idx">01</span><h2><span lang="en">Profile</span><span lang="ko">소개</span></h2></div>
+      <div class="sec-head reveal"><span class="idx">01</span><h2><span lang="en">Profile</span><span lang="ko">소개</span></h2></div>
 
-      <dl class="facts">
+      <dl class="facts reveal">
         <div class="fact">
           <dt><span lang="en">Now</span><span lang="ko">지금은</span></dt>
           <dd>
-            <span lang="en"><strong>Global PBL Program</strong>, Irvine CA — full-stack &amp; AI track, weekly mentorship from a Blizzard Battle.net backend engineer</span>
-            <span lang="ko"><strong>글로벌 PBL 프로그램</strong>(어바인) — 풀스택·AI 트랙. 매주 Blizzard Battle.net 백엔드 엔지니어에게 멘토링을 받아요</span>
+            <span lang="en"><strong>Global PBL Program</strong>, Irvine CA: full-stack &amp; AI track, weekly mentorship from a Blizzard Battle.net backend engineer</span>
+            <span lang="ko"><strong>Global PBL Program</strong>(Irvine)의 풀스택·AI 트랙에 있어요. 매주 Blizzard Battle.net 백엔드 엔지니어에게 멘토링을 받아요.</span>
           </dd>
         </div>
         <div class="fact">
           <dt><span lang="en">Shipped</span><span lang="ko">출시한 앱</span></dt>
           <dd>
-            <span lang="en"><strong>CLIR</strong> — live on the App Store · <strong>Conever</strong> — published on ONE Store (Korea, 2025)</span>
-            <span lang="ko"><strong>CLIR</strong> — 앱스토어 출시 · <strong>Conever</strong> — 원스토어 출시(한국, 2025)</span>
+            <span lang="en"><strong>CLIR</strong>, live on the App Store · <strong>Conever</strong>, published on ONE Store (Korea, 2025)</span>
+            <span lang="ko"><strong>CLIR</strong>는 App Store에, <strong>Conever</strong>는 ONE Store(한국)에 올라가 있어요.</span>
           </dd>
         </div>
         <div class="fact">
-          <dt><span lang="en">Focus</span><span lang="ko">파는 것</span></dt>
+          <dt><span lang="en">Focus</span><span lang="ko">파고드는 것</span></dt>
           <dd>
-            <span lang="en">Backend &amp; systems — caching, concurrency, WebSocket, self-hosted infra · AI agents whose reliability is <strong>measured, not assumed</strong></span>
-            <span lang="ko">백엔드와 시스템 — 캐싱, 동시성, WebSocket, 직접 운영하는 서버 · 믿음이 아니라 <strong>수치로 검증한</strong> AI 에이전트</span>
+            <span lang="en">Backend &amp; systems: caching, concurrency, WebSocket, self-hosted infra · AI agents whose reliability is <strong>measured, not assumed</strong></span>
+            <span lang="ko">백엔드와 시스템(캐싱, 동시성, WebSocket, 직접 운영하는 서버), 그리고 믿음이 아니라 <strong>수치로 검증하는</strong> AI 에이전트요.</span>
           </dd>
         </div>
         <div class="fact">
           <dt><span lang="en">Education</span><span lang="ko">학력</span></dt>
           <dd>
-            <span lang="en">B.S. Computer Science, Kookmin University — expected Feb 2028</span>
-            <span lang="ko">국민대학교 컴퓨터공학 — 2028년 2월 졸업 예정</span>
+            <span lang="en">B.S. Computer Science, Kookmin University (expected Feb 2028)</span>
+            <span lang="ko">국민대학교 컴퓨터공학, 2028년 2월 졸업 예정이에요.</span>
           </dd>
         </div>
       </dl>
 
-      <div class="prose">
+      <div class="prose reveal">
         <p lang="en">
-          What pulled me into computing wasn't the AI wave — it was wanting to understand how systems
+          What pulled me into computing wasn't the AI wave. It was wanting to understand how systems
           work from the ground up. AI lets me build fast and broadly today, but the deeper pull is
           <strong>systems, networking, and the low level</strong>. I like owning the hard part:
           the backend of a shipped app, a hand-written realtime layer, an agent that has to stay
@@ -118,61 +131,61 @@ try {
           컴퓨터에 빠진 건 AI 유행 때문이 아니에요. 시스템이 바닥에서 어떻게 돌아가는지 알고 싶었어요.
           지금은 AI 덕분에 빠르고 넓게 만들지만, 결국 파고들고 싶은 건
           <strong>시스템, 네트워킹, 로우레벨</strong>이에요. 출시된 앱의 백엔드, 직접 짠 실시간 레이어,
-          데모 밖에서도 믿을 수 있어야 하는 에이전트처럼 어려운 부분을 맡는 걸 좋아해요.
+          데모 밖에서도 믿을 수 있어야 하는 에이전트. 이렇게 어려운 부분을 맡는 걸 좋아해요.
         </p>
       </div>
     </section>
 
     <!-- 02 SELECTED WORK -->
     <section id="work">
-      <div class="sec-head"><span class="idx">02</span><h2><span lang="en">Selected work</span><span lang="ko">대표 작업</span></h2></div>
+      <div class="sec-head reveal"><span class="idx">02</span><h2><span lang="en">Selected work</span><span lang="ko">대표 작업</span></h2></div>
 
-      <!-- Sellii — table-led, no images -->
-      <article class="flagship">
+      <!-- Sellii: table-led, no images -->
+      <article class="flagship reveal">
         <div class="flagship-head">
           <h3>Sellii</h3>
           <p class="claim">
-            <span lang="en">A resale-arbitrage agent, verified before it acts.</span>
-            <span lang="ko">행동하기 전에, 서버가 먼저 검증하는 리셀 아비트리지 에이전트예요.</span>
+            <span lang="en">A resale-arbitrage agent that verifies before it acts.</span>
+            <span lang="ko">행동하기 전에 서버가 먼저 검증하는 resale arbitrage 에이전트예요.</span>
           </p>
         </div>
         <div class="meta-line">
-          <span lang="en">solo</span><span lang="ko">혼자 만듦</span>
+          <span lang="en">solo</span><span lang="ko">1인 개발</span>
           <span>Mar–May 2026</span>
-          <span lang="en">not launched · private repo — code walkthrough available</span>
-          <span lang="ko">미출시 · 비공개 저장소 — 코드 워크스루 가능</span>
+          <span lang="en">not launched · private repo · code walkthrough available</span>
+          <span lang="ko">미출시 · private repo · 코드 워크스루 가능</span>
         </div>
 
         <div class="prose">
           <p lang="en">
             An agent built to scan Facebook Marketplace, OfferUp, and Craigslist on a daily
-            schedule, price finds against eBay sold comps, and estimate net profit —
-            <strong>a human approves every deal</strong>.
+            schedule, price finds against eBay sold comps, and estimate net profit.
+            <strong>A human approves every deal.</strong>
           </p>
           <p lang="ko">
-            페이스북 마켓플레이스, OfferUp, 크레이그리스트를 매일 훑고, eBay 실거래가와 비교해
+            Facebook Marketplace, OfferUp, Craigslist를 매일 훑고, eBay 실거래가와 비교해서
             순이익을 추정하도록 만든 에이전트예요. <strong>거래는 전부 사람이 승인해요.</strong>
           </p>
           <p lang="en">
             The interesting part is trust. Instead of believing the model, the server
-            <strong>recomputes every economic figure</strong> from canonical eBay comps and pins
-            the evidence to each decision. I turned the reliability claims into three
+            <strong>recomputes every economic figure</strong> from canonical eBay comps and stores
+            the evidence with each decision. I turned the reliability claims into three
             reproducible offline harnesses and published the result tables.
           </p>
           <p lang="ko">
-            핵심은 신뢰예요. 모델이 말한 숫자를 믿는 대신, 서버가 eBay 실거래 데이터로
-            <strong>모든 금액을 다시 계산</strong>하고 근거를 결정에 박아둬요. 이 주장들을
-            오프라인에서 재현할 수 있는 하네스 3개로 직접 재서, 결과 표를 공개했어요.
+            핵심은 신뢰예요. 모델이 말한 숫자를 그대로 믿지 않고, 서버가 eBay 실거래 데이터로
+            <strong>모든 금액을 다시 계산</strong>해요. 판단의 근거도 결정에 같이 저장하고요.
+            이 주장들이 진짜인지 오프라인에서 재현되는 하네스 3개로 직접 쟀고, 결과 표를 공개했어요.
           </p>
         </div>
 
         <div style="margin-top: 20px;">
           <div class="table-wrap">
               <table>
-                <caption><span lang="en">Harness results — measured 2026-07-09 · offline, not production</span><span lang="ko">하네스 결과 — 2026-07-09 측정 · 오프라인, 프로덕션 아님</span></caption>
+                <caption><span lang="en">Harness results · measured 2026-07-09 · offline, not production</span><span lang="ko">하네스 결과 · 2026-07-09 측정 · 오프라인, 프로덕션 아님</span></caption>
                 <thead>
                   <tr>
-                    <th><span lang="en">What I measured</span><span lang="ko">잰 것</span></th>
+                    <th><span lang="en">What I measured</span><span lang="ko">측정 항목</span></th>
                     <th><span lang="en">Result</span><span lang="ko">결과</span></th>
                     <th><span lang="en">Scope</span><span lang="ko">범위</span></th>
                   </tr>
@@ -191,11 +204,11 @@ try {
                   <tr>
                     <td><span lang="en">Commits per replayed event</span><span lang="ko">이벤트 재전송 시 커밋 수</span></td>
                     <td class="num"><span class="good">1</span> <span class="scope"><span lang="en">naive pattern: up to 40</span><span lang="ko">비원자 패턴: 최대 40</span></span></td>
-                    <td class="num scope"><span lang="en">replay harness, side effects mocked</span><span lang="ko">리플레이 하네스, 부수효과 모킹</span></td>
+                    <td class="num scope"><span lang="en">replay harness, side effects mocked</span><span lang="ko">리플레이 하네스, side effect 모킹</span></td>
                   </tr>
                   <tr>
                     <td><span lang="en">Projected LLM spend</span><span lang="ko">예상 LLM 비용</span></td>
-                    <td class="num"><span class="good">−98.8%</span> <span class="scope"><span lang="en">vision calls 31 → 0</span><span lang="ko">비전 호출 31 → 0</span></span></td>
+                    <td class="num"><span class="good">−98.8%</span> <span class="scope"><span lang="en">vision calls 31 → 0</span><span lang="ko">vision 호출 31 → 0</span></span></td>
                     <td class="num scope"><span lang="en">fixed 31-listing fixture</span><span lang="ko">고정 매물 31개 픽스처</span></td>
                   </tr>
                   <tr>
@@ -205,27 +218,27 @@ try {
                   </tr>
                 </tbody>
               </table>
-            </div>
+          </div>
           <p class="table-note">
             <span lang="en">Full methodology, result tables, and the cases it does <em>not</em> catch → <a href="/sellii-validation/">harness results page</a></span>
-            <span lang="ko">방법론 전체와 <em>못 잡은</em> 케이스까지 → <a href="/sellii-validation/?lang=ko">검증 결과 페이지</a>에 정리해 뒀어요</span>
+            <span lang="ko">방법론 전체와 <em>못 잡은</em> 케이스까지 <a href="/sellii-validation/?lang=ko">검증 결과 페이지</a>에 정리해 뒀어요 →</span>
           </p>
         </div>
 
-        <p class="stack-line">Stack — TypeScript · Fastify · BullMQ · Redis · PostgreSQL · GPT-4o · Playwright</p>
+        <p class="stack-line">Stack: TypeScript · Fastify · BullMQ · Redis · PostgreSQL · GPT-4o · Playwright</p>
       </article>
 
-      <!-- CLIR — product-led -->
-      <article class="flagship">
+      <!-- CLIR: product-led -->
+      <article class="flagship reveal">
         <div class="flagship-head">
           <h3>CLIR</h3>
           <p class="claim">
-            <span lang="en">Scan a food label once — get a safe-or-not answer for your own dietary profile.</span>
+            <span lang="en">Scan a food label once, get a safe-or-not answer for your own dietary profile.</span>
             <span lang="ko">라벨을 한 번 스캔하면, 내 알레르기 프로필 기준으로 먹어도 되는지 바로 알려줘요.</span>
           </p>
         </div>
         <div class="meta-line">
-          <span class="live">● <span lang="en">live · App Store</span><span lang="ko">앱스토어 서비스 중</span></span>
+          <span class="live">● <span lang="en">live · App Store</span><span lang="ko">App Store 서비스 중</span></span>
           <span lang="en">backend owner, 4-person team</span><span lang="ko">4인 팀, 백엔드 담당</span>
           <span>Mar 2026 –<span lang="en"> present</span><span lang="ko"> 현재</span></span>
           <a href="https://apps.apple.com/us/app/clir/id6769223942" target="_blank" rel="noopener">App Store ↗</a>
@@ -235,40 +248,40 @@ try {
         <div class="flagship-cols">
           <div class="prose">
             <p lang="en">
-              Every scan used to trigger a paid AI call for ingredient analysis — at realistic
-              scale that breaks the cost model. I designed a <strong>perceptual-hash dedup
-              cache</strong>, so a repeat label scan skips the model ladder entirely. Exact-match
-              caching can't work here: two photos of the same label never hash identically.
+              Every scan used to trigger a paid AI call for ingredient analysis. At realistic
+              scale, that breaks the cost model. So I designed a <strong>perceptual-hash dedup
+              cache</strong>: a repeat label scan skips the model ladder entirely. Exact-match
+              caching can't work here, because two photos of the same label never hash identically.
             </p>
             <p lang="ko">
-              원래는 스캔할 때마다 유료 AI 호출이 나가서, 규모가 커지면 비용 구조가 무너져요.
-              그래서 <strong>이미지 지각 해시로 중복을 잡는 캐시</strong>를 설계했어요. 같은 라벨을
-              다시 스캔하면 모델 호출을 아예 건너뛰어요. 같은 라벨이라도 사진마다 해시가 달라서,
-              단순 일치 캐시로는 안 되는 문제였어요.
+              원래는 스캔할 때마다 유료 AI 호출이 나갔어요. 규모가 커지면 비용 구조가 무너져요.
+              그래서 <strong>perceptual hash로 중복을 잡는 캐시</strong>를 설계했어요. 같은 라벨을
+              다시 스캔하면 모델 호출을 아예 건너뛰어요. 같은 라벨이라도 사진마다 해시값이
+              달라지니까, 단순 일치 캐시로는 풀 수 없는 문제였어요.
             </p>
             <p lang="en">
               The community feed survives request bursts with TTL jitter,
-              stale-while-revalidate, and a distributed lock — N concurrent requests no longer
+              stale-while-revalidate, and a distributed lock, so N concurrent requests no longer
               trigger N recomputes of the 7-day aggregation.
             </p>
             <p lang="ko">
-              커뮤니티 피드는 TTL 지터, stale-while-revalidate, 분산 락으로 지켰어요. 요청이
-              한꺼번에 몰려도 7일 집계 재계산이 N번 일어나지 않아요.
+              커뮤니티 피드는 TTL jitter, stale-while-revalidate, 분산 락으로 지켰어요. 요청이
+              한꺼번에 몰려도 7일 집계를 다시 계산하는 일이 N번 일어나지 않아요.
             </p>
           </div>
 
           <div class="gallery">
             <figure>
               <img src="./assets/clir-ocr.png" data-zoom="./assets/clir-ocr.png" alt="CLIR scanning a food label with OCR" loading="lazy">
-              <figcaption>Fig. 1 — <span lang="en">scan a label or barcode</span><span lang="ko">라벨·바코드 스캔</span></figcaption>
+              <figcaption>Fig. 1 · <span lang="en">scan a label or barcode</span><span lang="ko">라벨·바코드 스캔</span></figcaption>
             </figure>
             <figure>
               <img src="./assets/clir-result.png" data-zoom="./assets/clir-result.png" alt="CLIR verdict screen: product marked Good for this profile" loading="lazy">
-              <figcaption>Fig. 2 — <span lang="en">verdict for your profile</span><span lang="ko">내 프로필 기준 판정</span></figcaption>
+              <figcaption>Fig. 2 · <span lang="en">verdict for your profile</span><span lang="ko">내 프로필 기준 판정</span></figcaption>
             </figure>
             <figure>
               <img src="./assets/clir-ingredients.png" data-zoom="./assets/clir-ingredients.png" alt="CLIR full ingredient breakdown" loading="lazy">
-              <figcaption>Fig. 3 — <span lang="en">ingredient breakdown</span><span lang="ko">성분 분석</span></figcaption>
+              <figcaption>Fig. 3 · <span lang="en">ingredient breakdown</span><span lang="ko">성분 분석</span></figcaption>
             </figure>
           </div>
         </div>
@@ -276,7 +289,7 @@ try {
         <div style="margin-top: 20px;">
           <div class="table-wrap">
               <table>
-                <caption><span lang="en">Repeat-scan path — call counts by mechanism, not measured hit-rates</span><span lang="ko">중복 스캔 경로 — 호출 횟수 기준, 적중률 실측 아님</span></caption>
+                <caption><span lang="en">Repeat-scan path · call counts by mechanism, not measured hit-rates</span><span lang="ko">중복 스캔 경로 · 호출 횟수 기준, 적중률 실측 아님</span></caption>
                 <thead>
                   <tr><th></th><th><span lang="en">Before</span><span lang="ko">전</span></th><th><span lang="en">After</span><span lang="ko">후</span></th></tr>
                 </thead>
@@ -296,48 +309,49 @@ try {
           </div>
         </div>
 
-        <p class="stack-line">Stack — TypeScript · Fastify · Redis · PostgreSQL · React Native (Expo) · Railway</p>
+        <p class="stack-line">Stack: TypeScript · Fastify · Redis · PostgreSQL · React Native (Expo) · Railway</p>
       </article>
 
-      <!-- FlowCraft — diagram-led -->
-      <article class="flagship">
+      <!-- FlowCraft: diagram-led -->
+      <article class="flagship reveal">
         <div class="flagship-head">
           <h3>FlowCraft</h3>
           <p class="claim">
             <span lang="en">A no-code Flutter app builder where agents never write the code directly.</span>
-            <span lang="ko">에이전트가 코드를 직접 쓰지 않는, 노코드 Flutter 앱 빌더예요.</span>
+            <span lang="ko">에이전트가 코드를 직접 쓰지 않는 노코드 Flutter 앱 빌더예요.</span>
           </p>
         </div>
         <div class="meta-line">
-          <span lang="en">solo</span><span lang="ko">혼자 만듦</span>
+          <span lang="en">solo</span><span lang="ko">1인 개발</span>
           <span>Mar 2026 –<span lang="en"> present</span><span lang="ko"> 현재</span></span>
           <a href="https://github.com/Poiurity/FlowCraft" target="_blank" rel="noopener">github.com/Poiurity/FlowCraft ↗</a>
         </div>
 
-        <div class="prose" style="max-width: 640px;">
+        <div class="prose">
           <p lang="en">
             Six LLM agents (Clarifier, WidgetExtender, Structure, Design, Repair, Critic) emit a
             <strong>typed AppState instead of raw Flutter</strong>; a deterministic generator
             compiles it to code. Generation runs in a closed loop: a 13-category static validator
-            checks the output, a repair agent patches failures — two attempts max, with oscillation
-            and wall-clock guards — and when repair fails, the system falls back to the prior valid
-            state when one exists.
+            checks the output, and a repair agent patches failures (two attempts max, with
+            oscillation and wall-clock guards). When repair fails, the system falls back to the
+            prior valid state when one exists.
           </p>
           <p lang="ko">
             LLM 에이전트 6개(Clarifier, WidgetExtender, Structure, Design, Repair, Critic)가
-            Flutter 코드 대신 <strong>타입이 정해진 AppState</strong>를 만들고, 결정적 생성기가
-            그걸 코드로 바꿔요. 생성은 항상 닫힌 루프 안에서 돌아요. 13개 항목을 검사하는 정적
-            검증기가 결과를 확인하고, 실패하면 수리 에이전트가 고쳐요 — 최대 2번, 진동·시간 가드
-            포함. 그래도 안 되면 이전에 성공한 상태가 있을 때 거기로 돌아가요.
+            Flutter 코드 대신 <strong>타입이 정해진 AppState</strong>를 만들어요. 코드는 생성기가
+            정해진 규칙대로만 만들어서, 같은 상태면 늘 같은 코드가 나와요. 생성은 항상 닫힌 루프
+            안에서 돌아요. 13개 항목을 검사하는 정적 검증기가 결과를 확인하고, 실패하면 Repair
+            에이전트가 최대 2번 고쳐요. 무한 반복과 시간 초과를 막는 가드도 있어요. 그래도 안 되면,
+            이전에 성공한 상태가 있을 때 거기로 돌아가요.
           </p>
           <p lang="en">
-            It started as an Orchestrator/Planning/UI/Logic pipeline; I redesigned it around typed
+            It started as an Orchestrator/Planning/UI/Logic pipeline. I redesigned it around typed
             state after raw code generation kept drifting between model calls. All
             <strong>53 automated tests pass</strong>; preview runs in the browser via DartPad.
           </p>
           <p lang="ko">
             처음엔 Orchestrator/Planning/UI/Logic 파이프라인이었어요. 모델을 호출할 때마다 코드가
-            흔들려서, 타입 상태 중심으로 다시 설계했어요. <strong>자동 테스트 53개가 전부
+            조금씩 달라져서, 타입 상태 중심으로 다시 설계했어요. <strong>자동 테스트 53개가 전부
             통과</strong>하고, 미리보기는 브라우저에서 DartPad로 돌아가요.
           </p>
         </div>
@@ -350,9 +364,8 @@ try {
                   <path d="M0,0 L0,6 L9,3 z" style="fill:var(--diagram-line)"/>
                 </marker>
               </defs>
-              <!-- connectors -->
               <line x1="360" y1="46" x2="360" y2="72" style="stroke:var(--diagram-line)" stroke-width="1.1" marker-end="url(#arr)"/>
-              <line x1="440" y1="98" x2="500" y2="98" style="stroke:var(--diagram-line)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+              <line class="flow" x1="440" y1="98" x2="500" y2="98" style="stroke:var(--diagram-line)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
               <path d="M 320 122 Q 230 140, 195 158" style="stroke:var(--diagram-line)" stroke-width="1.1" fill="none" marker-end="url(#arr)"/>
               <path d="M 400 122 Q 470 140, 502 158" style="stroke:var(--diagram-line)" stroke-width="1.1" fill="none" marker-end="url(#arr)"/>
               <text x="360" y="150" font-family="JetBrains Mono, monospace" font-size="9.5" style="fill:var(--text-3)" text-anchor="middle">in parallel</text>
@@ -363,14 +376,13 @@ try {
               <text x="372" y="392" font-family="JetBrains Mono, monospace" font-size="8.5" style="fill:var(--text-3)" text-anchor="start">main.dart</text>
               <line x1="450" y1="438" x2="508" y2="438" style="stroke:var(--diagram-line)" stroke-width="1.1" marker-end="url(#arr)"/>
               <text x="479" y="430" font-family="JetBrains Mono, monospace" font-size="8.5" style="fill:var(--negative)" text-anchor="middle">errors</text>
-              <path d="M 560 424 Q 520 380, 452 412" style="stroke:var(--diagram-line)" stroke-width="1" stroke-dasharray="4 3" fill="none" marker-end="url(#arr)"/>
+              <path class="flow" d="M 560 424 Q 520 380, 452 412" style="stroke:var(--diagram-line)" stroke-width="1" stroke-dasharray="4 3" fill="none" marker-end="url(#arr)"/>
               <text x="540" y="392" font-family="JetBrains Mono, monospace" font-size="8.5" style="fill:var(--text-3)" text-anchor="middle">re-verify</text>
               <text x="598" y="486" font-family="JetBrains Mono, monospace" font-size="8.5" style="fill:var(--text-3)" text-anchor="middle">still failing →</text>
               <text x="598" y="498" font-family="JetBrains Mono, monospace" font-size="8.5" style="fill:var(--text-3)" text-anchor="middle">prior valid state</text>
               <line x1="360" y1="468" x2="360" y2="494" style="stroke:var(--diagram-line)" stroke-width="1.1" marker-end="url(#arr)"/>
               <text x="345" y="486" font-family="JetBrains Mono, monospace" font-size="8.5" style="fill:var(--positive)" text-anchor="end">ok</text>
               <line x1="360" y1="542" x2="360" y2="566" style="stroke:var(--diagram-line)" stroke-width="1.1" marker-end="url(#arr)"/>
-              <!-- nodes -->
               <g transform="translate(300, 14)">
                 <rect width="120" height="32" rx="7" fill="none" style="stroke:var(--border-strong)" stroke-width="1" stroke-dasharray="4 4"/>
                 <text x="60" y="20" font-family="JetBrains Mono, monospace" font-size="10" style="fill:var(--text-3)" text-anchor="middle">user prompt</text>
@@ -428,153 +440,173 @@ try {
                 <text x="95" y="37" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">DartPad preview in browser</text>
               </g>
             </svg>
-            <figcaption>Fig. 1 — <span lang="en">closed-loop generation pipeline</span><span lang="ko">닫힌 루프 생성 파이프라인</span></figcaption>
+            <figcaption>Fig. 1 · <span lang="en">closed-loop generation pipeline</span><span lang="ko">닫힌 루프 생성 파이프라인</span></figcaption>
           </figure>
 
           <figure>
             <img src="./assets/flowcraft-1-main.png" data-zoom="./assets/flowcraft-1-main.png" alt="FlowCraft: chat, generated Flutter code, live preview" loading="lazy">
-            <figcaption>Fig. 2 — <span lang="en">chat → generated code → live preview</span><span lang="ko">대화 → 코드 생성 → 실시간 미리보기</span></figcaption>
+            <figcaption>Fig. 2 · <span lang="en">chat → generated code → live preview</span><span lang="ko">대화 → 코드 생성 → 실시간 미리보기</span></figcaption>
           </figure>
         </div>
 
-        <p class="stack-line">Stack — Flutter · Dart · OpenAI API · JSON Schema · DartPad</p>
+        <p class="stack-line">Stack: Flutter · Dart · OpenAI API · JSON Schema · DartPad</p>
       </article>
     </section>
 
     <!-- 03 MORE WORK -->
     <section id="more">
-      <div class="sec-head"><span class="idx">03</span><h2><span lang="en">More work</span><span lang="ko">그 외 작업</span></h2></div>
+      <div class="sec-head reveal"><span class="idx">03</span><h2><span lang="en">More work</span><span lang="ko">그 외 작업</span></h2></div>
 
-      <div class="row">
-        <div class="row-head">
-          <h3>LiveTrack</h3>
-          <span class="row-meta"><span lang="en">solo</span><span lang="ko">개인</span> · Apr 2026– · <a href="https://github.com/Poiurity/LiveTrack" target="_blank" rel="noopener">GitHub ↗</a></span>
+      <div class="rows">
+        <div class="row reveal">
+          <div class="row-head">
+            <h3>LiveTrack</h3>
+            <span class="row-meta"><span lang="en">solo</span><span lang="ko">1인 개발</span> · Apr 2026– · <a href="https://github.com/Poiurity/LiveTrack" target="_blank" rel="noopener">GitHub ↗</a></span>
+          </div>
+          <p lang="en">
+            Real-time location sharing for groups that split up on a trip. I wrote the
+            <strong>WebSocket layer myself</strong> instead of reaching for a managed realtime
+            service, because I wanted to own the failure handling: failures are classified by
+            retryability, with separate paths for partially completed operations. The whole stack
+            runs on one Hetzner VPS with Docker Compose, and movement analytics run on PostGIS.
+          </p>
+          <p lang="ko">
+            여행 중에 흩어진 일행이 서로 위치를 실시간으로 보는 앱이에요. 관리형 실시간 서비스
+            대신 <strong>WebSocket 서버를 직접 짰어요.</strong> 실패 처리를 남에게 맡기지 않고
+            직접 감당해 보고 싶었거든요. 실패는 재시도해도 되는지를 기준으로 나누고, 반쯤 끝난
+            작업은 따로 처리해요. 전체 스택은 Hetzner VPS 한 대에서 Docker Compose로 돌아가고,
+            이동 분석은 PostGIS로 해요.
+          </p>
+          <details>
+            <summary><span lang="en">architecture diagram</span><span lang="ko">구조 다이어그램</span></summary>
+            <figure class="diagram">
+              <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LiveTrack architecture: mobile clients connect over WebSocket to a self-hosted hub which persists to PostGIS, all on one VPS">
+                <defs>
+                  <marker id="arr2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" style="fill:var(--diagram-line)"/>
+                  </marker>
+                </defs>
+                <path class="flow" d="M 175 175 L 295 175" style="stroke:var(--diagram-line)" stroke-width="1.2" stroke-dasharray="5 4" fill="none"/>
+                <text x="235" y="166" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--accent)" text-anchor="middle">ws://</text>
+                <text x="235" y="195" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">bidirectional</text>
+                <line x1="455" y1="175" x2="555" y2="175" style="stroke:var(--diagram-line)" stroke-width="1.2" marker-end="url(#arr2)"/>
+                <text x="505" y="166" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">geo queries</text>
+                <line x1="375" y1="65" x2="375" y2="120" style="stroke:var(--diagram-line)" stroke-width="1" marker-end="url(#arr2)"/>
+                <text x="385" y="95" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">verify token</text>
+                <rect x="270" y="105" width="440" height="155" rx="8" fill="none" style="stroke:var(--border-strong)" stroke-width="1" stroke-dasharray="4 4"/>
+                <text x="280" y="120" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">Hetzner VPS · Docker Compose</text>
+                <g transform="translate(40, 130)">
+                  <rect width="135" height="90" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+                  <text x="67.5" y="26" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="middle">Mobile clients</text>
+                  <text x="67.5" y="46" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">React Native (Expo)</text>
+                  <text x="67.5" y="60" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">react-native-maps</text>
+                </g>
+                <g transform="translate(290, 25)">
+                  <rect width="170" height="44" rx="7" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1" stroke-opacity="0.55"/>
+                  <text x="85" y="20" font-family="Inter, sans-serif" font-size="12" font-weight="500" style="fill:var(--text)" text-anchor="middle">Firebase Auth</text>
+                  <text x="85" y="34" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">JWT identity provider</text>
+                </g>
+                <g transform="translate(295, 130)">
+                  <rect width="160" height="90" rx="8" style="fill:var(--diagram-node); stroke:var(--accent)" stroke-width="1.4"/>
+                  <text x="80" y="26" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--accent)" text-anchor="middle">WebSocket hub</text>
+                  <text x="80" y="46" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">Node.js + Fastify · ws</text>
+                  <text x="80" y="60" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">room broadcast</text>
+                </g>
+                <g transform="translate(555, 130)">
+                  <rect width="135" height="90" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+                  <text x="67.5" y="26" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="middle">Database</text>
+                  <text x="67.5" y="46" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">PostgreSQL + PostGIS</text>
+                  <text x="67.5" y="60" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">self-hosted in Docker</text>
+                </g>
+              </svg>
+            </figure>
+          </details>
         </div>
-        <p lang="en">
-          Real-time location sharing for groups that split up on a trip. I wrote the
-          <strong>WebSocket layer myself</strong> instead of reaching for a managed realtime
-          service — the point was to own the failure handling: failures are classified by
-          retryability, with separate paths for partially completed operations. The whole stack
-          runs on one Hetzner VPS with Docker Compose; movement analytics run on PostGIS.
-        </p>
-        <p lang="ko">
-          여행 중 흩어진 일행이 서로 위치를 실시간으로 보는 앱이에요. 관리형 실시간 서비스 대신
-          <strong>WebSocket 서버를 직접 짰어요</strong> — 실패 처리를 스스로 감당해 보고 싶었거든요.
-          실패는 재시도 가능 여부로 나누고, 반쯤 끝난 작업은 따로 처리해요. 전체 스택은 Hetzner
-          VPS 한 대에서 Docker Compose로 돌고, 이동 분석은 PostGIS로 해요.
-        </p>
-        <details>
-          <summary><span lang="en">architecture diagram</span><span lang="ko">구조 다이어그램</span></summary>
-          <figure class="diagram">
-            <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LiveTrack architecture: mobile clients connect over WebSocket to a self-hosted hub which persists to PostGIS, all on one VPS">
-              <defs>
-                <marker id="arr2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                  <path d="M0,0 L0,6 L9,3 z" style="fill:var(--diagram-line)"/>
-                </marker>
-              </defs>
-              <path d="M 175 175 L 295 175" style="stroke:var(--diagram-line)" stroke-width="1.2" stroke-dasharray="5 4" fill="none"/>
-              <text x="235" y="166" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--accent)" text-anchor="middle">ws://</text>
-              <text x="235" y="195" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">bidirectional</text>
-              <line x1="455" y1="175" x2="555" y2="175" style="stroke:var(--diagram-line)" stroke-width="1.2" marker-end="url(#arr2)"/>
-              <text x="505" y="166" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">geo queries</text>
-              <line x1="375" y1="65" x2="375" y2="120" style="stroke:var(--diagram-line)" stroke-width="1" marker-end="url(#arr2)"/>
-              <text x="385" y="95" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">verify token</text>
-              <rect x="270" y="105" width="440" height="155" rx="8" fill="none" style="stroke:var(--border-strong)" stroke-width="1" stroke-dasharray="4 4"/>
-              <text x="280" y="120" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">Hetzner VPS · Docker Compose</text>
-              <g transform="translate(40, 130)">
-                <rect width="135" height="90" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
-                <text x="67.5" y="26" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="middle">Mobile clients</text>
-                <text x="67.5" y="46" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">React Native (Expo)</text>
-                <text x="67.5" y="60" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">react-native-maps</text>
-              </g>
-              <g transform="translate(290, 25)">
-                <rect width="170" height="44" rx="7" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1" stroke-opacity="0.55"/>
-                <text x="85" y="20" font-family="Inter, sans-serif" font-size="12" font-weight="500" style="fill:var(--text)" text-anchor="middle">Firebase Auth</text>
-                <text x="85" y="34" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">JWT identity provider</text>
-              </g>
-              <g transform="translate(295, 130)">
-                <rect width="160" height="90" rx="8" style="fill:var(--diagram-node); stroke:var(--accent)" stroke-width="1.4"/>
-                <text x="80" y="26" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--accent)" text-anchor="middle">WebSocket hub</text>
-                <text x="80" y="46" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">Node.js + Fastify · ws</text>
-                <text x="80" y="60" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">room broadcast</text>
-              </g>
-              <g transform="translate(555, 130)">
-                <rect width="135" height="90" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
-                <text x="67.5" y="26" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="middle">Database</text>
-                <text x="67.5" y="46" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">PostgreSQL + PostGIS</text>
-                <text x="67.5" y="60" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">self-hosted in Docker</text>
-              </g>
-            </svg>
-          </figure>
-        </details>
-      </div>
 
-      <div class="row">
-        <div class="row-head">
-          <h3>Living Stage</h3>
-          <span class="row-meta"><span lang="en">hackathon · solo</span><span lang="ko">해커톤 · 개인</span> · May 2026 · <a href="https://github.com/Poiurity/Predator" target="_blank" rel="noopener">GitHub ↗</a></span>
+        <div class="row reveal">
+          <div class="row-head">
+            <h3>Living Stage</h3>
+            <span class="row-meta"><span lang="en">hackathon · solo</span><span lang="ko">해커톤 · 1인</span> · May 2026 · <a href="https://github.com/Poiurity/Predator" target="_blank" rel="noopener">GitHub ↗</a></span>
+          </div>
+          <p lang="en">
+            A speech-paced generative UI built in about five hours at a Google I/O hackathon
+            hosted by Cerebral Valley and Google DeepMind. As the speaker talks,
+            structured-output streaming grows widgets on stage. The hero Sim widget stays fully
+            interactive: pulling a slider re-evaluates a sandboxed mathjs model and redraws a 60fps
+            canvas chart, with <strong>no model call in the interaction loop</strong>.
+          </p>
+          <p lang="ko">
+            Cerebral Valley와 Google DeepMind가 주최한 Google I/O 해커톤에서 5시간쯤 걸려 만든,
+            발표 속도에 맞춰 자라나는 UI예요. 발표자가 말하면 structured output 스트리밍으로
+            위젯이 무대에 하나씩 생겨요. 핵심 위젯은 슬라이더를 당기면 샌드박스 mathjs 모델을
+            다시 계산해서 60fps 캔버스 차트를 그리는데, <strong>이 상호작용 루프에는 모델 호출이
+            없어요</strong>.
+          </p>
         </div>
-        <p lang="en">
-          A speech-paced generative UI built in about five hours at a Google I/O hackathon
-          (hosted by Cerebral Valley &amp; Google DeepMind). As the speaker talks,
-          structured-output streaming grows widgets on stage. The hero Sim widget stays fully
-          interactive: pulling a slider re-evaluates a sandboxed mathjs model and redraws a 60fps
-          canvas chart — <strong>no model call in the interaction loop</strong>.
-        </p>
-        <p lang="ko">
-          구글 I/O 해커톤(Cerebral Valley·Google DeepMind 주최)에서 5시간쯤 걸려 만든, 발표
-          속도에 맞춰 자라나는 UI예요. 발표자가 말하면 구조화 출력 스트리밍으로 위젯이 무대에
-          하나씩 생겨요. 핵심 위젯은 슬라이더를 당기면 샌드박스 mathjs 모델을 다시 계산해 60fps
-          캔버스 차트를 그리는데, <strong>이 상호작용 루프엔 모델 호출이 없어요</strong>.
-        </p>
-      </div>
 
-      <div class="row">
-        <div class="row-head">
-          <h3>Conever</h3>
-          <span class="row-meta"><span lang="en">team · frontend lead</span><span lang="ko">팀 · 프론트 리드</span> · 2025 · <a href="https://github.com/orgs/2025AlphaProject/repositories" target="_blank" rel="noopener">GitHub ↗</a></span>
+        <div class="row reveal">
+          <div class="row-head">
+            <h3>Conever</h3>
+            <span class="row-meta"><span lang="en">team · frontend lead</span><span lang="ko">팀 · 프론트 리드</span> · 2025 · <a href="https://github.com/orgs/2025AlphaProject/repositories" target="_blank" rel="noopener">GitHub ↗</a></span>
+          </div>
+          <p lang="en">Team-built travel app with AI route suggestions, native maps, and real-time trip sync. I led the frontend track; published on ONE Store (Korea).</p>
+          <p lang="ko">팀으로 만든 여행 앱이에요. AI 경로 추천, 네이티브 지도, 실시간 일정 동기화가 들어가요. 프론트엔드 트랙을 이끌었고, ONE Store(한국)에 출시했어요.</p>
         </div>
-        <p lang="en">Team-built travel app — AI route suggestions, native maps, real-time trip sync. I led the frontend track; published on ONE Store (Korea).</p>
-        <p lang="ko">팀으로 만든 여행 앱이에요. AI 경로 추천, 네이티브 지도, 실시간 일정 동기화가 들어가요. 프론트엔드 트랙을 이끌었고, 원스토어(한국)에 출시했어요.</p>
-      </div>
 
-      <div class="row">
-        <div class="row-head">
-          <h3>GPSTracker</h3>
-          <span class="row-meta"><span lang="en">team · Kernel360</span><span lang="ko">팀 · Kernel360</span> · 2025</span>
+        <div class="row reveal">
+          <div class="row-head">
+            <h3>GPSTracker</h3>
+            <span class="row-meta"><span lang="en">team · Kernel360</span><span lang="ko">팀 · Kernel360</span> · 2025</span>
+          </div>
+          <p lang="en">Fleet driving-analytics dashboard. The frontend ran mock-API-first so the team could move before the backend was ready; I collaborated on the Docker and Jenkins CI/CD pipeline.</p>
+          <p lang="ko">차량 주행 분석 대시보드예요. 백엔드가 준비되기 전에 mock API로 프론트를 먼저 움직이게 했고, 팀의 Docker·Jenkins CI/CD는 같이 구축했어요.</p>
         </div>
-        <p lang="en">Fleet driving-analytics dashboard. Mock-API-first frontend so the team could move before the backend was ready; collaborated on the Docker + Jenkins CI/CD pipeline.</p>
-        <p lang="ko">차량 주행 분석 대시보드예요. 백엔드가 준비되기 전에 목 API로 프론트를 먼저 움직이게 했고, 팀의 Docker·Jenkins CI/CD는 같이 구축했어요.</p>
-      </div>
 
-      <div class="row">
-        <div class="row-head">
-          <h3>Driftless</h3>
-          <span class="row-meta"><span lang="en">48h hackathon · solo</span><span lang="ko">48시간 해커톤 · 개인</span> · May 2026 · <a href="https://github.com/Poiurity/driftless-demo" target="_blank" rel="noopener">GitHub ↗</a></span>
+        <div class="row reveal">
+          <div class="row-head">
+            <h3>Driftless</h3>
+            <span class="row-meta"><span lang="en">48h hackathon · solo</span><span lang="ko">48시간 해커톤 · 1인</span> · May 2026 · <a href="https://github.com/Poiurity/driftless-demo" target="_blank" rel="noopener">GitHub ↗</a></span>
+          </div>
+          <p lang="en">Keeps an AI coding agent's persisted context (rules, skills, AGENTS.md) in sync with the codebase on every pull request, using only the agent's own extension mechanisms.</p>
+          <p lang="ko">PR이 생길 때마다 AI 코딩 에이전트의 컨텍스트 파일(규칙, 스킬, AGENTS.md)을 코드베이스와 맞춰주는 도구예요. 에이전트가 원래 가진 확장 수단만 썼어요.</p>
         </div>
-        <p lang="en">Keeps an AI coding agent's persisted context (rules, skills, AGENTS.md) in sync with the codebase on every pull request — using only the agent's own extension mechanisms.</p>
-        <p lang="ko">PR이 생길 때마다 AI 코딩 에이전트의 컨텍스트 파일(규칙, 스킬, AGENTS.md)을 코드베이스와 맞춰주는 도구예요. 에이전트가 원래 가진 확장 수단만 썼어요.</p>
-      </div>
 
-      <div class="row">
-        <div class="row-head">
-          <h3>PetAge AI · Danzam</h3>
-          <span class="row-meta"><span lang="en">team</span><span lang="ko">팀</span> · 2025 · <a href="https://petageai.com" target="_blank" rel="noopener">petageai.com ↗</a> · <a href="https://github.com/4TH-cocothon-team2/danzam-flutter" target="_blank" rel="noopener">Danzam ↗</a></span>
+        <div class="row reveal">
+          <div class="row-head">
+            <h3>PetAge AI · Danzam</h3>
+            <span class="row-meta"><span lang="en">team</span><span lang="ko">팀</span> · 2025 · <a href="https://petageai.com" target="_blank" rel="noopener">petageai.com ↗</a> · <a href="https://github.com/4TH-cocothon-team2/danzam-flutter" target="_blank" rel="noopener">Danzam ↗</a></span>
+          </div>
+          <p lang="en">PetAge estimates a pet's age from photos (EfficientNet-B0 served through FastAPI); I led the team. Danzam, a caffeine-rhythm sleep predictor, won the Excellence Award at the 4th COKOTHON.</p>
+          <p lang="ko">PetAge는 사진으로 반려동물 나이를 추정해요(EfficientNet-B0 + FastAPI). 팀을 이끌었어요. 카페인 리듬으로 수면을 예측하는 Danzam은 제4회 COKOTHON에서 우수상을 받았어요.</p>
         </div>
-        <p lang="en">PetAge estimates a pet's age from photos (EfficientNet-B0 via FastAPI) — led the team. Danzam, a caffeine-rhythm sleep predictor, won the Excellence Award at the 4th COKOTHON.</p>
-        <p lang="ko">PetAge는 사진으로 반려동물 나이를 추정해요(EfficientNet-B0 + FastAPI) — 팀을 이끌었어요. 카페인 리듬으로 수면을 예측하는 Danzam은 제4회 COKOTHON에서 우수상을 받았어요.</p>
       </div>
     </section>
 
-  </main>
-</div>
+  </div>
+</main>
 
 <footer class="footer">
-  <p class="ask">
-    <span lang="en">Hiring for backend or agent work? <a href="mailto:iamlyg9667@gmail.com">Email me.</a></span>
-    <span lang="ko">백엔드나 에이전트 만들 사람을 찾고 계신가요? <a href="mailto:iamlyg9667@gmail.com">메일 주세요.</a></span>
-  </p>
-  <p class="fine">© 2026 Yeonguk Lee · Irvine, CA</p>
+  <div class="footer-inner">
+    <p class="ask">
+      <span lang="en">Hiring for backend or agent work?</span>
+      <span lang="ko">백엔드나 에이전트 만들 사람을 찾고 계신가요?</span>
+    </p>
+    <div class="btn-row">
+      <a href="mailto:iamlyg9667@gmail.com" class="btn btn-primary">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span lang="en">Email me</span><span lang="ko">메일 보내기</span>
+      </a>
+      <a href="https://github.com/Poiurity" target="_blank" rel="noopener" class="btn btn-sec">
+        <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub
+      </a>
+      <a href="https://linkedin.com/in/yeonguk-lee" target="_blank" rel="noopener" class="btn btn-sec">
+        <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+    </div>
+    <p class="fine">© 2026 Yeonguk Lee · Irvine, CA</p>
+  </div>
 </footer>
 
 <div class="lightbox" id="lightbox" aria-hidden="true"><img src="" alt=""></div>
@@ -596,12 +628,30 @@ try {
   });
   apply(document.documentElement.dataset.lang || 'en');
 
-  // scroll spy
-  var links = document.querySelectorAll('.rail-nav a[href^="#"]');
+  // fixed nav: hairline border appears on scroll (linear.app pattern)
+  var nav = document.getElementById('topnav');
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // reveal on scroll
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(function (el) { ro.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+  }
+
+  // scroll spy for nav links
+  var links = document.querySelectorAll('.nav-links a[href^="#"]');
   var map = {};
   links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
   if ('IntersectionObserver' in window) {
-    var obs = new IntersectionObserver(function (es) {
+    var so = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
         if (e.isIntersecting && map[e.target.id]) {
           links.forEach(function (a) { a.classList.remove('active'); });
@@ -609,7 +659,7 @@ try {
         }
       });
     }, { rootMargin: '-25% 0px -65% 0px' });
-    document.querySelectorAll('main section[id]').forEach(function (s) { obs.observe(s); });
+    document.querySelectorAll('main section[id]').forEach(function (s) { so.observe(s); });
   }
 
   // lightbox
