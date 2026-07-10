@@ -138,8 +138,31 @@ try {
     <!-- 02 WORK: card grid -->
     <section id="work">
       <div class="sec-head reveal"><span class="idx">02</span><h2><span lang="en">Work</span><span lang="ko">작업</span></h2></div>
+      <div class="work-controls reveal">
+        <div class="ctl-group">
+          <span class="ctl-label"><span lang="en">sort</span><span lang="ko">정렬</span></span>
+          <div class="pills" role="group" aria-label="Sort">
+            <button type="button" data-sort="picks" aria-pressed="true"><span lang="en">my picks</span><span lang="ko">내 맘대로</span></button>
+            <button type="button" data-sort="newest" aria-pressed="false"><span lang="en">newest</span><span lang="ko">최신순</span></button>
+            <button type="button" data-sort="trust" aria-pressed="false"><span lang="en">trust issues</span><span lang="ko">모델 불신 순</span></button>
+            <button type="button" data-sort="caffeine" aria-pressed="false"><span lang="en">caffeine</span><span lang="ko">카페인 순</span></button>
+          </div>
+        </div>
+        <div class="ctl-group">
+          <span class="ctl-label"><span lang="en">show</span><span lang="ko">보기</span></span>
+          <div class="pills" role="group" aria-label="Filter">
+            <button type="button" data-filter="all" aria-pressed="true"><span lang="en">all</span><span lang="ko">전부</span></button>
+            <button type="button" data-filter="verified" aria-pressed="false"><span lang="en">verifies before acting</span><span lang="ko">검증부터 함</span></button>
+            <button type="button" data-filter="store" aria-pressed="false"><span lang="en">in an app store</span><span lang="ko">스토어에 있음</span></button>
+            <button type="button" data-filter="humans" aria-pressed="false"><span lang="en">built with humans</span><span lang="ko">사람이랑 만듦</span></button>
+            <button type="button" data-filter="weekend" aria-pressed="false"><span lang="en">48 hours or less</span><span lang="ko">48시간 안에</span></button>
+            <button type="button" data-filter="selfhosted" aria-pressed="false"><span lang="en">on a server I pay for</span><span lang="ko">내 돈으로 서버 돌림</span></button>
+          </div>
+        </div>
+        <p class="sort-note" id="sortNote"><span data-note="picks"><span lang="en">Hand-ordered. The ones I want you to see first, first.</span><span lang="ko">제가 정한 순서예요. 먼저 보여드리고 싶은 걸 앞에 뒀어요.</span></span><span data-note="newest" hidden><span lang="en">Most recent first. The boring one, included for completeness.</span><span lang="ko">최신순이에요. 제일 평범한 정렬이지만 구색은 갖춰야죠.</span></span><span data-note="trust" hidden><span lang="en">Ranked by how little the model gets to act unchecked. #1 recomputes every number server-side.</span><span lang="ko">모델이 검증 없이 움직이는 걸 얼마나 못 참았는지 순이에요. 1등은 서버가 숫자를 전부 다시 계산해요.</span></span><span data-note="caffeine" hidden><span lang="en">Estimated espresso density during the build. Hackathons cheat. Danzam, a caffeine app, disapproves of this ranking.</span><span lang="ko">만들 때의 에스프레소 밀도 추정 순이에요. 해커톤은 반칙이고요. 카페인 앱인 Danzam이 이 정렬을 못마땅해할 거예요.</span></span></p>
+      </div>
       <div class="cards">
-        <a class="card reveal" href="#p-sellii" data-project="p-sellii" style="--d: 0s;">
+        <a class="card reveal" href="#p-sellii" data-project="p-sellii" data-picks="0" data-newest="5" data-trust="0" data-caffeine="3" data-tags="verified" style="--d: 0s;">
           <div class="card-thumb" aria-hidden="true"><svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect width="320" height="200" style="fill:var(--surface-2)"/><text x="24" y="38" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1" style="fill:var(--text-3)">TRUST HARNESS</text><text x="22" y="110" font-family="JetBrains Mono, monospace" font-size="44" font-weight="600" style="fill:var(--accent)">17/17</text><text x="24" y="140" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-2)">fabricated claims blocked</text><text x="24" y="158" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-3)">8/8 valid preserved · 0 FP</text><circle cx="270" cy="54" r="22" fill="none" style="stroke:var(--accent)" stroke-width="1.4"/><path d="M260 54 l7 7 l14 -14" fill="none" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="card-body">
             <h3>Sellii</h3>
@@ -147,15 +170,15 @@ try {
             <p class="card-meta"><span class="flag"><span lang="en">featured</span><span lang="ko">대표</span></span> · <span lang="en">solo · 2026 · not launched</span><span lang="ko">1인 개발 · 2026 · 미출시</span></p>
           </div>
         </a>
-        <a class="card reveal" href="#p-clir" data-project="p-clir" style="--d: 0.06s;">
-          <div class="card-thumb" aria-hidden="true"><img src="./assets/clir-result.png" alt="CLIR verdict screen" loading="lazy"></div>
+        <a class="card reveal" href="#p-clir" data-project="p-clir" data-picks="1" data-newest="3" data-trust="2" data-caffeine="5" data-tags="store humans" style="--d: 0.06s;">
+          <div class="card-thumb" aria-hidden="true"><img src="./assets/clir-result.png" alt="CLIR verdict screen" style="object-position: center 25%;" loading="lazy"></div>
           <div class="card-body">
             <h3>CLIR</h3>
             <p class="card-sum"><span lang="en">Scan a food label once, get a safe-or-not answer for your profile.</span><span lang="ko">라벨을 한 번 스캔하면, 내 프로필 기준으로 먹어도 되는지 알려줘요.</span></p>
             <p class="card-meta"><span class="flag"><span lang="en">featured</span><span lang="ko">대표</span></span> · <span class="live">● </span><span lang="en"><span class="live">live · App Store</span> · backend owner</span><span lang="ko"><span class="live">App Store 서비스 중</span> · 백엔드 담당</span></p>
           </div>
         </a>
-        <a class="card reveal" href="#p-flowcraft" data-project="p-flowcraft" style="--d: 0.12s;">
+        <a class="card reveal" href="#p-flowcraft" data-project="p-flowcraft" data-picks="2" data-newest="4" data-trust="1" data-caffeine="4" data-tags="verified" style="--d: 0.12s;">
           <div class="card-thumb" aria-hidden="true"><img src="./assets/flowcraft-1-main.png" alt="FlowCraft IDE with generated code and preview" loading="lazy"></div>
           <div class="card-body">
             <h3>FlowCraft</h3>
@@ -163,7 +186,7 @@ try {
             <p class="card-meta"><span class="flag"><span lang="en">featured</span><span lang="ko">대표</span></span> · <span lang="en">solo · 2026 · open source</span><span lang="ko">1인 개발 · 2026 · 오픈소스</span></p>
           </div>
         </a>
-        <a class="card reveal" href="#p-livetrack" data-project="p-livetrack" style="--d: 0s;">
+        <a class="card reveal" href="#p-livetrack" data-project="p-livetrack" data-picks="3" data-newest="2" data-trust="4" data-caffeine="6" data-tags="selfhosted" style="--d: 0s;">
           <div class="card-thumb" aria-hidden="true"><svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect width="320" height="200" style="fill:var(--surface-2)"/><text x="24" y="38" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1" style="fill:var(--text-3)">SELF-HOSTED REALTIME</text><circle cx="92" cy="112" r="7" style="fill:var(--accent)"/><circle cx="92" cy="112" r="17" fill="none" style="stroke:var(--accent)" stroke-opacity="0.35" stroke-width="1.2"/><circle cx="236" cy="96" r="7" style="fill:var(--text-3)"/><circle cx="236" cy="96" r="17" fill="none" style="stroke:var(--text-3)" stroke-opacity="0.35" stroke-width="1.2"/><path d="M 108 108 C 150 80, 186 120, 220 98" fill="none" style="stroke:var(--diagram-line)" stroke-width="1.4" stroke-dasharray="5 4"/><text x="162" y="80" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--accent)" text-anchor="middle">ws://</text><text x="24" y="168" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-2)">room broadcast · PostGIS replay</text></svg></div>
           <div class="card-body">
             <h3>LiveTrack</h3>
@@ -171,7 +194,7 @@ try {
             <p class="card-meta"><span lang="en">solo · 2026 · self-hosted</span><span lang="ko">1인 개발 · 2026 · 직접 운영</span></p>
           </div>
         </a>
-        <a class="card reveal" href="#p-livingstage" data-project="p-livingstage" style="--d: 0.06s;">
+        <a class="card reveal" href="#p-livingstage" data-project="p-livingstage" data-picks="4" data-newest="0" data-trust="5" data-caffeine="0" data-tags="weekend" style="--d: 0.06s;">
           <div class="card-thumb" aria-hidden="true"><svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect width="320" height="200" style="fill:var(--surface-2)"/><text x="24" y="38" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1" style="fill:var(--text-3)">SPEECH-PACED UI</text><rect x="44" y="118" width="36" height="42" rx="5" style="fill:var(--surface-3)"/><rect x="92" y="98" width="36" height="62" rx="5" style="fill:var(--surface-3)"/><rect x="140" y="80" width="36" height="80" rx="5" style="fill:var(--border-strong)"/><rect x="188" y="58" width="36" height="102" rx="5" style="fill:var(--accent)"/><text x="24" y="184" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-2)">widgets grow as the speaker talks</text></svg></div>
           <div class="card-body">
             <h3>Living Stage</h3>
@@ -179,15 +202,15 @@ try {
             <p class="card-meta"><span lang="en">Google I/O hackathon · solo · 2026</span><span lang="ko">Google I/O 해커톤 · 1인 · 2026</span></p>
           </div>
         </a>
-        <a class="card reveal" href="#p-conever" data-project="p-conever" style="--d: 0.12s;">
-          <div class="card-thumb" aria-hidden="true"><img src="./assets/conever-4-map.png" alt="Conever native map screen" loading="lazy"></div>
+        <a class="card reveal" href="#p-conever" data-project="p-conever" data-picks="5" data-newest="6" data-trust="8" data-caffeine="8" data-tags="store humans" style="--d: 0.12s;">
+          <div class="card-thumb" aria-hidden="true"><img src="./assets/conever-4-map.png" alt="Conever native map screen" style="object-position: center 30%;" loading="lazy"></div>
           <div class="card-body">
             <h3>Conever</h3>
             <p class="card-sum"><span lang="en">Plan trips together, with AI suggestions and real-time sync.</span><span lang="ko">AI 추천과 실시간 동기화로 함께 여행을 계획하는 앱이에요.</span></p>
             <p class="card-meta"><span lang="en">team · frontend lead · 2025 · ONE Store</span><span lang="ko">팀 · 프론트 리드 · 2025 · ONE Store</span></p>
           </div>
         </a>
-        <a class="card reveal" href="#p-gpstracker" data-project="p-gpstracker" style="--d: 0s;">
+        <a class="card reveal" href="#p-gpstracker" data-project="p-gpstracker" data-picks="6" data-newest="7" data-trust="6" data-caffeine="7" data-tags="humans" style="--d: 0s;">
           <div class="card-thumb" aria-hidden="true"><img src="./assets/gps-2-route.png" alt="GPSTracker route replay dashboard" loading="lazy"></div>
           <div class="card-body">
             <h3>GPSTracker</h3>
@@ -195,7 +218,7 @@ try {
             <p class="card-meta"><span lang="en">team · Kernel360 · 2025</span><span lang="ko">팀 · Kernel360 · 2025</span></p>
           </div>
         </a>
-        <a class="card reveal" href="#p-driftless" data-project="p-driftless" style="--d: 0.06s;">
+        <a class="card reveal" href="#p-driftless" data-project="p-driftless" data-picks="7" data-newest="1" data-trust="3" data-caffeine="1" data-tags="weekend" style="--d: 0.06s;">
           <div class="card-thumb" aria-hidden="true"><svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><defs><marker id="arrSync" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L7,3 z" style="fill:var(--diagram-line)"/></marker></defs><rect width="320" height="200" style="fill:var(--surface-2)"/><text x="24" y="38" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1" style="fill:var(--text-3)">CONTEXT SYNC</text><rect x="40" y="78" width="94" height="46" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/><text x="87" y="105" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text)" text-anchor="middle">code</text><rect x="186" y="78" width="94" height="46" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/><text x="233" y="105" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text)" text-anchor="middle">AGENTS.md</text><path d="M 138 88 C 156 76, 166 76, 182 88" fill="none" style="stroke:var(--diagram-line)" stroke-width="1.2" marker-end="url(#arrSync)"/><path d="M 182 114 C 164 126, 154 126, 138 114" fill="none" style="stroke:var(--diagram-line)" stroke-width="1.2" marker-end="url(#arrSync)"/><text x="24" y="168" font-family="JetBrains Mono, monospace" font-size="11" style="fill:var(--text-2)">synced on every pull request</text></svg></div>
           <div class="card-body">
             <h3>Driftless</h3>
@@ -203,8 +226,8 @@ try {
             <p class="card-meta"><span lang="en">48h hackathon · solo · 2026</span><span lang="ko">48시간 해커톤 · 1인 · 2026</span></p>
           </div>
         </a>
-        <a class="card reveal" href="#p-petage" data-project="p-petage" style="--d: 0.12s;">
-          <div class="card-thumb" aria-hidden="true"><img src="./assets/petage-1-result.png" alt="PetAge AI age estimate result" loading="lazy"></div>
+        <a class="card reveal" href="#p-petage" data-project="p-petage" data-picks="8" data-newest="8" data-trust="7" data-caffeine="2" data-tags="humans weekend" style="--d: 0.12s;">
+          <div class="card-thumb" aria-hidden="true"><img src="./assets/petage-2-landing.png" alt="PetAge AI: a dog photo estimated at 34 human years" loading="lazy"></div>
           <div class="card-body">
             <h3>PetAge AI · Danzam</h3>
             <p class="card-sum"><span lang="en">A pet-age estimator and an award-winning sleep predictor.</span><span lang="ko">반려동물 나이 추정기, 그리고 우수상을 받은 수면 예측 앱이에요.</span></p>
@@ -757,6 +780,30 @@ try {
     });
   });
   lb.addEventListener('click', function () { lb.classList.remove('open'); lbImg.removeAttribute('src'); });
+  // work grid: sort + filter
+  var gridCards = Array.prototype.slice.call(document.querySelectorAll('.card[data-project]'));
+  var sortNote = document.getElementById('sortNote');
+  document.querySelectorAll('[data-sort]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('[data-sort]').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+      var k = b.dataset.sort;
+      gridCards.forEach(function (c) { c.style.order = c.dataset[k] || 0; });
+      if (sortNote) sortNote.querySelectorAll('[data-note]').forEach(function (n) { n.hidden = n.dataset.note !== k; });
+    });
+  });
+  document.querySelectorAll('[data-filter]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('[data-filter]').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+      var f = b.dataset.filter;
+      gridCards.forEach(function (c) {
+        var show = f === 'all' || (' ' + (c.dataset.tags || '') + ' ').indexOf(' ' + f + ' ') !== -1;
+        c.classList.toggle('hide', !show);
+      });
+    });
+  });
+
   // project modal
   var pmodal = document.getElementById('pmodal');
   var pbody = pmodal.querySelector('.pmodal-body');

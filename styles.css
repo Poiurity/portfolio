@@ -410,6 +410,46 @@ figcaption {
 .diagram .flow { animation: dashflow 1.4s linear infinite; }
 @keyframes dashflow { to { stroke-dashoffset: -14; } }
 
+/* ---------- WORK: sort + filter controls ---------- */
+.work-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.ctl-group { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.ctl-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  min-width: 36px;
+}
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pills button {
+  appearance: none;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-2);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 5px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.1s var(--ease), background 0.1s var(--ease), border-color 0.1s var(--ease);
+}
+.pills button:hover { color: var(--text); border-color: var(--border-strong); }
+.pills button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.sort-note {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+.card.hide { display: none; }
+
 /* ---------- WORK: project card grid (thumbnail + name + summary) ---------- */
 .cards {
   display: grid;
