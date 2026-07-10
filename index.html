@@ -31,6 +31,7 @@ try {
     <nav class="nav-links" aria-label="Sections">
       <a href="#profile"><span lang="en">Profile</span><span lang="ko">소개</span></a>
       <a href="#work"><span lang="en">Work</span><span lang="ko">대표 작업</span></a>
+      <a href="#writing"><span lang="en">Writing</span><span lang="ko">글</span></a>
     </nav>
     <div class="topnav-right">
       <div class="lang-toggle" role="group" aria-label="Language">
@@ -682,6 +683,34 @@ try {
         <p class="stack-line">Stack: Flutter · FastAPI · Supabase · EfficientNet-B0 (PyTorch/ONNX)</p>
       </article>
     </div>
+
+    <!-- 03 WRITING -->
+    <section id="writing">
+      <div class="sec-head reveal"><span class="idx">03</span><h2><span lang="en">Writing</span><span lang="ko">글</span></h2></div>
+      <div class="notes">
+        <a class="note-row reveal" href="/notes/flowcraft-typed-state/">
+          <div class="note-head">
+            <h3><span lang="en">Why my code-generating agents never write code</span><span lang="ko">코드 생성 에이전트인데, 코드를 직접 못 쓰게 했어요</span></h3>
+            <span class="note-meta">2026-07 · <span lang="en">design note · 4 min</span><span lang="ko">설계 노트 · 4분</span></span>
+          </div>
+          <p><span lang="en">Raw code generation kept drifting between model calls, so I made the agents emit typed state instead, inside a verify-repair loop.</span><span lang="ko">모델을 호출할 때마다 코드가 조금씩 달라져서, 에이전트가 코드 대신 타입 상태를 만들게 바꿨어요. 검증-수리 루프 안에서요.</span></p>
+        </a>
+        <a class="note-row reveal" href="/notes/clir-phash-cache/">
+          <div class="note-head">
+            <h3><span lang="en">Caching scans that never hash the same twice</span><span lang="ko">같은 라벨인데 해시는 매번 달라요</span></h3>
+            <span class="note-meta">2026-07 · <span lang="en">backend note · 3 min</span><span lang="ko">백엔드 노트 · 3분</span></span>
+          </div>
+          <p><span lang="en">Two photos of the same food label never match byte-for-byte. How CLIR turns a 4-call model ladder into one Redis read anyway.</span><span lang="ko">같은 라벨을 찍어도 사진은 바이트 단위로 절대 같지 않아요. 그런데도 CLIR가 유료 호출 4번을 Redis 조회 1번으로 줄인 방법이에요.</span></p>
+        </a>
+        <a class="note-row reveal" href="/sellii-validation/">
+          <div class="note-head">
+            <h3><span lang="en">Three claims about an agent, each turned into a number</span><span lang="ko">에이전트에 대한 주장 3가지를, 전부 숫자로 바꿨어요</span></h3>
+            <span class="note-meta">2026-07 · <span lang="en">measurement report · 6 min</span><span lang="ko">측정 리포트 · 6분</span></span>
+          </div>
+          <p><span lang="en">Trust, duplicate execution, and unit economics, measured in three reproducible offline harnesses. Gaps documented, not hidden.</span><span lang="ko">신뢰, 중복 실행, 단위 경제를 재현 가능한 오프라인 하네스 3개로 측정했어요. 못 잡은 케이스까지 다 적었어요.</span></p>
+        </a>
+      </div>
+    </section>
 
   </div>
 </main>

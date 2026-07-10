@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caching scans that never hash the same twice · Yeonguk Lee</title>
+<meta name="description" content="Two photos of the same food label never match byte-for-byte. How CLIR's perceptual-hash dedup cache turns a 4-call paid model ladder into one Redis read.">
+<link rel="canonical" href="https://poiurity.com/notes/clir-phash-cache/">
+<script>
+document.documentElement.classList.add('js');
+try {
+  var l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('lang');
+  if (l === 'ko' || l === 'en') { document.documentElement.dataset.lang = l; document.documentElement.lang = l; }
+} catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<header class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a href="/" class="brand">Yeonguk Lee<em>.</em></a>
+    <nav class="nav-links" aria-label="Back">
+      <a href="/#writing">&larr; <span lang="en">Writing</span><span lang="ko">글 목록</span></a>
+    </nav>
+    <div class="topnav-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-setlang="en" aria-pressed="true">EN</button>
+        <button type="button" data-setlang="ko" aria-pressed="false">KO</button>
+      </div>
+      <a href="mailto:iamlyg9667@gmail.com" class="btn btn-primary btn-sm">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span lang="en">Email</span><span lang="ko">메일</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="report">
+
+  <header class="report-head reveal">
+    <div class="kicker"><span lang="en">CLIR · backend note · 2026-07-10</span><span lang="ko">CLIR · 백엔드 노트 · 2026-07-10</span></div>
+    <h1>
+      <span lang="en">Caching scans that never<br>hash the same twice.</span>
+      <span lang="ko">같은 라벨인데,<br>해시는 매번 달라요.</span>
+    </h1>
+    <p class="lede" lang="en">
+      CLIR scans food labels and answers "safe or not" against your dietary profile. Every scan
+      used to trigger a paid model ladder. The obvious fix is a cache. The problem is that the
+      obvious cache <strong>cannot work</strong>.
+    </p>
+    <p class="lede" lang="ko">
+      CLIR는 식품 라벨을 스캔해서 내 알레르기 프로필 기준으로 먹어도 되는지 알려줘요. 원래는
+      스캔할 때마다 유료 모델 호출이 나갔어요. 당연한 해법은 캐시죠. 문제는, 그 당연한 캐시가
+      <strong>여기서는 통하지 않는다</strong>는 거예요.
+    </p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="idx">01</span><h2><span lang="en">Why exact-match caching fails here</span><span lang="ko">단순 일치 캐시가 실패하는 이유</span></h2></div>
+    <p lang="en">
+      A cache needs a stable key. But the input here is a photo, and two photos of the same
+      label are never the same bytes: a slightly different angle, different lighting, a
+      different crop. Hash the image bytes and you get a brand-new key on every scan, so the
+      hit rate of an exact-match cache is effectively zero by construction.
+    </p>
+    <p lang="ko">
+      캐시에는 안정적인 키가 필요해요. 그런데 여기 입력은 사진이고, 같은 라벨을 찍은 사진 두 장은
+      바이트 단위로 절대 같지 않아요. 각도가 조금 다르고, 조명이 다르고, 잘리는 범위가 달라요.
+      이미지 바이트를 해시하면 스캔할 때마다 새 키가 나와요. 단순 일치 캐시의 적중률은 구조적으로
+      0에 수렴해요.
+    </p>
+    <p lang="en">
+      The cost side is real: a cold scan walks a 4-stage fallback ladder (gpt-4o-mini, gpt-4o,
+      Google Vision plus gpt-4.1-mini) under a 30-second budget. Up to 3 OpenAI calls and 1
+      Vision call, paid, per scan. At any realistic scale that breaks the cost model.
+    </p>
+    <p lang="ko">
+      비용은 진짜 문제예요. 캐시가 비어 있으면 스캔 하나가 4단계 폴백 사다리(gpt-4o-mini, gpt-4o,
+      Google Vision + gpt-4.1-mini)를 최대 30초 예산 안에서 타요. 스캔 한 번에 유료 호출이 OpenAI
+      최대 3번, Vision 1번이에요. 규모가 조금만 커져도 비용 구조가 무너져요.
+    </p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">02</span><h2><span lang="en">Perceptual hash: key by what the image looks like</span><span lang="ko">perceptual hash: 어떻게 생겼는지로 키를 만들기</span></h2></div>
+    <p lang="en">
+      The fix is to stop hashing bytes and start hashing appearance. A perceptual hash (pHash)
+      maps visually similar images to matching keys, so a repeat scan of the same label lands
+      on the same cache entry even though the photo is new. The extracted result lives in
+      Redis with a 90-day TTL.
+    </p>
+    <p lang="ko">
+      해법은 바이트가 아니라 생김새를 해시하는 거예요. perceptual hash(pHash)는 눈으로 봤을 때
+      비슷한 이미지를 같은 키로 보내줘요. 그래서 새로 찍은 사진이어도, 같은 라벨을 다시 스캔하면
+      같은 캐시 항목에 도착해요. 추출 결과는 Redis에 90일 TTL로 저장해요.
+    </p>
+    <p lang="en">
+      The detail I care most about: cache keys are <strong>namespaced by schema version and
+      prompt version</strong>. When the extraction prompt or the result schema changes, I don't
+      flush anything. Old entries simply stop matching and expire on their own, while new scans
+      populate the new namespace. Invalidation becomes a non-event.
+    </p>
+    <p lang="ko">
+      제일 아끼는 디테일은 이거예요. 캐시 키에 <strong>스키마 버전과 프롬프트 버전을 함께</strong>
+      넣었어요. 추출 프롬프트나 결과 스키마가 바뀌면, 아무것도 지울 필요가 없어요. 옛 항목은 그냥
+      더 이상 매칭되지 않다가 스스로 만료되고, 새 스캔이 새 네임스페이스를 채워요. 캐시 무효화가
+      사건이 아니게 돼요.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <caption><span lang="en">Repeat-scan path · call counts by mechanism, not measured hit-rates</span><span lang="ko">중복 스캔 경로 · 호출 횟수 기준, 적중률 실측 아님</span></caption>
+        <thead>
+          <tr><th></th><th><span lang="en">Before</span><span lang="ko">전</span></th><th><span lang="en">After</span><span lang="ko">후</span></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span lang="en">Paid API calls</span><span lang="ko">유료 API 호출</span></td>
+            <td class="num"><span lang="en">up to 4</span><span lang="ko">최대 4</span> <span class="scope">3 OpenAI + 1 Vision</span></td>
+            <td class="num good">0</td>
+          </tr>
+          <tr>
+            <td><span lang="en">Lookup</span><span lang="ko">조회</span></td>
+            <td class="num"><span lang="en">4-stage model ladder, 30s budget</span><span lang="ko">모델 4단계, 최대 30초</span></td>
+            <td class="num good"><span lang="en">one Redis read</span><span lang="ko">Redis 조회 1번</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">03</span><h2><span lang="en">The honest scope</span><span lang="ko">정직한 범위</span></h2></div>
+    <p lang="en">
+      What the table says is a mechanism fact: on a cache hit, a repeat scan collapses from the
+      paid ladder to a single Redis read. What it does not say is a production hit rate. I
+      haven't measured one, so I don't quote one. The same discipline applies to the sibling
+      guard on the community feed, where TTL jitter, stale-while-revalidate, and a distributed
+      lock keep a burst of N concurrent requests from triggering N recomputes of the 7-day
+      aggregation: I describe the mechanism, not an uptime story.
+    </p>
+    <p lang="ko">
+      위 표가 말하는 건 메커니즘 사실이에요. 캐시에 맞으면, 중복 스캔이 유료 사다리 대신 Redis
+      조회 1번으로 끝난다는 것. 표가 말하지 않는 건 프로덕션 적중률이에요. 실측한 적이 없으니
+      인용하지 않아요. 커뮤니티 피드를 지키는 형제 장치도 같은 기준으로 말해요. TTL jitter,
+      stale-while-revalidate, 분산 락으로 요청 N개가 한꺼번에 몰려도 7일 집계 재계산이 N번
+      일어나지 않게 했다는 메커니즘까지만요.
+    </p>
+  </section>
+
+  <div class="foot reveal">
+    <p lang="en">
+      CLIR is live on the <a href="https://apps.apple.com/us/app/clir/id6769223942" target="_blank" rel="noopener">App Store</a>;
+      I own its backend on a 4-person team. Screenshots and the before/after table are on the <a href="/#p-clir">project card</a>.
+    </p>
+    <p lang="ko">
+      CLIR는 <a href="https://apps.apple.com/us/app/clir/id6769223942" target="_blank" rel="noopener">App Store</a>에서 서비스 중이고,
+      4인 팀에서 백엔드를 맡고 있어요. 스크린샷과 전/후 표는 <a href="/#p-clir">프로젝트 카드</a>에 있어요.
+    </p>
+    <p style="margin-top:12px">
+      <a href="/">poiurity.com</a> · <a href="mailto:iamlyg9667@gmail.com">iamlyg9667@gmail.com</a> ·
+      <a href="https://github.com/Poiurity" target="_blank" rel="noopener">github.com/Poiurity</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var TITLES = {
+    en: 'Caching scans that never hash the same twice · Yeonguk Lee',
+    ko: '같은 라벨인데, 해시는 매번 달라요 · 이영욱'
+  };
+  function apply(l) {
+    document.documentElement.dataset.lang = l;
+    document.documentElement.lang = l;
+    document.title = TITLES[l] || TITLES.en;
+    document.querySelectorAll('[data-setlang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.setlang === l));
+    });
+    try { localStorage.setItem('lang', l); } catch (e) {}
+  }
+  document.querySelectorAll('[data-setlang]').forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.setlang); });
+  });
+  apply(document.documentElement.dataset.lang || 'en');
+
+  var nav = document.getElementById('topnav');
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(function (el) { ro.observe(el); });
+  }
+})();
+</script>
+
+</body>
+</html>

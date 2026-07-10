@@ -556,6 +556,30 @@ figcaption {
   .pmodal-close { position: fixed; top: 12px; right: 12px; }
 }
 
+/* ---------- WRITING ---------- */
+.notes { border-top: 1px solid var(--border); }
+.note-row {
+  display: block;
+  text-decoration: none;
+  padding: 16px 14px;
+  margin: 0 -14px;
+  border-bottom: 1px solid var(--border);
+  border-radius: 10px;
+  transition: background 0.16s var(--ease);
+}
+.note-row:hover { background: var(--surface-1); }
+.note-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.note-head h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; transition: color 0.1s var(--ease); }
+.note-row:hover .note-head h3 { color: var(--accent); }
+.note-head .note-meta { font-family: var(--mono); font-size: 11px; color: var(--text-3); white-space: nowrap; }
+.note-row p { color: var(--text-2); font-size: 13.5px; margin-top: 4px; max-width: 680px; }
+
 /* ---------- FOOTER ---------- */
 .footer { border-top: 1px solid var(--border); }
 .footer-inner {

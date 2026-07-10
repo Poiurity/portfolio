@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why my code-generating agents never write code · Yeonguk Lee</title>
+<meta name="description" content="Raw code generation kept drifting between model calls, so FlowCraft's agents emit typed state instead, inside a verify-repair loop with a deterministic generator.">
+<link rel="canonical" href="https://poiurity.com/notes/flowcraft-typed-state/">
+<script>
+document.documentElement.classList.add('js');
+try {
+  var l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('lang');
+  if (l === 'ko' || l === 'en') { document.documentElement.dataset.lang = l; document.documentElement.lang = l; }
+} catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<header class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a href="/" class="brand">Yeonguk Lee<em>.</em></a>
+    <nav class="nav-links" aria-label="Back">
+      <a href="/#writing">&larr; <span lang="en">Writing</span><span lang="ko">글 목록</span></a>
+    </nav>
+    <div class="topnav-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-setlang="en" aria-pressed="true">EN</button>
+        <button type="button" data-setlang="ko" aria-pressed="false">KO</button>
+      </div>
+      <a href="mailto:iamlyg9667@gmail.com" class="btn btn-primary btn-sm">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span lang="en">Email</span><span lang="ko">메일</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="report">
+
+  <header class="report-head reveal">
+    <div class="kicker"><span lang="en">FlowCraft · design note · 2026-07-10</span><span lang="ko">FlowCraft · 설계 노트 · 2026-07-10</span></div>
+    <h1>
+      <span lang="en">Why my code-generating agents<br>never write code.</span>
+      <span lang="ko">코드 생성 에이전트인데,<br>코드를 직접 못 쓰게 했어요.</span>
+    </h1>
+    <p class="lede" lang="en">
+      FlowCraft turns a plain-language prompt into a working Flutter app. Six LLM agents are
+      involved, and <strong>none of them is allowed to write Flutter code</strong>. This note is
+      about why that rule exists and what it took to make it hold.
+    </p>
+    <p class="lede" lang="ko">
+      FlowCraft는 말로 설명한 앱을 실제로 도는 Flutter 앱으로 만들어 줘요. LLM 에이전트 6개가
+      움직이는데, <strong>그중 누구도 Flutter 코드를 직접 쓸 수 없어요</strong>. 왜 이 규칙을
+      만들었고, 지키게 하려고 뭘 했는지 적어봤어요.
+    </p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="idx">01</span><h2><span lang="en">The problem: code that drifts</span><span lang="ko">문제: 흔들리는 코드</span></h2></div>
+    <p lang="en">
+      The first version was a straightforward pipeline: Orchestrator, Planning, UI, Logic agents
+      editing code directly. It worked in a demo and fell apart in use. Every model call drifted:
+      the same request produced slightly different code each time, a small revision meant
+      regenerating whole files, and a "make this button blue" request could break something
+      unrelated on the other side of the app.
+    </p>
+    <p lang="ko">
+      첫 버전은 단순한 파이프라인이었어요. Orchestrator, Planning, UI, Logic 에이전트가 코드를
+      직접 고치는 구조요. 데모에서는 됐는데, 쓰다 보니 무너졌어요. 모델을 부를 때마다 코드가
+      조금씩 달라졌고, 사소한 수정에도 파일을 통째로 다시 만들었고, "버튼을 파랗게 바꿔줘" 한마디가
+      앱 반대편의 엉뚱한 걸 망가뜨렸어요.
+    </p>
+    <p lang="en">
+      The root cause wasn't a bad prompt. It was the medium: raw code is an output you can't
+      diff semantically, can't validate cheaply, and can't regenerate deterministically.
+    </p>
+    <p lang="ko">
+      원인은 프롬프트가 아니었어요. 매체가 문제였어요. 코드라는 출력물은 의미 단위로 비교하기도,
+      싸게 검증하기도, 똑같이 다시 만들어내기도 어려워요.
+    </p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">02</span><h2><span lang="en">The rule: agents emit state, a generator emits code</span><span lang="ko">규칙: 에이전트는 상태를, 생성기는 코드를</span></h2></div>
+    <p lang="en">
+      So I redesigned it around one rule. Agents (Clarifier, WidgetExtender, Structure, Design,
+      Repair, Critic) only produce a <strong>typed AppState</strong>: a JSON model of screens,
+      widgets, navigation, and state. A deterministic generator compiles that model to
+      <code>main.dart</code>. Same state in, same code out, every time. A revision is a patch to
+      the state, not a rewrite of the code.
+    </p>
+    <p lang="ko">
+      그래서 규칙 하나를 중심에 놓고 다시 설계했어요. 에이전트(Clarifier, WidgetExtender,
+      Structure, Design, Repair, Critic)는 <strong>타입이 정해진 AppState</strong>만 만들어요.
+      화면, 위젯, 내비게이션, 상태를 담은 JSON 모델이에요. 그리고 결정적 생성기가 그 모델을
+      <code>main.dart</code>로 바꿔요. 같은 상태를 넣으면 언제나 같은 코드가 나와요. 수정은
+      코드를 다시 쓰는 게 아니라 상태에 패치를 얹는 일이 됐어요.
+    </p>
+    <p lang="en">
+      Generation runs inside a closed loop. A static validator checks 13 error categories
+      (undeclared variables, illegal widget nesting, reserved identifiers, and so on). Failures
+      go to a Repair agent that patches the state: two attempts max, with oscillation and
+      wall-clock guards so it can't loop forever. If repair still fails, the system falls back to
+      the prior valid state when one exists. A Critic then scores how faithful the result is to
+      the original intent. In enforce mode every generation goes through this loop; off and
+      shadow modes exist for comparison.
+    </p>
+    <p lang="ko">
+      생성은 닫힌 루프 안에서 돌아요. 정적 검증기가 13개 항목(선언 안 된 변수, 위젯 중첩 규칙
+      위반, 예약어 충돌 같은 것들)을 검사해요. 실패하면 Repair 에이전트가 상태를 고치는데, 최대
+      2번까지만이고, 같은 수리를 반복하거나 시간을 끌면 가드가 끊어요. 그래도 안 되면 이전에
+      성공한 상태가 있을 때 거기로 돌아가요. 마지막으로 Critic이 결과가 원래 의도에 얼마나
+      충실한지 점수를 매겨요. enforce 모드에서는 모든 생성이 이 루프를 지나가고, 비교용으로
+      off·shadow 모드도 있어요.
+    </p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">03</span><h2><span lang="en">What I claim, and what I don't</span><span lang="ko">주장하는 것과, 하지 않는 것</span></h2></div>
+    <p lang="en">
+      What I claim: the pipeline's shape works. All <strong>53 automated tests pass</strong>,
+      covering the validator's 13 error codes, the closed-loop repair contract, and oscillation
+      handling. Revisions stay stable because code is compiled from state, never edited.
+      Preview runs in the browser via DartPad.
+    </p>
+    <p lang="ko">
+      주장하는 것: 이 구조가 동작한다는 거예요. 검증기의 13개 에러 코드, 닫힌 루프의 수리 계약,
+      진동 처리까지 <strong>자동 테스트 53개가 전부 통과</strong>해요. 코드는 상태에서
+      컴파일될 뿐 직접 수정되지 않으니까, 수정을 거듭해도 흔들리지 않아요. 미리보기는 브라우저에서
+      DartPad로 돌아가요.
+    </p>
+    <p lang="en">
+      What I don't claim: that the agents themselves are smart. The tests measure the pipeline's
+      guarantees, not model quality. A bad generation still happens; the point of the design is
+      that a bad generation gets caught, repaired, or rolled back instead of shipped.
+    </p>
+    <p lang="ko">
+      주장하지 않는 것: 에이전트가 똑똑하다는 거요. 테스트가 재는 건 파이프라인의 보장이지 모델의
+      품질이 아니에요. 이상한 생성은 지금도 나와요. 이 설계의 핵심은 이상한 생성이 사용자에게
+      도착하기 전에 걸리고, 고쳐지고, 안 되면 되돌려진다는 거예요.
+    </p>
+  </section>
+
+  <div class="foot reveal">
+    <p lang="en">
+      The repo is public: <a href="https://github.com/Poiurity/FlowCraft" target="_blank" rel="noopener">github.com/Poiurity/FlowCraft</a>.
+      The pipeline diagram and a live preview screenshot are on the <a href="/#p-flowcraft">project card</a>.
+    </p>
+    <p lang="ko">
+      저장소는 공개돼 있어요: <a href="https://github.com/Poiurity/FlowCraft" target="_blank" rel="noopener">github.com/Poiurity/FlowCraft</a>.
+      파이프라인 다이어그램과 미리보기 화면은 <a href="/#p-flowcraft">프로젝트 카드</a>에 있어요.
+    </p>
+    <p style="margin-top:12px">
+      <a href="/">poiurity.com</a> · <a href="mailto:iamlyg9667@gmail.com">iamlyg9667@gmail.com</a> ·
+      <a href="https://github.com/Poiurity" target="_blank" rel="noopener">github.com/Poiurity</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var TITLES = {
+    en: 'Why my code-generating agents never write code · Yeonguk Lee',
+    ko: '코드 생성 에이전트인데, 코드를 직접 못 쓰게 했어요 · 이영욱'
+  };
+  function apply(l) {
+    document.documentElement.dataset.lang = l;
+    document.documentElement.lang = l;
+    document.title = TITLES[l] || TITLES.en;
+    document.querySelectorAll('[data-setlang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.setlang === l));
+    });
+    try { localStorage.setItem('lang', l); } catch (e) {}
+  }
+  document.querySelectorAll('[data-setlang]').forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.setlang); });
+  });
+  apply(document.documentElement.dataset.lang || 'en');
+
+  var nav = document.getElementById('topnav');
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(function (el) { ro.observe(el); });
+  }
+})();
+</script>
+
+</body>
+</html>
