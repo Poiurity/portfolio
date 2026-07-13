@@ -121,9 +121,9 @@ h1 [lang="ko"], h2 [lang="ko"], h3 [lang="ko"] { line-height: inherit; }
   gap: 20px;
 }
 .topnav .brand {
-  font-weight: 650;
-  font-size: 15px;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.02em;
   text-decoration: none;
   white-space: nowrap;
   margin-right: 8px;
@@ -212,11 +212,20 @@ h1 [lang="ko"], h2 [lang="ko"], h3 [lang="ko"] { line-height: inherit; }
 /* ---------- HERO ---------- */
 .hero { padding: 88px 0 84px; }
 .hero h1 {
-  font-size: clamp(37px, 5.4vw, 60px);
-  font-weight: 650;
-  letter-spacing: -0.025em;
-  line-height: 1.07;
+  font-size: clamp(46px, 7.4vw, 86px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.0;
   max-width: 900px;
+}
+.hero .hero-tagline {
+  margin-top: 18px;
+  font-size: clamp(20px, 2.5vw, 27px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+  color: var(--text);
+  max-width: 720px;
 }
 .hero .hero-sub {
   margin-top: 20px;
