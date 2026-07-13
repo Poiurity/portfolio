@@ -266,6 +266,32 @@ section { margin-bottom: 104px; }
 }
 .fact dd { color: var(--text-2); }
 .fact dd strong { color: var(--text); font-weight: 600; }
+
+/* term gloss: inline info popover for opaque proper nouns (progressive disclosure) */
+.gloss { position: relative; display: inline-block; }
+.gloss-btn {
+  display: inline; padding: 0; margin: 0; border: 0; background: none;
+  font: inherit; color: var(--text); cursor: help; -webkit-tap-highlight-color: transparent;
+}
+.gloss-btn strong { border-bottom: 1px dotted var(--text-3); transition: border-color 0.1s var(--ease); }
+.gloss-btn:hover strong, .gloss:focus-within .gloss-btn strong { border-bottom-color: var(--accent); }
+.gloss-btn:focus { outline: none; }
+.gloss-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+.gloss-i { width: 11px; height: 11px; margin-left: 3px; color: var(--text-3); vertical-align: 0.5px; }
+.gloss-pop {
+  position: absolute; top: calc(100% + 8px); left: 0; z-index: 50;
+  width: max-content; max-width: min(300px, calc(100vw - 40px));
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface-1); color: var(--text-2);
+  font-size: 12.5px; line-height: 1.5; font-weight: 400; letter-spacing: 0; text-align: left;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+  opacity: 0; visibility: hidden; transform: translateY(-4px);
+  transition: opacity 0.16s var(--ease), transform 0.16s var(--ease), visibility 0.16s var(--ease);
+  pointer-events: none;
+}
+.gloss:hover .gloss-pop, .gloss:focus-within .gloss-pop, .gloss.open .gloss-pop {
+  opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto;
+}
 @media (max-width: 560px) {
   .fact { grid-template-columns: 1fr; gap: 4px; padding: 10px 0; }
 }
