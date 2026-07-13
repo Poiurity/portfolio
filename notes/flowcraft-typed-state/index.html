@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Why my code-generating agents never write code · Yeonguk Lee</title>
-<meta name="description" content="Raw code generation kept drifting between model calls, so FlowCraft's agents emit typed state instead, inside a verify-repair loop with a deterministic generator.">
+<meta name="description" content="Raw code generation drifts between model calls, so FlowCraft's six agents never write Flutter; they emit typed state that a deterministic generator compiles, with a verify-repair loop that runs in enforce mode.">
 <link rel="canonical" href="https://poiurity.com/notes/flowcraft-typed-state/">
 <script>
 document.documentElement.classList.add('js');
@@ -61,49 +61,52 @@ try {
   </header>
 
   <section>
-    <div class="sec-head"><span class="idx">01</span><h2><span lang="en">The problem: code that drifts</span><span lang="ko">문제: 흔들리는 코드</span></h2></div>
+    <div class="sec-head"><span class="idx">01</span><h2><span lang="en">The problem: code is the wrong medium</span><span lang="ko">문제: 코드는 잘못된 매체</span></h2></div>
     <p lang="en">
-      The first version was a straightforward pipeline: Orchestrator, Planning, UI, Logic agents
-      editing code directly. It worked in a demo and fell apart in use. Every model call drifted:
-      the same request produced slightly different code each time, a small revision meant
-      regenerating whole files, and a "make this button blue" request could break something
-      unrelated on the other side of the app.
+      When six agents build an app, the obvious design is to let them write the Flutter code
+      directly. I did the opposite on purpose. Raw code generation drifts between calls: the same
+      prompt yields slightly different code each time, a one-line revision means regenerating whole
+      files, and a "make this button blue" request can break something unrelated on the far side of
+      the app. None of that is a prompt you can fix. It comes from treating code as the thing the
+      agents pass around.
     </p>
     <p lang="ko">
-      첫 버전은 단순한 파이프라인이었어요. Orchestrator, Planning, UI, Logic 에이전트가 코드를
-      직접 고치는 구조요. 데모에서는 됐는데, 쓰다 보니 무너졌어요. 모델을 부를 때마다 코드가
-      조금씩 달라졌고, 사소한 수정에도 파일을 통째로 다시 만들었고, "버튼을 파랗게 바꿔줘" 한마디가
-      앱 반대편의 엉뚱한 걸 망가뜨렸어요.
+      에이전트 6개로 앱을 만든다고 하면, 보통은 에이전트가 Flutter 코드를 직접 쓰게 해요. 저는
+      일부러 반대로 갔어요. 코드를 그대로 생성하면 모델을 호출할 때마다 출력이 흔들리거든요. 같은
+      프롬프트인데도 매번 조금씩 다른 코드가 나오고, 한 줄만 고치려는데 파일을 통째로 다시 만들고,
+      "버튼을 파랗게 바꿔줘" 한마디가 앱 반대편의 엉뚱한 걸 건드려요. 이건 프롬프트를 잘 쓴다고
+      해결되는 문제가 아니에요. 에이전트가 코드라는 매체로 주고받기 때문에 생기는 일이에요.
     </p>
     <p lang="en">
-      The root cause wasn't a bad prompt. It was the medium: raw code is an output you can't
-      diff semantically, can't validate cheaply, and can't regenerate deterministically.
+      Raw code is an output you can't diff semantically, can't validate cheaply, and can't
+      regenerate deterministically. So rather than push the agents to write better code, I took
+      code away from them entirely.
     </p>
     <p lang="ko">
-      원인은 프롬프트가 아니었어요. 매체가 문제였어요. 코드라는 출력물은 의미 단위로 비교하기도,
-      싸게 검증하기도, 똑같이 다시 만들어내기도 어려워요.
+      코드라는 출력물은 의미 단위로 비교하기도, 싸게 검증하기도, 똑같이 다시 만들어내기도 어려워요.
+      그래서 에이전트가 코드를 더 잘 쓰게 만드는 대신, 아예 코드를 손에서 뺐어요.
     </p>
   </section>
 
   <section>
     <div class="sec-head"><span class="idx">02</span><h2><span lang="en">The rule: agents emit state, a generator emits code</span><span lang="ko">규칙: 에이전트는 상태를, 생성기는 코드를</span></h2></div>
     <p lang="en">
-      So I redesigned it around one rule. Agents (Clarifier, WidgetExtender, Structure, Design,
+      So I designed it around one rule. Agents (Clarifier, WidgetExtender, Structure, Design,
       Repair, Critic) only produce a <strong>typed AppState</strong>: a JSON model of screens,
       widgets, navigation, and state. A deterministic generator compiles that model to
       <code>main.dart</code>. Same state in, same code out, every time. A revision is a patch to
       the state, not a rewrite of the code.
     </p>
     <p lang="ko">
-      그래서 규칙 하나를 중심에 놓고 다시 설계했어요. 에이전트(Clarifier, WidgetExtender,
+      그래서 규칙 하나를 중심에 두고 설계했어요. 에이전트(Clarifier, WidgetExtender,
       Structure, Design, Repair, Critic)는 <strong>타입이 정해진 AppState</strong>만 만들어요.
       화면, 위젯, 내비게이션, 상태를 담은 JSON 모델이에요. 그리고 결정적 생성기가 그 모델을
       <code>main.dart</code>로 바꿔요. 같은 상태를 넣으면 언제나 같은 코드가 나와요. 수정은
       코드를 다시 쓰는 게 아니라 상태에 패치를 얹는 일이 됐어요.
     </p>
     <p lang="en">
-      Generation runs inside a closed loop. A static validator checks 13 error categories
-      (undeclared variables, illegal widget nesting, reserved identifiers, and so on). Failures
+      Generation runs inside a closed loop. A static validator checks the state for structural
+      errors (undeclared variables, illegal widget nesting, reserved identifiers, and so on). Failures
       go to a Repair agent that patches the state: two attempts max, with oscillation and
       wall-clock guards so it can't loop forever. If repair still fails, the system falls back to
       the prior valid state when one exists. A Critic then scores how faithful the result is to
@@ -111,8 +114,8 @@ try {
       shadow modes exist for comparison.
     </p>
     <p lang="ko">
-      생성은 닫힌 루프 안에서 돌아요. 정적 검증기가 13개 항목(선언 안 된 변수, 위젯 중첩 규칙
-      위반, 예약어 충돌 같은 것들)을 검사해요. 실패하면 Repair 에이전트가 상태를 고치는데, 최대
+      생성은 닫힌 루프 안에서 돌아요. 정적 검증기가 구조적 오류(선언 안 된 변수, 위젯 중첩 규칙
+      위반, 예약어 충돌 같은 것들)를 검사해요. 실패하면 Repair 에이전트가 상태를 고치는데, 최대
       2번까지만이고, 같은 수리를 반복하거나 시간을 끌면 가드가 끊어요. 그래도 안 되면 이전에
       성공한 상태가 있을 때 거기로 돌아가요. 마지막으로 Critic이 결과가 원래 의도에 얼마나
       충실한지 점수를 매겨요. enforce 모드에서는 모든 생성이 이 루프를 지나가고, 비교용으로
@@ -124,12 +127,12 @@ try {
     <div class="sec-head"><span class="idx">03</span><h2><span lang="en">What I claim, and what I don't</span><span lang="ko">주장하는 것과, 하지 않는 것</span></h2></div>
     <p lang="en">
       What I claim: the pipeline's shape works. All <strong>53 automated tests pass</strong>,
-      covering the validator's 13 error codes, the closed-loop repair contract, and oscillation
+      covering the validator's error codes, the closed-loop repair contract, and oscillation
       handling. Revisions stay stable because code is compiled from state, never edited.
       Preview runs in the browser via DartPad.
     </p>
     <p lang="ko">
-      주장하는 것: 이 구조가 동작한다는 거예요. 검증기의 13개 에러 코드, 닫힌 루프의 수리 계약,
+      주장하는 것: 이 구조가 동작한다는 거예요. 검증기의 에러 코드, 닫힌 루프의 수리 계약,
       진동 처리까지 <strong>자동 테스트 53개가 전부 통과</strong>해요. 코드는 상태에서
       컴파일될 뿐 직접 수정되지 않으니까, 수정을 거듭해도 흔들리지 않아요. 미리보기는 브라우저에서
       DartPad로 돌아가요.

@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yeonguk Lee · Software Engineer</title>
-<meta name="description" content="Backend & systems engineer who builds fast with AI. Backend owner of CLIR (live on the App Store); builds agents that verify before they act, with reliability measured in reproducible harnesses.">
+<meta name="description" content="Backend engineer who builds fast with AI. Backend owner of CLIR (live on the App Store); builds agents that verify before they act, with reliability measured in reproducible harnesses.">
 <link rel="canonical" href="https://poiurity.com/">
 <meta property="og:title" content="Yeonguk Lee · Software Engineer">
-<meta property="og:description" content="Backend & systems engineer who builds fast with AI. Shipped App Store backend; agents that verify before they act.">
+<meta property="og:description" content="Backend engineer who builds fast with AI. Shipped App Store backend; agents that verify before they act.">
 <meta property="og:url" content="https://poiurity.com/">
 <meta property="og:type" content="website">
 <script>
@@ -52,8 +52,8 @@ try {
   <div class="hero">
     <div class="container">
       <h1 class="reveal" style="--d: 0s;">
-        <span lang="en">Backend &amp; systems engineer<br>who builds fast with AI.</span>
-        <span lang="ko">백엔드와 시스템 기본기 위에서<br>AI로 빠르게 만드는 엔지니어.</span>
+        <span lang="en">Backend engineer<br>who builds fast with AI.</span>
+        <span lang="ko">백엔드 기본기 위에서<br>AI로 빠르게 만드는 엔지니어.</span>
       </h1>
       <p class="hero-sub reveal" style="--d: 0.09s;">
         <span lang="en">I own the backend of <strong>CLIR</strong>, a food-allergy scanner live on the App Store,
@@ -172,7 +172,7 @@ try {
           </div>
         </a>
         <a class="card reveal" href="#p-clir" data-project="p-clir" data-picks="1" data-newest="3" data-trust="2" data-caffeine="5" data-tags="store humans" style="--d: 0.06s;">
-          <div class="card-thumb" aria-hidden="true"><img src="./assets/clir-result.png" alt="CLIR verdict screen" style="object-position: center 25%;" loading="lazy"></div>
+          <div class="card-thumb" aria-hidden="true"><img src="./assets/clir-result.png" alt="CLIR result screen" style="object-position: center 25%;" loading="lazy"></div>
           <div class="card-body">
             <h3>CLIR</h3>
             <p class="card-sum"><span lang="en">Scan a food label once, get a safe-or-not answer for your profile.</span><span lang="ko">라벨을 한 번 스캔하면, 내 프로필 기준으로 먹어도 되는지 알려줘요.</span></p>
@@ -183,7 +183,7 @@ try {
           <div class="card-thumb" aria-hidden="true"><img src="./assets/flowcraft-1-main.png" alt="FlowCraft IDE with generated code and preview" loading="lazy"></div>
           <div class="card-body">
             <h3>FlowCraft</h3>
-            <p class="card-sum"><span lang="en">A no-code Flutter app builder where agents never write the code.</span><span lang="ko">에이전트가 코드를 직접 쓰지 않는 노코드 Flutter 앱 빌더예요.</span></p>
+            <p class="card-sum"><span lang="en">A no-code Flutter app builder where agents never write the code directly.</span><span lang="ko">에이전트가 코드를 직접 쓰지 않는 노코드 Flutter 앱 빌더예요.</span></p>
             <p class="card-meta"><span class="flag"><span lang="en">featured</span><span lang="ko">대표</span></span> · <span lang="en">solo · 2026 · open source</span><span lang="ko">1인 개발 · 2026 · 오픈소스</span></p>
           </div>
         </a>
@@ -349,15 +349,19 @@ try {
           <div class="prose">
             <p lang="en">
               Every scan used to trigger a paid AI call for ingredient analysis. At realistic
-              scale, that breaks the cost model. So I designed a <strong>perceptual-hash dedup
-              cache</strong>: a repeat label scan skips the model ladder entirely. Exact-match
-              caching can't work here, because two photos of the same label never hash identically.
+              scale, that breaks the cost model. So I built a <strong>perceptual-hash dedup
+              cache</strong>, now live in production: a repeat label scan skips the model ladder
+              entirely. Exact-match caching can't work here, because two photos of the same label
+              never hash identically. Keys are versioned by schema and prompt, so cache invalidation
+              is a non-event, and every scan records its own latency, cost, and cache-hit telemetry.
             </p>
             <p lang="ko">
               원래는 스캔할 때마다 유료 AI 호출이 나갔어요. 규모가 커지면 비용 구조가 무너져요.
-              그래서 <strong>perceptual hash로 중복을 잡는 캐시</strong>를 설계했어요. 같은 라벨을
-              다시 스캔하면 모델 호출을 아예 건너뛰어요. 같은 라벨이라도 사진마다 해시값이
-              달라지니까, 단순 일치 캐시로는 풀 수 없는 문제였어요.
+              그래서 <strong>perceptual hash로 중복을 잡는 캐시</strong>를 만들었고, 지금 프로덕션에서
+              돌고 있어요. 같은 라벨을 다시 스캔하면 모델 호출을 아예 건너뛰어요. 같은 라벨이라도
+              사진마다 해시값이 달라지니까, 단순 일치 캐시로는 풀 수 없는 문제였어요. 키에 스키마·
+              프롬프트 버전을 넣어서 캐시 무효화가 사건이 아니고, 스캔마다 지연·비용·캐시 적중
+              텔레메트리를 남겨요.
             </p>
             <p lang="en">
               The community feed survives request bursts with TTL jitter,
@@ -376,8 +380,8 @@ try {
               <figcaption>Fig. 1 · <span lang="en">scan a label or barcode</span><span lang="ko">라벨·바코드 스캔</span></figcaption>
             </figure>
             <figure>
-              <img src="./assets/clir-result.png" data-zoom="./assets/clir-result.png" alt="CLIR verdict screen: product marked Good for this profile" loading="lazy">
-              <figcaption>Fig. 2 · <span lang="en">verdict for your profile</span><span lang="ko">내 프로필 기준 판정</span></figcaption>
+              <img src="./assets/clir-result.png" data-zoom="./assets/clir-result.png" alt="CLIR result screen: product marked Good for this profile" loading="lazy">
+              <figcaption>Fig. 2 · <span lang="en">result for your profile</span><span lang="ko">내 프로필 기준 결과</span></figcaption>
             </figure>
             <figure>
               <img src="./assets/clir-ingredients.png" data-zoom="./assets/clir-ingredients.png" alt="CLIR full ingredient breakdown" loading="lazy">
@@ -431,34 +435,35 @@ try {
           <p lang="en">
             Six LLM agents (Clarifier, WidgetExtender, Structure, Design, Repair, Critic) emit a
             <strong>typed AppState instead of raw Flutter</strong>; a deterministic generator
-            compiles it to code. Generation runs in a closed loop: a 13-category static validator
-            checks the output, and a repair agent patches failures (two attempts max, with
+            compiles it to code. In enforce mode, generation runs in a closed loop: a static
+            validator checks the output, and a repair agent patches failures (two attempts max, with
             oscillation and wall-clock guards). When repair fails, the system falls back to the
             prior valid state when one exists.
           </p>
           <p lang="ko">
             LLM 에이전트 6개(Clarifier, WidgetExtender, Structure, Design, Repair, Critic)가
             Flutter 코드 대신 <strong>타입이 정해진 AppState</strong>를 만들어요. 코드는 생성기가
-            정해진 규칙대로만 만들어서, 같은 상태면 늘 같은 코드가 나와요. 생성은 항상 닫힌 루프
-            안에서 돌아요. 13개 항목을 검사하는 정적 검증기가 결과를 확인하고, 실패하면 Repair
+            정해진 규칙대로만 만들어서, 같은 상태면 늘 같은 코드가 나와요. enforce 모드에서는 생성이
+            닫힌 루프 안에서 돌아요. 정적 검증기가 결과를 확인하고, 실패하면 Repair
             에이전트가 최대 2번 고쳐요. 무한 반복과 시간 초과를 막는 가드도 있어요. 그래도 안 되면,
             이전에 성공한 상태가 있을 때 거기로 돌아가요.
           </p>
           <p lang="en">
-            It started as an Orchestrator/Planning/UI/Logic pipeline. I redesigned it around typed
-            state after raw code generation kept drifting between model calls. All
+            The rule is a deliberate design choice, not a patch: raw code generation drifts between
+            model calls, so nothing in the pipeline edits code directly. All
             <strong>53 automated tests pass</strong>; preview runs in the browser via DartPad.
           </p>
           <p lang="ko">
-            처음엔 Orchestrator/Planning/UI/Logic 파이프라인이었어요. 모델을 호출할 때마다 코드가
-            조금씩 달라져서, 타입 상태 중심으로 다시 설계했어요. <strong>자동 테스트 53개가 전부
-            통과</strong>하고, 미리보기는 브라우저에서 DartPad로 돌아가요.
+            이 규칙은 나중에 덧댄 게 아니라 처음부터 의도한 설계예요. 코드를 그대로 생성하면 모델을
+            호출할 때마다 조금씩 달라지니까, 파이프라인 어디서도 코드를 직접 건드리지 않게 했어요.
+            <strong>자동 테스트 53개가 전부 통과</strong>하고, 미리보기는 브라우저에서 DartPad로
+            돌아가요.
           </p>
         </div>
 
         <div class="flagship-cols" style="margin-top: 20px;">
           <figure class="diagram">
-            <svg viewBox="0 0 720 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FlowCraft closed-loop pipeline: agents emit typed AppState, a deterministic generator compiles it, a static validator and repair agent verify every output">
+            <svg viewBox="0 0 720 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FlowCraft pipeline: agents emit typed AppState, a deterministic generator compiles it, and in enforce mode a static validator and repair agent check each generation in a closed loop">
               <defs>
                 <marker id="arr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
                   <path d="M0,0 L0,6 L9,3 z" style="fill:var(--diagram-line)"/>
@@ -520,8 +525,8 @@ try {
               <g transform="translate(270, 400)">
                 <rect width="180" height="68" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
                 <text x="90" y="26" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="middle">Static validator</text>
-                <text x="90" y="44" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">13 error categories</text>
-                <text x="90" y="57" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">checks every output</text>
+                <text x="90" y="44" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">structural checks</text>
+                <text x="90" y="57" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">vars · nesting · reserved ids</text>
               </g>
               <g transform="translate(508, 400)">
                 <rect width="180" height="68" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
@@ -540,7 +545,7 @@ try {
                 <text x="95" y="37" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">DartPad preview in browser</text>
               </g>
             </svg>
-            <figcaption>Fig. 1 · <span lang="en">closed-loop generation pipeline</span><span lang="ko">닫힌 루프 생성 파이프라인</span></figcaption>
+            <figcaption>Fig. 1 · <span lang="en">closed-loop generation pipeline (enforce mode)</span><span lang="ko">닫힌 루프 생성 파이프라인 (enforce 모드)</span></figcaption>
           </figure>
 
           <figure>
@@ -693,7 +698,7 @@ try {
             <h3><span lang="en">Why my code-generating agents never write code</span><span lang="ko">코드 생성 에이전트인데, 코드를 직접 못 쓰게 했어요</span></h3>
             <span class="note-meta">2026-07 · <span lang="en">design note · 4 min</span><span lang="ko">설계 노트 · 4분</span></span>
           </div>
-          <p><span lang="en">Raw code generation kept drifting between model calls, so I made the agents emit typed state instead, inside a verify-repair loop.</span><span lang="ko">모델을 호출할 때마다 코드가 조금씩 달라져서, 에이전트가 코드 대신 타입 상태를 만들게 바꿨어요. 검증-수리 루프 안에서요.</span></p>
+          <p><span lang="en">Raw code generation drifts between model calls, so the agents never touch Flutter directly; they emit typed state a generator compiles, with a verify-repair loop that runs in enforce mode.</span><span lang="ko">코드를 그대로 생성하면 모델을 호출할 때마다 달라져요. 그래서 에이전트가 Flutter 코드를 직접 만지지 않고, 생성기가 컴파일하는 타입 상태만 만들어요. 검증-수리 루프는 enforce 모드에서 돌아요.</span></p>
         </a>
         <a class="note-row reveal" href="/notes/clir-phash-cache/">
           <div class="note-head">

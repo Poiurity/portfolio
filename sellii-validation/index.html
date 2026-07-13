@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sellii · Verification Harness Results · Yeonguk Lee</title>
-<meta name="description" content="Methodology and result tables for three reproducible offline harnesses measuring Sellii's server-side verification, exactly-once event handling, and LLM cost/recall trade-off.">
+<meta name="description" content="Methodology and result tables for three reproducible offline harnesses measuring Sellii's server-side verification, exactly-once event handling in a replay harness, and the LLM cost/recall trade-off.">
 <link rel="canonical" href="https://poiurity.com/sellii-validation/">
 <script>
 document.documentElement.classList.add('js');
@@ -61,10 +61,10 @@ try {
       여기에 밝혀 뒀어요.
     </p>
     <div class="scope-banner">
-      <span lang="en"><strong>Read this first:</strong> every number below comes from a deterministic harness on fixed
+      <span lang="en"><strong>Read this first:</strong> every measured number below comes from a deterministic harness on fixed
       fixtures, run fully offline. It is <strong>not production traffic</strong>, and Sellii has no real users. Where a harness
       measures a fix rather than the shipped code, that is stated explicitly. Gaps and misses are documented, not hidden.</span>
-      <span lang="ko"><strong>먼저 읽어주세요:</strong> 아래 숫자는 전부 고정된 픽스처로 오프라인에서 돌린 결정적
+      <span lang="ko"><strong>먼저 읽어주세요:</strong> 아래 측정 수치는 전부 고정된 픽스처로 오프라인에서 돌린 결정적
       하네스 결과예요. <strong>프로덕션 트래픽이 아니고</strong>, Sellii는 실사용자가 없어요. 출시된 코드가 아니라
       '고친 것'을 측정한 경우에는 그렇게 명시했어요. 못 잡은 케이스도 숨기지 않고 적었어요.</span>
     </div>
@@ -127,20 +127,62 @@ try {
       </table>
     </div>
 
-    <h3><span lang="en">What it does not catch (documented gaps: 12/29)</span><span lang="ko">못 잡는 것 (기록해 둔 구멍: 12/29)</span></h3>
+    <h3><span lang="en">What it does not catch, traced downstream (12/29 gaps)</span><span lang="ko">못 잡는 것을 하류까지 추적 (구멍 12/29)</span></h3>
     <p lang="en">
-      Four corruption types get through, each with a known cause and a concrete hardening step:
-      comps fabricated for a never-searched query (canonical recomputation only protects on cache hit),
-      comps that are <em>entirely</em> the wrong product (the token filter falls back when almost nothing matches),
-      stale comps older than three years (no freshness window yet), and a missing listing URL (detail check is skipped).
-      These are why the page says <strong>17/17 economic lies</strong>, not "100% of everything."
+      Four corruption types get through this harness, each with a known cause: comps fabricated for a
+      never-searched query (canonical recomputation only protects on a cache hit), comps that are
+      <em>entirely</em> the wrong product (the token filter falls back when almost nothing matches),
+      stale comps older than three years (no freshness window yet), and a missing listing URL (this
+      harness skips the detail check). That is why the headline is <strong>17/17 economic lies</strong>,
+      not "100% of everything."
     </p>
     <p lang="ko">
-      4가지 손상 유형은 통과돼요. 각각 원인과 다음 보강 방법을 알아요: 검색한 적 없는 쿼리로
-      지어낸 시세(재계산은 캐시에 있을 때만 보호해요), 시세가 <em>전부</em> 다른 상품인 경우(거의
-      안 맞으면 토큰 필터가 물러서요), 3년 넘은 오래된 판매 기록(신선도 검사가 아직 없어요),
-      매물 URL 누락(상세 검사를 건너뛰어요). 그래서 이 페이지는 "전부 100% 차단"이 아니라
-      <strong>경제적 거짓말 17/17</strong>이라고 말해요.
+      4가지 손상 유형이 이 하네스를 통과해요. 각각 원인을 알아요: 검색한 적 없는 쿼리로 지어낸
+      시세(재계산은 캐시에 있을 때만 보호해요), 시세가 <em>전부</em> 다른 상품인 경우(거의 안 맞으면
+      토큰 필터가 물러서요), 3년 넘은 오래된 판매 기록(신선도 검사가 아직 없어요), 매물 URL
+      누락(이 하네스는 상세 검사를 건너뛰어요). 그래서 헤드라인이 "전부 100% 차단"이 아니라
+      <strong>경제적 거짓말 17/17</strong>이에요.
+    </p>
+    <p lang="en">
+      But this harness exercises one gate in isolation. Tracing all 12 gap cases through the full
+      production path splits them cleanly: <strong>3 already fail closed</strong> downstream, and
+      <strong>9 genuinely fail open</strong>.
+    </p>
+    <p lang="ko">
+      그런데 이 하네스는 게이트 하나만 떼어내서 돌려요. 12개 구멍을 프로덕션 전체 경로로 따라가
+      보면 깔끔하게 나뉘어요. <strong>3건은 하류에서 이미 막히고(fail-closed)</strong>,
+      <strong>9건은 진짜로 뚫려요(fail-open)</strong>.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <caption><span lang="en">12 gap cases traced into production</span><span lang="ko">구멍 12건을 프로덕션까지 추적</span></caption>
+        <thead><tr><th><span lang="en">Downstream disposition</span><span lang="ko">하류 결말</span></th><th><span lang="en">Cases</span><span lang="ko">건수</span></th><th><span lang="en">Why</span><span lang="ko">이유</span></th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span lang="en">Fail-closed in production</span><span lang="ko">프로덕션에서 차단</span></td>
+            <td class="num good">3</td>
+            <td><span lang="en">Missing listing URL: <code>listing_url</code> is <code>NOT NULL</code> in the schema, and the auto-send step requires a valid https URL, so a URL-less recommendation never passes that gate.</span><span lang="ko">매물 URL 누락: 스키마에서 <code>listing_url</code>이 <code>NOT NULL</code>이고, 자동 발송 단계가 유효한 https URL을 요구해요. 그래서 URL 없는 추천은 그 게이트를 통과하지 못해요.</span></td>
+          </tr>
+          <tr>
+            <td><span lang="en">Fail-open</span><span lang="ko">통과</span></td>
+            <td class="num bad">9</td>
+            <td><span lang="en">Fabricated, wrong-product, or stale comps clear the economic gate and would reach a human as "approved."</span><span lang="ko">지어냈거나, 다른 상품이거나, 오래된 시세가 경제 게이트를 통과해서 "승인됨" 상태로 사람에게 도달해요.</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p lang="en">
+      The 9 fail-open cases are the real exposure. For them I designed a <strong>review-queue routing
+      patch</strong>: a recommendation built on comps the server can't verify (never-searched,
+      wrong-product, or past the freshness window) is diverted to a human review queue instead of
+      auto-approval. It's a design I can walk through, <strong>not shipped code</strong>, so I list it
+      as the next step, not a current guarantee.
+    </p>
+    <p lang="ko">
+      진짜 노출은 이 9건이에요. 이걸 위해 <strong>리뷰 큐 라우팅 패치</strong>를 설계했어요. 서버가
+      검증할 수 없는 시세(검색된 적 없거나, 다른 상품이거나, 신선도 기준을 넘긴)로 만든 추천은 자동
+      승인 대신 사람 리뷰 큐로 보내요. 코드로 보여드릴 수 있는 설계지 <strong>아직 배포한 코드는
+      아니에요</strong>. 그래서 현재의 보장이 아니라 다음 단계로 적어 둬요.
     </p>
 
     <div class="limits">
@@ -205,11 +247,11 @@ try {
     </div>
     <p lang="en">
       Under partial failure (crash after the side effect but before the marker is written), act-then-mark ordering
-      committed twice (a double charge), while <strong>claim-then-act committed once</strong>, with the retry becoming a no-op.
+      committed twice (a duplicate committed action), while <strong>claim-then-act committed once</strong>, with the retry becoming a no-op.
     </p>
     <p lang="ko">
       부분 실패(side effect는 성공했는데 마커를 쓰기 전에 죽는 경우)에서는, 행동-후-기록 순서가 두 번
-      커밋됐어요. 이중 결제가 나는 거예요. <strong>선점-후-행동은 한 번만 커밋됐고</strong>, 재시도는 아무 일도 하지 않았어요.
+      커밋됐어요. 같은 작업이 한 번 더 커밋되는 거예요. <strong>선점-후-행동은 한 번만 커밋됐고</strong>, 재시도는 아무 일도 하지 않았어요.
     </p>
 
     <div class="limits">
