@@ -439,6 +439,29 @@ figcaption {
 .gallery figure img { aspect-ratio: 9 / 16; }
 @media (max-width: 640px) { .gallery { grid-template-columns: 1fr; } .gallery figure img { aspect-ratio: auto; } }
 
+/* split layout: text left, a cluster of photos on the right */
+.hero { overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.86fr); gap: 24px; align-items: stretch; }
+.hero-text { align-self: center; min-width: 0; }
+.hero-role { font-family: var(--mono); font-size: clamp(16px, 1.9vw, 21px); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+.profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.66fr); gap: 28px; align-items: stretch; }
+.profile-text { min-width: 0; }
+.hero-photos, .profile-photos { position: relative; min-height: 380px; }
+.ph { position: absolute; margin: 0; overflow: hidden; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-2); box-shadow: 0 12px 36px color-mix(in srgb, var(--text) 13%, transparent); }
+.ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ph-a { left: 0; top: 8%; width: 64%; height: 82%; z-index: 2; }
+.ph-b { right: 0; top: 0; width: 50%; height: 44%; z-index: 3; }
+/* profile: one main photo (facade) with two overlapping accents */
+.pp-b { left: 4%; top: 9%; width: 60%; height: 80%; z-index: 2; }
+.pp-a { right: 0; top: 0; width: 48%; height: 39%; z-index: 3; }
+.pp-c { right: 2%; bottom: 2%; width: 52%; height: 40%; z-index: 3; }
+@media (max-width: 880px) {
+  .hero-grid, .profile-grid { grid-template-columns: 1fr; }
+  .hero-photos, .profile-photos { position: static; min-height: 0; display: flex; gap: 22px; overflow-x: auto; margin-top: 4px; padding: 10px 6px 18px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+  .hero-photos .ph, .profile-photos .ph { position: static; flex: 0 0 auto; width: 66%; max-width: 250px; height: auto; aspect-ratio: 3 / 4; z-index: auto; scroll-snap-align: center; }
+}
+
+
 /* diagram figure (SVG) + ambient dash flow (nod to linear.app ambient motion) */
 .diagram { padding: 18px 14px; }
 .diagram svg { width: 100%; height: auto; display: block; }
