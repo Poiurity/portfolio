@@ -110,16 +110,19 @@ try {
       go to a Repair agent that patches the state: two attempts max, with oscillation and
       wall-clock guards so it can't loop forever. If repair still fails, the system falls back to
       the prior valid state when one exists. A Critic then scores how faithful the result is to
-      the original intent. In enforce mode every generation goes through this loop; off and
-      shadow modes exist for comparison.
+      the original intent. I didn't build this loop first, though. The generator came first, and the
+      verify-repair loop came months later. I kept it in shadow mode (logging what it would have
+      repaired without touching the output) until I trusted it enough to switch it to enforce, where
+      every generation now runs through it.
     </p>
     <p lang="ko">
       생성은 닫힌 루프 안에서 돌아요. 정적 검증기가 구조적 오류(선언 안 된 변수, 위젯 중첩 규칙
       위반, 예약어 충돌 같은 것들)를 검사해요. 실패하면 Repair 에이전트가 상태를 고치는데, 최대
       2번까지만이고, 같은 수정을 반복하거나 시간을 끌면 가드가 중단시켜요. 그래도 안 되면 이전에
       성공한 상태가 있을 때 거기로 돌아가요. 마지막으로 Critic이 결과가 원래 의도에 얼마나
-      충실한지 점수를 매겨요. enforce 모드에서는 모든 생성이 이 루프를 거치고, 비교용으로
-      off·shadow 모드도 있어요.
+      충실한지 점수를 매겨요. 근데 이 루프를 먼저 만든 건 아니에요. 생성기가 먼저였고, 검증-수리
+      루프는 몇 달 뒤에 붙였어요. 한동안 shadow 모드로 뒀어요. 실제 출력은 안 건드리고, 고쳤을 법한
+      것만 로그로 남기면서요. 믿을 만해지고 나서야 enforce로 바꿨고, 지금은 모든 생성이 이 루프를 거쳐요.
     </p>
   </section>
 

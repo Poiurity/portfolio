@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>I hand-wrote the WebSocket layer so I could watch it fail · Yeonguk Lee</title>
-<meta name="description" content="Why LiveTrack streams group location over a hand-written WebSocket layer instead of a managed realtime service: to own the failure handling, classified along two axes most reconnect stories collapse into one.">
+<meta name="description" content="Why LiveTrack streams group location over a hand-written WebSocket layer instead of a managed realtime service: to own the failure handling, classified by layer and severity so each failure gets the right strategy (retry, stop, or reconcile later).">
 <link rel="canonical" href="https://poiurity.com/notes/livetrack-websocket/">
 <script>
 document.documentElement.classList.add('js');
@@ -90,42 +90,44 @@ try {
   </section>
 
   <section>
-    <div class="sec-head"><span class="idx">02</span><h2><span lang="en">Two axes, not one reconnect story</span><span lang="ko">하나의 재연결 로직이 아니라, 두 개의 축</span></h2></div>
+    <div class="sec-head"><span class="idx">02</span><h2><span lang="en">Where it came from, and how bad it is</span><span lang="ko">어디서 왔는지, 그리고 얼마나 나쁜지</span></h2></div>
     <p lang="en">
-      The layer classifies a failure along two axes that a single reconnect story tends to collapse into one.
+      So I wrote a small classifier instead. Every failure gets two labels: which <strong>layer</strong> it came
+      from (the network, my server, or the user's phone) and how <strong>severe</strong> it is (transient,
+      permanent, or partial). A managed reconnect collapses all of that into one event. I wanted the labels.
     </p>
     <p lang="ko">
-      이 계층은 실패를 두 축으로 분류해요. 보통의 재연결 로직은 이 둘을 하나로 뭉뚱그리지만요.
+      그래서 대신 작은 분류기를 만들었어요. 실패마다 라벨을 두 개 붙여요. 어디서 왔는지(<strong>레이어</strong>:
+      네트워크, 제 서버, 아니면 사용자 폰), 그리고 얼마나 나쁜지(<strong>심각도</strong>: transient, permanent,
+      partial). 관리형 재연결은 이걸 전부 하나의 이벤트로 뭉뚱그려요. 저는 그 라벨이 필요했어요.
     </p>
     <p lang="en">
-      The first axis is <strong>retryability</strong>. Is the failure transient (a dropped connection, a
-      timeout, a moment of lost signal) or permanent (a malformed frame, a rejected token, a client that is
-      simply gone)? Transient failures retry; permanent ones surface and stop. Retrying a permanent failure just
-      burns the same error on a loop.
+      The severity decides the move. A <strong>transient</strong> failure retries once and moves on: a socket
+      that drops, the database briefly busy, GPS that flickers for a second. A <strong>permanent</strong> one
+      surfaces and stops: a denied location permission, a rejected token, a malformed request; retrying just
+      loops the same error. A <strong>partial</strong> one keeps the session alive and catches up later: high
+      latency, an analytics write that failed, the app sent to the background. The user keeps moving, and the
+      data reconciles when it can.
     </p>
     <p lang="ko">
-      첫째 축은 <strong>재시도 가능성(retryability)</strong>이에요. 이 실패가 일시적인가(끊긴 연결,
-      타임아웃, 잠깐의 신호 유실), 아니면 영구적인가(잘못된 프레임, 거부된 토큰, 그냥 사라진 클라이언트).
-      일시적 실패는 재시도하고, 영구적 실패는 에러를 그대로 드러내고 멈춰요. 영구적 실패를 재시도해봤자
-      같은 에러만 계속 반복하게 돼요.
+      심각도가 다음 행동을 정해요. <strong>transient</strong>는 한 번 재시도하고 넘어가요. 소켓이 끊기거나,
+      DB가 잠깐 바쁘거나, GPS가 한순간 깜빡이는 경우요. <strong>permanent</strong>는 드러내고 멈춰요. 위치 권한
+      거부, 거부된 토큰, 잘못된 요청 같은 거요. 재시도해봤자 같은 에러만 반복돼요. <strong>partial</strong>은
+      세션을 살려두고 나중에 따라잡아요. 지연이 크거나, 분석 쓰기가 실패하거나, 앱이 백그라운드로 간 경우요.
+      사용자는 계속 움직이고, 데이터는 가능해지면 맞춰져요.
     </p>
     <p lang="en">
-      The second axis is <strong>completion</strong>. When a socket dies mid-operation, did the operation land,
-      half-land, or not land at all? A position update that half-committed is not the same problem as a
-      connection that never delivered one: the first needs the state <em>reconciled</em>, the second just needs
-      the message <em>resent</em>. Keeping these apart is the whole point. "Retry it" answers the first axis;
-      "reconcile it" answers the second. That's the conflation I didn't want to inherit from a managed
-      reconnect.
+      A managed SDK gives you one reconnect that treats all three the same. But "retry," "stop," and "catch up
+      later" are three different answers, and on a live tracker that difference is the product. That's why I
+      wanted the classification in my own code, where I could see it and change it.
     </p>
     <p lang="ko">
-      둘째 축은 <strong>완료 여부(completion)</strong>예요. 소켓이 작업 도중 죽었을 때, 그 작업은 도착했나,
-      반쯤 도착했나, 아예 안 도착했나? 일부만 반영된 위치 업데이트는 애초에 하나도 못 보낸 연결과는 다른
-      문제예요. 앞은 상태를 <em>reconcile</em>해야 하고, 뒤는 메시지를 <em>다시 보내면</em> 돼요. 이 둘을
-      구분해서 다루는 게 핵심이에요. "재시도해"는 첫째 축의 답이고, "reconcile해"는 둘째 축의 답이에요.
-      관리형 재연결을 쓰면 이 뭉뚱그림을 그대로 떠안게 되는데, 저는 그게 싫었어요.
+      관리형 SDK는 이 셋을 똑같이 다루는 하나의 재연결을 줘요. 그런데 '재시도', '멈춤', '나중에 따라잡기'는
+      서로 다른 답이고, 라이브 추적기에서는 그 차이가 곧 제품이에요. 그래서 저는 이 분류를 제 코드 안에,
+      보이고 바꿀 수 있는 곳에 두고 싶었어요.
     </p>
     <figure class="diagram" style="border:1px solid var(--border); border-radius:8px; background:var(--surface-1);">
-      <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A socket failure mid-operation is classified along two independent axes: retryability (transient retries, permanent surfaces then stops) and completion (a half-landed write reconciles state, a never-delivered write resends the message).">
+      <svg viewBox="0 0 720 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A failure's severity picks its strategy: transient failures (socket drop, GPS flicker) retry once; permanent failures (denied permission, bad auth) surface and stop; partial failures (high latency, app backgrounded) keep going and reconcile later.">
         <defs>
           <marker id="arrLT" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
             <path d="M0,0 L0,6 L9,3 z" style="fill:var(--diagram-line)"/>
@@ -133,62 +135,56 @@ try {
         </defs>
 
         <!-- origin -->
-        <g transform="translate(20, 130)">
-          <rect width="150" height="80" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
-          <text x="75" y="34" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="middle">Socket failure</text>
-          <text x="75" y="54" font-family="JetBrains Mono, monospace" font-size="10" style="fill:var(--text-3)" text-anchor="middle">mid-operation</text>
+        <g transform="translate(20, 143)">
+          <rect width="140" height="64" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+          <text x="70" y="30" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="middle">Failure</text>
+          <text x="70" y="48" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="middle">layer + severity</text>
         </g>
 
-        <!-- origin -> axis question boxes -->
-        <path d="M 170 170 C 192 170, 192 76, 210 76" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
-        <path d="M 170 170 C 192 170, 192 264, 210 264" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <!-- origin -> severity boxes -->
+        <path d="M 160 175 C 180 175, 178 55, 195 55" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <path d="M 160 175 L 195 175" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <path d="M 160 175 C 180 175, 178 295, 195 295" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
 
-        <!-- axis 1 question -->
-        <g transform="translate(210, 48)">
-          <rect width="170" height="56" rx="8" style="fill:var(--diagram-node); stroke:var(--accent)" stroke-width="1.4"/>
-          <text x="16" y="24" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="0.08em" style="fill:var(--accent)" text-anchor="start">AXIS 1</text>
-          <text x="16" y="42" font-family="Inter, sans-serif" font-size="14" font-weight="600" style="fill:var(--text)" text-anchor="start">Retryable?</text>
+        <!-- severity boxes -->
+        <g transform="translate(195, 28)">
+          <rect width="150" height="54" rx="8" style="fill:var(--diagram-node); stroke:var(--accent)" stroke-width="1.4"/>
+          <text x="18" y="32" font-family="Inter, sans-serif" font-size="14" font-weight="600" style="fill:var(--text)" text-anchor="start">transient</text>
         </g>
-        <!-- axis 2 question -->
-        <g transform="translate(210, 236)">
-          <rect width="170" height="56" rx="8" style="fill:var(--diagram-node); stroke:var(--accent)" stroke-width="1.4"/>
-          <text x="16" y="24" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="0.08em" style="fill:var(--accent)" text-anchor="start">AXIS 2</text>
-          <text x="16" y="42" font-family="Inter, sans-serif" font-size="14" font-weight="600" style="fill:var(--text)" text-anchor="start">Completed?</text>
+        <g transform="translate(195, 148)">
+          <rect width="150" height="54" rx="8" style="fill:var(--diagram-node); stroke:var(--accent)" stroke-width="1.4"/>
+          <text x="18" y="32" font-family="Inter, sans-serif" font-size="14" font-weight="600" style="fill:var(--text)" text-anchor="start">permanent</text>
+        </g>
+        <g transform="translate(195, 268)">
+          <rect width="150" height="54" rx="8" style="fill:var(--diagram-node); stroke:var(--accent)" stroke-width="1.4"/>
+          <text x="18" y="32" font-family="Inter, sans-serif" font-size="14" font-weight="600" style="fill:var(--text)" text-anchor="start">partial</text>
         </g>
 
-        <!-- axis 1 question -> outcomes -->
-        <path d="M 380 76 C 402 76, 402 46, 420 46" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
-        <path d="M 380 76 C 402 76, 402 106, 420 106" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
-        <!-- axis 2 question -> outcomes -->
-        <path d="M 380 264 C 402 264, 402 234, 420 234" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
-        <path d="M 380 264 C 402 264, 402 294, 420 294" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <!-- severity -> strategy -->
+        <path d="M 345 55 L 390 55" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <path d="M 345 175 L 390 175" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <path d="M 345 295 L 390 295" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
 
-        <!-- axis 1 outcomes -->
-        <g transform="translate(420, 20)">
-          <rect width="280" height="52" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
-          <text x="18" y="22" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">transient</text>
-          <text x="18" y="40" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">retry the send</text>
+        <!-- strategy pills -->
+        <g transform="translate(390, 28)">
+          <rect width="310" height="54" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+          <text x="18" y="24" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">retry once</text>
+          <text x="18" y="42" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">socket drop · GPS flicker</text>
         </g>
-        <g transform="translate(420, 80)">
-          <rect width="280" height="52" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
-          <text x="18" y="22" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">permanent</text>
-          <text x="18" y="40" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">surface, then stop</text>
+        <g transform="translate(390, 148)">
+          <rect width="310" height="54" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+          <text x="18" y="24" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">surface, then stop</text>
+          <text x="18" y="42" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">denied permission · bad auth</text>
         </g>
-        <!-- axis 2 outcomes -->
-        <g transform="translate(420, 208)">
-          <rect width="280" height="52" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
-          <text x="18" y="22" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">half-landed write</text>
-          <text x="18" y="40" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">reconcile state</text>
-        </g>
-        <g transform="translate(420, 268)">
-          <rect width="280" height="52" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
-          <text x="18" y="22" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">never delivered</text>
-          <text x="18" y="40" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">resend message</text>
+        <g transform="translate(390, 268)">
+          <rect width="310" height="54" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+          <text x="18" y="24" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">keep going, reconcile later</text>
+          <text x="18" y="42" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">high latency · app backgrounded</text>
         </g>
       </svg>
       <figcaption>
-        <span lang="en">One socket failure, two independent questions: "retry it" answers one axis, "reconcile it" answers the other.</span>
-        <span lang="ko">소켓 실패 하나에 서로 다른 두 질문. "재시도해"가 한 축의 답, "reconcile해"가 다른 축의 답이에요.</span>
+        <span lang="en">Every failure gets a layer and a severity; the severity picks the strategy: retry once, stop, or catch up later.</span>
+        <span lang="ko">실패마다 레이어와 심각도를 붙이고, 심각도가 전략을 골라요. 한 번 재시도, 멈춤, 아니면 나중에 따라잡기.</span>
       </figcaption>
     </figure>
   </section>
@@ -214,7 +210,7 @@ try {
       scaling ceiling, not a humblebrag. And I didn't self-host everything on principle: the one dependency I
       deliberately <strong>rented is auth</strong> (Firebase). Owning the socket layer was worth the failure
       modes it taught me; owning an identity provider would have bought me nothing but risk. The claims here are
-      about design, not load. The socket handlers, the retryability classifier, and the partial-operation path
+      about design, not load. The socket layer (rooms, a heartbeat, backpressure) and the failure classifier
       are code I'm happy to walk through live.
     </p>
     <p lang="ko">
@@ -223,7 +219,7 @@ try {
       아니라 진짜 확장 한계예요. 그리고 무조건 다 셀프호스팅한 건 아니에요. 의도적으로
       <strong>빌려 쓴 의존성은 인증(Firebase) 하나</strong>예요. 소켓 계층은 직접 짜면서 배운 실패 모드만으로도
       그럴 값어치가 있었지만, 인증 제공자까지 직접 만들었다면 리스크만 늘었을 거예요. 여기서 하는 주장은
-      부하 감당이 아니라 설계에 대한 거예요. 소켓 핸들러, retryability 분류기, 부분완료 경로는 라이브로
+      부하 감당이 아니라 설계에 대한 거예요. 소켓 계층(방, heartbeat, backpressure)과 실패 분류기는 라이브로
       기꺼이 같이 뜯어볼 수 있는 코드예요.
     </p>
   </section>
