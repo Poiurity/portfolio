@@ -55,13 +55,13 @@ try {
     </p>
     <p class="lede" lang="ko">
       FlowCraft는 말로 설명한 앱을 실제로 도는 Flutter 앱으로 만들어 줘요. LLM 에이전트 6개가
-      움직이는데, <strong>그중 누구도 Flutter 코드를 직접 쓸 수 없어요</strong>. 왜 이 규칙을
-      만들었고, 지키게 하려고 뭘 했는지 적어봤어요.
+      움직이는데, <strong>그중 누구도 Flutter 코드를 직접 쓸 수 없어요</strong>. 왜 이런 규칙을
+      만들었고, 그 규칙을 어떻게 지키도록 설계했는지 이야기해볼게요.
     </p>
   </header>
 
   <section>
-    <div class="sec-head"><span class="idx">01</span><h2><span lang="en">The problem: code is the wrong medium</span><span lang="ko">문제: 코드는 잘못된 매체</span></h2></div>
+    <div class="sec-head"><span class="idx">01</span><h2><span lang="en">The problem: code is the wrong medium</span><span lang="ko">문제: 주고받는 대상이 코드라서</span></h2></div>
     <p lang="en">
       When six agents build an app, the obvious design is to let them write the Flutter code
       directly. I did the opposite on purpose. Raw code generation drifts between calls: the same
@@ -75,7 +75,7 @@ try {
       일부러 반대로 갔어요. 코드를 그대로 생성하면 모델을 호출할 때마다 출력이 흔들리거든요. 같은
       프롬프트인데도 매번 조금씩 다른 코드가 나오고, 한 줄만 고치려는데 파일을 통째로 다시 만들고,
       "버튼을 파랗게 바꿔줘" 한마디가 앱 반대편의 엉뚱한 걸 건드려요. 이건 프롬프트를 잘 쓴다고
-      해결되는 문제가 아니에요. 에이전트가 코드라는 매체로 주고받기 때문에 생기는 일이에요.
+      해결되는 문제가 아니에요. 에이전트끼리 코드 자체를 주고받기 때문에 생기는 문제예요.
     </p>
     <p lang="en">
       Raw code is an output you can't diff semantically, can't validate cheaply, and can't
@@ -83,7 +83,7 @@ try {
       code away from them entirely.
     </p>
     <p lang="ko">
-      코드라는 출력물은 의미 단위로 비교하기도, 싸게 검증하기도, 똑같이 다시 만들어내기도 어려워요.
+      코드는 의미 단위로 비교하기도, 적은 비용으로 검증하기도, 똑같이 다시 만들어내기도 어려워요.
       그래서 에이전트가 코드를 더 잘 쓰게 만드는 대신, 아예 코드를 손에서 뺐어요.
     </p>
   </section>
@@ -102,7 +102,7 @@ try {
       Structure, Design, Repair, Critic)는 <strong>타입이 정해진 AppState</strong>만 만들어요.
       화면, 위젯, 내비게이션, 상태를 담은 JSON 모델이에요. 그리고 결정적 생성기가 그 모델을
       <code>main.dart</code>로 바꿔요. 같은 상태를 넣으면 언제나 같은 코드가 나와요. 수정은
-      코드를 다시 쓰는 게 아니라 상태에 패치를 얹는 일이 됐어요.
+      코드를 다시 쓰는 게 아니라 상태에 패치를 적용하는 일이 됐어요.
     </p>
     <p lang="en">
       Generation runs inside a closed loop. A static validator checks the state for structural
@@ -116,9 +116,9 @@ try {
     <p lang="ko">
       생성은 닫힌 루프 안에서 돌아요. 정적 검증기가 구조적 오류(선언 안 된 변수, 위젯 중첩 규칙
       위반, 예약어 충돌 같은 것들)를 검사해요. 실패하면 Repair 에이전트가 상태를 고치는데, 최대
-      2번까지만이고, 같은 수리를 반복하거나 시간을 끌면 가드가 끊어요. 그래도 안 되면 이전에
+      2번까지만이고, 같은 수정을 반복하거나 시간을 끌면 가드가 중단시켜요. 그래도 안 되면 이전에
       성공한 상태가 있을 때 거기로 돌아가요. 마지막으로 Critic이 결과가 원래 의도에 얼마나
-      충실한지 점수를 매겨요. enforce 모드에서는 모든 생성이 이 루프를 지나가고, 비교용으로
+      충실한지 점수를 매겨요. enforce 모드에서는 모든 생성이 이 루프를 거치고, 비교용으로
       off·shadow 모드도 있어요.
     </p>
   </section>
@@ -132,7 +132,7 @@ try {
       Preview runs in the browser via DartPad.
     </p>
     <p lang="ko">
-      주장하는 것: 이 구조가 동작한다는 거예요. 검증기의 에러 코드, 닫힌 루프의 수리 계약,
+      주장하는 것: 이 구조가 동작한다는 거예요. 검증기의 에러 코드, Repair 단계의 계약,
       진동 처리까지 <strong>자동 테스트 53개가 전부 통과</strong>해요. 코드는 상태에서
       컴파일될 뿐 직접 수정되지 않으니까, 수정을 거듭해도 흔들리지 않아요. 미리보기는 브라우저에서
       DartPad로 돌아가요.
@@ -143,9 +143,9 @@ try {
       that a bad generation gets caught, repaired, or rolled back instead of shipped.
     </p>
     <p lang="ko">
-      주장하지 않는 것: 에이전트가 똑똑하다는 거요. 테스트가 재는 건 파이프라인의 보장이지 모델의
-      품질이 아니에요. 이상한 생성은 지금도 나와요. 이 설계의 핵심은 이상한 생성이 사용자에게
-      도착하기 전에 걸리고, 고쳐지고, 안 되면 되돌려진다는 거예요.
+      주장하지 않는 것: 에이전트가 똑똑하다는 거요. 테스트가 검증하는 건 파이프라인의 보장이지 모델의
+      품질이 아니에요. 잘못된 생성 결과는 지금도 나와요. 이 설계의 핵심은 그런 결과가 사용자에게
+      전달되기 전에 걸리고, 고쳐지고, 안 되면 되돌려진다는 거예요.
     </p>
   </section>
 

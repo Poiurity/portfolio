@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sellii · Verification Harness Results · Yeonguk Lee</title>
 <meta name="description" content="Methodology and result tables for three reproducible offline harnesses measuring Sellii's server-side verification, exactly-once event handling in a replay harness, and the LLM cost/recall trade-off.">
-<link rel="canonical" href="https://poiurity.com/sellii-validation/">
+<link rel="canonical" href="https://poiurity.com/notes/sellii-validation/">
 <script>
 document.documentElement.classList.add('js');
 try {
@@ -82,7 +82,7 @@ try {
       <li lang="en"><strong>Prompt-only baseline:</strong> trusts the model's self-reported price, profit, and recommendation; schema validation only. This represents "we told the model not to make things up."</li>
       <li lang="ko"><strong>프롬프트만 쓰는 기준선:</strong> 모델이 스스로 보고한 가격·수익·추천을 그대로 믿어요. 스키마 검사만 해요. "지어내지 마"라고 지시하는 방식의 한계를 대표해요.</li>
       <li lang="en"><strong>Server-side verifier:</strong> a faithful replica of the production gate sequence. It <strong>discards the model's economic fields entirely</strong>, recomputes price, profit, and the buy/skip call from canonical eBay sold comps, then stores the evidence snapshot with the decision.</li>
-      <li lang="ko"><strong>서버 검증기:</strong> 실제 게이트 순서를 그대로 옮겼어요. <strong>모델이 말한 금액을 전부 버리고</strong>, eBay 실거래 데이터에서 가격·수익·판단을 다시 계산해요. 근거 스냅샷도 결정에 같이 저장하고요.</li>
+      <li lang="ko"><strong>서버 검증기:</strong> 실제 게이트 순서를 그대로 옮겼어요. <strong>모델이 말한 금액을 전부 버리고</strong>, eBay 실거래 데이터에서 가격·수익·판단을 다시 계산해요. 근거 스냅샷도 결정과 함께 저장하고요.</li>
     </ul>
     <div class="tags">
       <span class="tag"><span lang="en">44 fixtures</span><span lang="ko">픽스처 44개</span></span>
@@ -127,7 +127,7 @@ try {
       </table>
     </div>
 
-    <h3><span lang="en">What it does not catch, traced downstream (12/29 gaps)</span><span lang="ko">못 잡는 것을 하류까지 추적 (구멍 12/29)</span></h3>
+    <h3><span lang="en">What it does not catch, traced downstream (12/29 gaps)</span><span lang="ko">못 잡는 것을 프로덕션 경로까지 추적 (구멍 12/29)</span></h3>
     <p lang="en">
       Four corruption types get through this harness, each with a known cause: comps fabricated for a
       never-searched query (canonical recomputation only protects on a cache hit), comps that are
@@ -150,13 +150,13 @@ try {
     </p>
     <p lang="ko">
       그런데 이 하네스는 게이트 하나만 떼어내서 돌려요. 12개 구멍을 프로덕션 전체 경로로 따라가
-      보면 깔끔하게 나뉘어요. <strong>3건은 하류에서 이미 막히고(fail-closed)</strong>,
+      보면 깔끔하게 나뉘어요. <strong>3건은 프로덕션 경로에서 이미 막히고(fail-closed)</strong>,
       <strong>9건은 진짜로 뚫려요(fail-open)</strong>.
     </p>
     <div class="table-wrap">
       <table>
         <caption><span lang="en">12 gap cases traced into production</span><span lang="ko">구멍 12건을 프로덕션까지 추적</span></caption>
-        <thead><tr><th><span lang="en">Downstream disposition</span><span lang="ko">하류 결말</span></th><th><span lang="en">Cases</span><span lang="ko">건수</span></th><th><span lang="en">Why</span><span lang="ko">이유</span></th></tr></thead>
+        <thead><tr><th><span lang="en">Downstream disposition</span><span lang="ko">프로덕션에서의 결말</span></th><th><span lang="en">Cases</span><span lang="ko">건수</span></th><th><span lang="en">Why</span><span lang="ko">이유</span></th></tr></thead>
         <tbody>
           <tr>
             <td><span lang="en">Fail-closed in production</span><span lang="ko">프로덕션에서 차단</span></td>
@@ -179,10 +179,10 @@ try {
       as the next step, not a current guarantee.
     </p>
     <p lang="ko">
-      진짜 노출은 이 9건이에요. 이걸 위해 <strong>리뷰 큐 라우팅 패치</strong>를 설계했어요. 서버가
+      진짜 노출은 이 9건이에요. 이걸 위해 <strong>리뷰 큐로 보내는 방식</strong>을 설계했어요. 서버가
       검증할 수 없는 시세(검색된 적 없거나, 다른 상품이거나, 신선도 기준을 넘긴)로 만든 추천은 자동
-      승인 대신 사람 리뷰 큐로 보내요. 코드로 보여드릴 수 있는 설계지 <strong>아직 배포한 코드는
-      아니에요</strong>. 그래서 현재의 보장이 아니라 다음 단계로 적어 둬요.
+      승인 대신 사람 리뷰 큐로 보내요. 아직 코드로 구현한 건 아니고 설계 단계예요. <strong>배포한
+      코드는 아니에요</strong>. 그래서 현재의 보장이 아니라 다음 단계로 적어 둬요.
     </p>
 
     <div class="limits">
@@ -224,7 +224,7 @@ try {
       논리적으로 같은 이벤트 1개를 <strong>순차 20번, 동시 20번, 프로세스 재시작을 사이에 두고, 그리고 두
       프로세스에서 동시에</strong> 전달했어요. 중복 제거 전략 3가지를 비교했고, 외부 side effect는 카운터로 모킹했어요.
       이상적인 결과는 이벤트당 정확히 1번 커밋이에요. 동시성 레이스는 진짜예요. 비원자 전략은 확인과 삽입 사이에
-      비동기 틈이 있어서 실제로 겹쳐요.
+      비동기 구간이 있어서 실제로 겹쳐요.
     </p>
     <div class="tags">
       <span class="tag"><span lang="en">4 scenarios</span><span lang="ko">시나리오 4개</span></span>
@@ -250,8 +250,8 @@ try {
       committed twice (a duplicate committed action), while <strong>claim-then-act committed once</strong>, with the retry becoming a no-op.
     </p>
     <p lang="ko">
-      부분 실패(side effect는 성공했는데 마커를 쓰기 전에 죽는 경우)에서는, 행동-후-기록 순서가 두 번
-      커밋됐어요. 같은 작업이 한 번 더 커밋되는 거예요. <strong>선점-후-행동은 한 번만 커밋됐고</strong>, 재시도는 아무 일도 하지 않았어요.
+      부분 실패(side effect는 성공했는데 마커를 쓰기 전에 죽는 경우)에서는, 실행 후 기록 순서가 두 번
+      커밋됐어요. 같은 작업이 한 번 더 커밋되는 거예요. <strong>선점 후 실행은 한 번만 커밋됐고</strong>, 재시도는 아무 일도 하지 않았어요.
     </p>
 
     <div class="limits">
@@ -267,7 +267,7 @@ try {
   <!-- 03 COST -->
   <section id="cost" class="reveal">
     <div class="sec-head"><span class="idx">03</span><h2><span lang="en">Unit economics: what does HTTP-first buy, and what does it cost?</span><span lang="ko">단위 경제: HTTP 우선 설계는 얼마나 아끼고, 무엇을 잃을까?</span></h2></div>
-    <p class="sec-q"><span lang="en">Replacing "one vision call per listing" with free deterministic filters plus a small text model: how much cheaper, and how many good deals get lost?</span><span lang="ko">"매물마다 vision 호출 1번"을 공짜 결정적 필터와 작은 텍스트 모델로 바꾸면, 얼마나 싸지고 좋은 매물을 몇 개나 놓칠까요?</span></p>
+    <p class="sec-q"><span lang="en">Replacing "one vision call per listing" with free deterministic filters plus a small text model: how much cheaper, and how many good deals get lost?</span><span lang="ko">"매물마다 vision 호출 1번"을 무료 결정적 필터와 작은 텍스트 모델로 바꾸면, 얼마나 싸지고 좋은 매물을 몇 개나 놓칠까요?</span></p>
 
     <h3><span lang="en">Method</span><span lang="ko">방법</span></h3>
     <p lang="en">
@@ -280,8 +280,8 @@ try {
     <p lang="ko">
       같은 고정 매물 31개 픽스처를 두 파이프라인에 통과시켰어요. <strong>기준선</strong>은 모든 매물을 gpt-4o
       Vision으로 보내요. <strong>HTTP 우선</strong> 설계는 결정적 필터(가격 검증, 초기 수익 게이트, 48시간 중복
-      제거, 삭제 매물 확인)가 후보를 공짜로 줄이고, 살아남은 것만 gpt-4o-mini에 텍스트로 보내요. 수익·시세 판단은
-      실제 프로덕션 함수를 썼고 LLM 출력은 픽스처로 주입했어요. 그래서 재는 건 파이프라인 구조·비용·유지율이지,
+      제거, 삭제 매물 확인)가 후보를 비용 없이 줄이고, 살아남은 것만 gpt-4o-mini에 텍스트로 보내요. 수익·시세 판단은
+      실제 프로덕션 함수를 썼고 LLM 출력은 픽스처로 주입했어요. 그래서 측정하는 건 파이프라인 구조·비용·유지율이지,
       모델 정확도가 아니에요.
     </p>
     <div class="tags">
@@ -328,7 +328,7 @@ try {
     <p lang="ko">
       놓친 3건은 전부 사진에 모호한 제목만 있는 매물이에요("🔥 급처, DM 주세요" 같은). 텍스트만 보는 모델은
       브랜드·모델명을 못 뽑는데, vision 기준선은 사진을 읽어서 잡아요. 이게 HTTP 우선 설계의 진짜 비용/유지율
-      트레이드오프예요. 가정이 아니라 측정한 거예요. 그 구간만 vision으로 올려보내는 방식은 아직 <strong>벤치마크
+      트레이드오프예요. 가정이 아니라 측정한 거예요. 그 구간만 vision 모델로 넘기는 방식은 아직 <strong>벤치마크
       안 한 가설</strong>이라서, 주장하지 않아요.
     </p>
 
@@ -355,7 +355,7 @@ try {
     <p lang="ko">
       각 하네스는 완전히 오프라인에서 도는 결정적 스크립트예요(<code>npm run test:trust</code> ·
       <code>npm run test:idempotency</code> · <code>npm run test:cost</code>). 돌릴 때마다 같은 표가 나와요.
-      저장소는 private이지만, 하네스와 그것이 복제한 프로덕션 게이트 로직을 <strong>라이브 코드 워크스루</strong>로
+      저장소는 private이지만, 하네스와, 그 안에서 재현한 프로덕션 게이트 로직을 <strong>라이브 코드 워크스루</strong>로
       보여드릴 수 있어요.
     </p>
     <p style="margin-top:12px">

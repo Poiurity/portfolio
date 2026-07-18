@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/sellii-validation", "destination": "/notes/sellii-validation/", "permanent": true },
+    { "source": "/sellii-validation/", "destination": "/notes/sellii-validation/", "permanent": true }
+  ]
+}

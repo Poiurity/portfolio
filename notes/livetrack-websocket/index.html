@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I hand-wrote the WebSocket layer so I could watch it fail · Yeonguk Lee</title>
+<meta name="description" content="Why LiveTrack streams group location over a hand-written WebSocket layer instead of a managed realtime service: to own the failure handling, classified along two axes most reconnect stories collapse into one.">
+<link rel="canonical" href="https://poiurity.com/notes/livetrack-websocket/">
+<script>
+document.documentElement.classList.add('js');
+try {
+  var l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('lang');
+  if (l === 'ko' || l === 'en') { document.documentElement.dataset.lang = l; document.documentElement.lang = l; }
+} catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<header class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a href="/" class="brand">Yeonguk Lee</a>
+    <nav class="nav-links" aria-label="Back">
+      <a href="/#writing">&larr; <span lang="en">Writing</span><span lang="ko">글 목록</span></a>
+    </nav>
+    <div class="topnav-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-setlang="en" aria-pressed="true">EN</button>
+        <button type="button" data-setlang="ko" aria-pressed="false">KO</button>
+      </div>
+      <a href="mailto:iamlyg9667@gmail.com" class="btn btn-primary btn-sm">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span lang="en">Email</span><span lang="ko">메일</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="report">
+
+  <header class="report-head reveal">
+    <div class="kicker"><span lang="en">LiveTrack · engineering note · 2026-07-17</span><span lang="ko">LiveTrack · 엔지니어링 노트 · 2026-07-17</span></div>
+    <h1>
+      <span lang="en">I hand-wrote the WebSocket layer<br>so I could watch it fail.</span>
+      <span lang="ko">웹소켓 계층을 직접 짰어요,<br>어떻게 깨지는지 보려고.</span>
+    </h1>
+    <p class="lede" lang="en">
+      LiveTrack streams a group's live location over WebSockets, self-hosted on a single VPS. The reflex
+      is to reach for a managed realtime service and let it handle reconnects and backpressure. I wrote the
+      socket layer by hand instead, because in a live tracker the failure states <strong>are</strong> the
+      product. I wanted the seam where it breaks to be code I own.
+    </p>
+    <p class="lede" lang="ko">
+      LiveTrack는 그룹의 실시간 위치를 웹소켓으로 주고받아요. VPS 한 대에 셀프호스팅했고요. 보통은
+      관리형 realtime 서비스를 써서 재연결·백프레셔를 맡기죠. 저는 대신 소켓 계층을 직접 짰어요.
+      실시간 추적기에서는 실패 상태가 <strong>곧</strong> 제품이라, 어디서 어떻게 깨지는지까지 제가
+      책임지는 코드로 만들고 싶었거든요.
+    </p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="idx">01</span><h2><span lang="en">The default is managed, and it's usually right</span><span lang="ko">디폴트는 관리형이고, 대개 그게 맞아요</span></h2></div>
+    <p lang="en">
+      A managed realtime service is the right default for most apps. It solves reconnection, backpressure,
+      presence, and horizontal scale: the parts that are tedious and easy to get subtly wrong. Reaching for
+      one is usually the responsible call, and I want to be clear up front that this note is not an argument
+      against it.
+    </p>
+    <p lang="ko">
+      관리형 realtime 서비스는 대부분의 앱에 맞는 디폴트예요. 재연결, 백프레셔, 프레즌스, 수평 확장처럼
+      지루하고 미묘하게 틀리기 쉬운 부분을 대신 풀어줘요. 보통은 그걸 쓰는 게 책임 있는 선택이고, 이
+      노트가 그걸 반대하는 글이 아니라는 걸 먼저 분명히 해둘게요.
+    </p>
+    <p lang="en">
+      The reason I didn't, here, is narrow: in a group location tracker almost every interesting state is a
+      failure state. A phone drops to no signal mid-update. A socket half-sends a position and the connection
+      dies. A client reconnects while a write from its previous session is still in flight. A managed SDK hands
+      you an <code>onError</code> callback and a reconnect you can't see inside. I wanted to see inside.
+    </p>
+    <p lang="ko">
+      제가 여기서 안 쓴 건 딱 한 가지 이유 때문이에요. 그룹 위치 추적기에서는 신경 써야 하는 상태가
+      거의 다 실패 상태거든요. 업데이트 도중 폰이 신호를 잃어요. 소켓이 위치를 반쯤 보내다 연결이 죽어요.
+      이전 세션에서 보낸 쓰기가 아직 처리되는 중인데 클라이언트가 재연결해요. 관리형 SDK가 주는 건
+      <code>onError</code> 콜백과, 안을 들여다볼 수 없는 재연결뿐이에요. 저는 그 안을 보고 싶었어요.
+    </p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">02</span><h2><span lang="en">Two axes, not one reconnect story</span><span lang="ko">하나의 재연결 로직이 아니라, 두 개의 축</span></h2></div>
+    <p lang="en">
+      The layer classifies a failure along two axes that a single reconnect story tends to collapse into one.
+    </p>
+    <p lang="ko">
+      이 계층은 실패를 두 축으로 분류해요. 보통의 재연결 로직은 이 둘을 하나로 뭉뚱그리지만요.
+    </p>
+    <p lang="en">
+      The first axis is <strong>retryability</strong>. Is the failure transient (a dropped connection, a
+      timeout, a moment of lost signal) or permanent (a malformed frame, a rejected token, a client that is
+      simply gone)? Transient failures retry; permanent ones surface and stop. Retrying a permanent failure just
+      burns the same error on a loop.
+    </p>
+    <p lang="ko">
+      첫째 축은 <strong>재시도 가능성(retryability)</strong>이에요. 이 실패가 일시적인가(끊긴 연결,
+      타임아웃, 잠깐의 신호 유실), 아니면 영구적인가(잘못된 프레임, 거부된 토큰, 그냥 사라진 클라이언트).
+      일시적 실패는 재시도하고, 영구적 실패는 에러를 그대로 드러내고 멈춰요. 영구적 실패를 재시도해봤자
+      같은 에러만 계속 반복하게 돼요.
+    </p>
+    <p lang="en">
+      The second axis is <strong>completion</strong>. When a socket dies mid-operation, did the operation land,
+      half-land, or not land at all? A position update that half-committed is not the same problem as a
+      connection that never delivered one: the first needs the state <em>reconciled</em>, the second just needs
+      the message <em>resent</em>. Keeping these apart is the whole point. "Retry it" answers the first axis;
+      "reconcile it" answers the second. That's the conflation I didn't want to inherit from a managed
+      reconnect.
+    </p>
+    <p lang="ko">
+      둘째 축은 <strong>완료 여부(completion)</strong>예요. 소켓이 작업 도중 죽었을 때, 그 작업은 도착했나,
+      반쯤 도착했나, 아예 안 도착했나? 일부만 반영된 위치 업데이트는 애초에 하나도 못 보낸 연결과는 다른
+      문제예요. 앞은 상태를 <em>reconcile</em>해야 하고, 뒤는 메시지를 <em>다시 보내면</em> 돼요. 이 둘을
+      구분해서 다루는 게 핵심이에요. "재시도해"는 첫째 축의 답이고, "reconcile해"는 둘째 축의 답이에요.
+      관리형 재연결을 쓰면 이 뭉뚱그림을 그대로 떠안게 되는데, 저는 그게 싫었어요.
+    </p>
+    <figure class="diagram" style="border:1px solid var(--border); border-radius:8px; background:var(--surface-1);">
+      <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A socket failure mid-operation is classified along two independent axes: retryability (transient retries, permanent surfaces then stops) and completion (a half-landed write reconciles state, a never-delivered write resends the message).">
+        <defs>
+          <marker id="arrLT" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 z" style="fill:var(--diagram-line)"/>
+          </marker>
+        </defs>
+
+        <!-- origin -->
+        <g transform="translate(20, 130)">
+          <rect width="150" height="80" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+          <text x="75" y="34" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="middle">Socket failure</text>
+          <text x="75" y="54" font-family="JetBrains Mono, monospace" font-size="10" style="fill:var(--text-3)" text-anchor="middle">mid-operation</text>
+        </g>
+
+        <!-- origin -> axis question boxes -->
+        <path d="M 170 170 C 192 170, 192 76, 210 76" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <path d="M 170 170 C 192 170, 192 264, 210 264" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+
+        <!-- axis 1 question -->
+        <g transform="translate(210, 48)">
+          <rect width="170" height="56" rx="8" style="fill:var(--diagram-node); stroke:var(--accent)" stroke-width="1.4"/>
+          <text x="16" y="24" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="0.08em" style="fill:var(--accent)" text-anchor="start">AXIS 1</text>
+          <text x="16" y="42" font-family="Inter, sans-serif" font-size="14" font-weight="600" style="fill:var(--text)" text-anchor="start">Retryable?</text>
+        </g>
+        <!-- axis 2 question -->
+        <g transform="translate(210, 236)">
+          <rect width="170" height="56" rx="8" style="fill:var(--diagram-node); stroke:var(--accent)" stroke-width="1.4"/>
+          <text x="16" y="24" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="0.08em" style="fill:var(--accent)" text-anchor="start">AXIS 2</text>
+          <text x="16" y="42" font-family="Inter, sans-serif" font-size="14" font-weight="600" style="fill:var(--text)" text-anchor="start">Completed?</text>
+        </g>
+
+        <!-- axis 1 question -> outcomes -->
+        <path d="M 380 76 C 402 76, 402 46, 420 46" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <path d="M 380 76 C 402 76, 402 106, 420 106" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <!-- axis 2 question -> outcomes -->
+        <path d="M 380 264 C 402 264, 402 234, 420 234" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+        <path d="M 380 264 C 402 264, 402 294, 420 294" style="stroke:var(--diagram-line)" stroke-width="1.2" fill="none" marker-end="url(#arrLT)"/>
+
+        <!-- axis 1 outcomes -->
+        <g transform="translate(420, 20)">
+          <rect width="280" height="52" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+          <text x="18" y="22" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">transient</text>
+          <text x="18" y="40" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">retry the send</text>
+        </g>
+        <g transform="translate(420, 80)">
+          <rect width="280" height="52" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+          <text x="18" y="22" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">permanent</text>
+          <text x="18" y="40" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">surface, then stop</text>
+        </g>
+        <!-- axis 2 outcomes -->
+        <g transform="translate(420, 208)">
+          <rect width="280" height="52" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+          <text x="18" y="22" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">half-landed write</text>
+          <text x="18" y="40" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">reconcile state</text>
+        </g>
+        <g transform="translate(420, 268)">
+          <rect width="280" height="52" rx="8" style="fill:var(--diagram-node); stroke:var(--diagram-stroke)" stroke-width="1"/>
+          <text x="18" y="22" font-family="JetBrains Mono, monospace" font-size="9" style="fill:var(--text-3)" text-anchor="start">never delivered</text>
+          <text x="18" y="40" font-family="Inter, sans-serif" font-size="13" font-weight="600" style="fill:var(--text)" text-anchor="start">resend message</text>
+        </g>
+      </svg>
+      <figcaption>
+        <span lang="en">One socket failure, two independent questions: "retry it" answers one axis, "reconcile it" answers the other.</span>
+        <span lang="ko">소켓 실패 하나에 서로 다른 두 질문. "재시도해"가 한 축의 답, "reconcile해"가 다른 축의 답이에요.</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">03</span><h2><span lang="en">The honest scope</span><span lang="ko">정직한 범위</span></h2></div>
+    <p lang="en">
+      Two honest edges. First, this is a build-vs-buy <em>choice</em>, not a war story. I didn't ship a managed
+      version, watch it fail, and rip it out. I chose the hand-written layer up front because owning the failure
+      was the point, and I'd make the opposite call the moment failure handling stops being the thing that
+      matters. If I needed presence and horizontal scale I wasn't going to hand-roll, a managed service wins,
+      full stop.
+    </p>
+    <p lang="ko">
+      미리 짚고 넘어갈 두 가지가 있어요. 첫째, 이건 build-vs-buy <em>선택</em>이지 무용담이 아니에요. 관리형
+      버전을 출시했다가 깨지는 걸 보고 걷어낸 게 아니에요. 실패를 직접 감당하는 게 목적이라 처음부터 직접
+      짠 계층을 골랐고, 실패 처리가 더는 중요하지 않은 순간이 오면 반대로 결정할 거예요. 직접 구현할 생각도
+      없는 프레즌스·수평 확장이 필요하다면, 그럴 땐 관리형이 맞아요, 두말없이.
+    </p>
+    <p lang="en">
+      Second, the scope is small, and I'd rather name the ceiling than imply I've cleared it. LiveTrack
+      self-hosts on a single Hetzner VPS, Postgres and all, inside one Docker Compose stack; that's a real
+      scaling ceiling, not a humblebrag. And I didn't self-host everything on principle: the one dependency I
+      deliberately <strong>rented is auth</strong> (Firebase). Owning the socket layer was worth the failure
+      modes it taught me; owning an identity provider would have bought me nothing but risk. The claims here are
+      about design, not load. The socket handlers, the retryability classifier, and the partial-operation path
+      are code I'm happy to walk through live.
+    </p>
+    <p lang="ko">
+      둘째, 범위는 작아요. 넘어선 척하지 않고 어디까지가 한계인지 분명히 말할게요. LiveTrack는 Hetzner VPS
+      한 대에 셀프호스팅해요. Postgres까지 전부 하나의 Docker Compose 스택 안에 있어요. 이건 은근한 자랑이
+      아니라 진짜 확장 한계예요. 그리고 무조건 다 셀프호스팅한 건 아니에요. 의도적으로
+      <strong>빌려 쓴 의존성은 인증(Firebase) 하나</strong>예요. 소켓 계층은 직접 짜면서 배운 실패 모드만으로도
+      그럴 값어치가 있었지만, 인증 제공자까지 직접 만들었다면 리스크만 늘었을 거예요. 여기서 하는 주장은
+      부하 감당이 아니라 설계에 대한 거예요. 소켓 핸들러, retryability 분류기, 부분완료 경로는 라이브로
+      기꺼이 같이 뜯어볼 수 있는 코드예요.
+    </p>
+  </section>
+
+  <div class="foot reveal">
+    <p lang="en">
+      LiveTrack is a self-hosted real-time group location platform (React Native, Node.js + Fastify, ws,
+      PostgreSQL/PostGIS, on a Hetzner VPS). The architecture diagram and stack are on the
+      <a href="/#p-livetrack">project card</a>, and the repo is public:
+      <a href="https://github.com/Poiurity/LiveTrack" target="_blank" rel="noopener">github.com/Poiurity/LiveTrack</a>.
+    </p>
+    <p lang="ko">
+      LiveTrack는 셀프호스팅 실시간 그룹 위치 플랫폼이에요(React Native, Node.js + Fastify, ws,
+      PostgreSQL/PostGIS, Hetzner VPS). 아키텍처 다이어그램과 스택은
+      <a href="/#p-livetrack">프로젝트 카드</a>에 있고, 저장소는 공개예요:
+      <a href="https://github.com/Poiurity/LiveTrack" target="_blank" rel="noopener">github.com/Poiurity/LiveTrack</a>.
+    </p>
+    <p style="margin-top:12px">
+      <a href="/">poiurity.com</a> · <a href="mailto:iamlyg9667@gmail.com">iamlyg9667@gmail.com</a> ·
+      <a href="https://github.com/Poiurity" target="_blank" rel="noopener">github.com/Poiurity</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var TITLES = {
+    en: 'I hand-wrote the WebSocket layer so I could watch it fail · Yeonguk Lee',
+    ko: '웹소켓 계층을 직접 짰어요, 어떻게 깨지는지 보려고 · 이영욱'
+  };
+  function apply(l) {
+    document.documentElement.dataset.lang = l;
+    document.documentElement.lang = l;
+    document.title = TITLES[l] || TITLES.en;
+    document.querySelectorAll('[data-setlang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.setlang === l));
+    });
+    try { localStorage.setItem('lang', l); } catch (e) {}
+  }
+  document.querySelectorAll('[data-setlang]').forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.setlang); });
+  });
+  apply(document.documentElement.dataset.lang || 'en');
+
+  var nav = document.getElementById('topnav');
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(function (el) { ro.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+  }
+})();
+</script>
+
+</body>
+</html>

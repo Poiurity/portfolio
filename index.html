@@ -238,7 +238,7 @@ try {
           <div class="card-body">
             <h3>Driftless</h3>
             <p class="card-sum"><span lang="en">Keeps an AI agent's context files in sync on every PR.</span><span lang="ko">PR마다 AI 에이전트의 컨텍스트 파일을 코드와 맞춰줘요.</span></p>
-            <p class="card-meta"><span lang="en">48h hackathon · solo · 2026</span><span lang="ko">48시간 해커톤 · 1인 · 2026</span></p>
+            <p class="card-meta"><span lang="en">IBM Bob Dev Day · solo · 2026</span><span lang="ko">IBM Bob Dev Day · 1인 · 2026</span></p>
           </div>
         </a>
         <a class="card reveal" href="#p-petage" data-project="p-petage" data-picks="8" data-newest="8" data-trust="7" data-caffeine="2" data-tags="humans weekend" style="--d: 0.12s;">
@@ -334,8 +334,8 @@ try {
               </table>
           </div>
           <p class="table-note">
-            <span lang="en">Full methodology, result tables, and the cases it does <em>not</em> catch → <a href="/sellii-validation/">harness results page</a></span>
-            <span lang="ko">방법론 전체와 <em>못 잡은</em> 케이스까지 <a href="/sellii-validation/?lang=ko">검증 결과 페이지</a>에 정리해 뒀어요 →</span>
+            <span lang="en">Full methodology, result tables, and the cases it does <em>not</em> catch → <a href="/notes/sellii-validation/">harness results page</a></span>
+            <span lang="ko">방법론 전체와 <em>못 잡은</em> 케이스까지 <a href="/notes/sellii-validation/?lang=ko">검증 결과 페이지</a>에 정리해 뒀어요 →</span>
           </p>
         </div>
 
@@ -677,10 +677,30 @@ try {
           <h3>Driftless</h3>
           <p class="claim"><span lang="en">Keeps an AI coding agent's context files in sync with the code on every PR.</span><span lang="ko">PR이 생길 때마다 AI 코딩 에이전트의 컨텍스트 파일을 코드와 맞춰줘요.</span></p>
         </div>
-        <div class="meta-line"><span lang="en">48h hackathon · solo</span><span lang="ko">48시간 해커톤 · 1인</span> <span>May 2026</span> <a href="https://github.com/Poiurity/driftless-demo" target="_blank" rel="noopener">GitHub ↗</a></div>
-        <div class="prose">
-          <p lang="en">Keeps an AI coding agent's persisted context (rules, skills, AGENTS.md) in sync with the codebase on every pull request, using only the agent's own extension mechanisms. Built solo in a 48-hour IBM hackathon; 7 of 7 mock test scenarios pass.</p>
-          <p lang="ko">PR이 생길 때마다 AI 코딩 에이전트의 컨텍스트 파일(규칙, 스킬, AGENTS.md)을 코드베이스와 맞춰주는 도구예요. 에이전트가 원래 가진 확장 수단만 썼어요. IBM 해커톤에서 48시간 동안 혼자 만들었고, mock 테스트 시나리오 7개가 전부 통과해요.</p>
+        <div class="meta-line"><span lang="en">IBM Bob Dev Day Hackathon · solo</span><span lang="ko">IBM Bob Dev Day 해커톤 · 1인</span> <span>May 2026</span> <a href="https://github.com/Poiurity/driftless-demo" target="_blank" rel="noopener">GitHub ↗</a></div>
+        <div class="flagship-cols">
+          <div class="prose">
+            <p lang="en">Agentic IDEs lean on persisted markdown for context (AGENTS.md, rules, skill files), and it goes stale fast. A team moves from npm to pnpm but the agent still suggests npm install; you switch to Vitest and it keeps writing Jest tests. Bob's /init writes those files once and never revisits them.</p>
+            <p lang="ko">에이전트형 IDE는 컨텍스트를 마크다운(AGENTS.md, 규칙, 스킬 파일)에 저장해 두는데, 이게 금방 낡아요. 팀이 npm에서 pnpm으로 옮겼는데도 에이전트는 계속 npm install을 권하고, Vitest로 바꿨는데도 Jest 테스트를 짜죠. Bob의 /init은 그 파일들을 한 번 만들고 다시 안 봐요.</p>
+            <p lang="en">Driftless is a <strong>/sync command plus three Skills</strong>, built natively on IBM's Bob. A significance classifier rates each PR diff HIGH, MEDIUM, or LOW; an artifact router picks which .md files are actually affected; a surgical updater rewrites only those sections and leaves the rest alone. A trivial diff like a CSS tweak or a comment exits early, so the docs never bloat. It runs entirely on Bob's own Skills and Slash Commands with no external infrastructure. Three pre-cached scenarios run end to end and 7 tests pass.</p>
+            <p lang="ko"><strong>Driftless는 /sync 명령어와 스킬 3개</strong>로, IBM Bob 위에서 만들었어요. 첫 스킬이 PR diff를 HIGH·MEDIUM·LOW로 분류하고, 둘째가 실제로 영향받은 .md 파일을 고르고, 셋째가 그 부분만 수술하듯 고치고 나머지는 그대로 둬요. CSS 수정이나 주석 같은 사소한 변경은 일찍 종료해서 문서가 붓지 않아요. Bob이 원래 가진 스킬과 슬래시 커맨드만으로 돌아가고, 외부 인프라는 없어요. 미리 캐시한 시나리오 3개가 end-to-end로 돌고 테스트 7개가 통과해요.</p>
+            <p lang="en">I started with 5 Skills and an orchestrator, then cut it to 3 Skills with direct command orchestration. It ran leaner and worked better.</p>
+            <p lang="ko">처음엔 스킬 5개에 오케스트레이터까지 뒀다가, 스킬 3개 + 직접 명령 오케스트레이션으로 줄였어요. 더 가볍고 더 잘 돌았어요.</p>
+          </div>
+          <figure>
+            <img src="./assets/driftless-flow.png" data-zoom="./assets/driftless-flow.png" alt="Driftless pipeline: /sync to significance classifier to artifact router to surgical updater to a sync PR" loading="lazy">
+            <figcaption>Fig. 1 · <span lang="en">the /sync pipeline: classify, route, update</span><span lang="ko">/sync 파이프라인: 분류 · 라우팅 · 수정</span></figcaption>
+          </figure>
+        </div>
+        <div class="flagship-cols" style="margin-top: 20px;">
+          <figure>
+            <img src="./assets/driftless-logo.png" data-zoom="./assets/driftless-logo.png" alt="Driftless logo" loading="lazy">
+            <figcaption>Fig. 2 · Driftless</figcaption>
+          </figure>
+          <figure>
+            <img src="./assets/driftless-event.png" data-zoom="./assets/driftless-event.png" alt="IBM Dev Day: Bob hackathon event banner" loading="lazy">
+            <figcaption>Fig. 3 · <span lang="en">IBM Dev Day: Bob hackathon (Apr–May 2026)</span><span lang="ko">IBM Dev Day: Bob 해커톤 (2026.4–5)</span></figcaption>
+          </figure>
         </div>
         <p class="stack-line">Stack: IBM Bob (Skills, Slash Commands) · watsonx · GitHub</p>
       </article>
@@ -721,7 +741,7 @@ try {
           </div>
           <p><span lang="en">Two photos of the same food label never match byte-for-byte. How CLIR turns a 4-call model ladder into one Redis read anyway.</span><span lang="ko">같은 라벨을 찍어도 사진은 바이트 단위로 절대 같지 않아요. 그런데도 CLIR가 유료 호출 4번을 Redis 조회 1번으로 줄인 방법이에요.</span></p>
         </a>
-        <a class="note-row reveal" href="/sellii-validation/">
+        <a class="note-row reveal" href="/notes/sellii-validation/">
           <div class="note-head">
             <h3><span lang="en">Three claims about an agent, each turned into a number</span><span lang="ko">에이전트에 대한 주장 3가지를, 전부 숫자로 바꿨어요</span></h3>
             <span class="note-meta">2026-07 · <span lang="en">measurement report</span><span lang="ko">측정 리포트</span></span>
